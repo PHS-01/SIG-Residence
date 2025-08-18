@@ -3,7 +3,8 @@
 #include <unistd.h>
 #include <home.h>
 
-const char *PROJECT_VERSION = "0.1-dev";
+const char *PROJECT_VERSION = "1.0-alpha";
+
 void draw_border(char style, int border_margin_left_right, int border_margin_top_bottom);
 void draw_building_border(char style, int border_margin_left_right, int border_margin_top_bottom);
 
@@ -33,30 +34,25 @@ int main(void)
             }
         }
         refresh();
-        usleep(500000); // espera 0.1s
+        usleep(500000);
     }
 
     // Função de animação da borda
-    draw_building_border('#', 50, 0);
+    draw_building_border('#',40, 0);
 
     char resp = '\n';
     while (resp != '0')
     {
-        int height, width;
-
-        // Pega altura e largura do terminal
-        getmaxyx(stdscr, height, width);
-
         // Limpar a tela
         clear();
 
         // Função para imprimir a bordar da tela
-        draw_border('#', 50, 0);
+        draw_border('#',40, 0);
 
         // Função para imprimir a tela home
-        home(height, width, resp);
+        home(LINES, COLS);
         
-        mvprintw((height-3), (width-63), "v %s", PROJECT_VERSION);
+        mvprintw((LINES-3), (COLS-53), "v %s", PROJECT_VERSION);
 
         // Atualizar a tela
         refresh();
@@ -79,7 +75,6 @@ int main(void)
                 refresh();
                 break;
             default:
-                clear();
                 mvprintw(0, 0, "%s", "default");
                 refresh();
                 break;
@@ -96,52 +91,44 @@ int main(void)
 
 void draw_border(char style, int border_margin_left_right, int border_margin_top_bottom)
 {
-    int height, width;
-
-    // Pega altura e largura do terminal
-    getmaxyx(stdscr, height, width);
-
     // Desenha borda superior e inferior
-    for (int x = border_margin_left_right; x < (width - border_margin_left_right); x++) {
+    for (int x = border_margin_left_right; x < (COLS - border_margin_left_right); x++) {
         mvaddch(border_margin_top_bottom, x, style);                              // borda cima
-        mvaddch(height - 1- border_margin_top_bottom, x, style);                  // borda baixo
+        mvaddch(LINES - 1- border_margin_top_bottom, x, style);                  // borda baixo
     }
 
     // Desenha borda esquerda e direita
-    for (int y = border_margin_top_bottom; y < (height - border_margin_top_bottom); y++) {
+    for (int y = border_margin_top_bottom; y < (LINES - border_margin_top_bottom); y++) {
         mvaddch(y, border_margin_left_right, style);               // borda esquerda
-        mvaddch(y, width - 1 - border_margin_left_right, style);   // borda direita
+        mvaddch(y, COLS - 1 - border_margin_left_right, style);   // borda direita
     }
 }
 
 void draw_building_border(char style, int border_margin_left_right, int border_margin_top_bottom)
 {
-    int height, width;
-    getmaxyx(stdscr, height, width);
-
     // Desenha topo gradualmente
-    for(int x = border_margin_left_right; x < width - border_margin_left_right; x++) {
+    for(int x = border_margin_left_right; x < COLS - border_margin_left_right; x++) {
         mvaddch(border_margin_top_bottom, x, style);
         refresh();
-        usleep(15000); // pausa para animação
+        usleep(15000);
     }
 
     // Desenha direita gradualmente
-    for(int y = border_margin_top_bottom + 1; y < height - border_margin_top_bottom; y++) {
-        mvaddch(y, width - 1 - border_margin_left_right, style);
+    for(int y = border_margin_top_bottom + 1; y < LINES - border_margin_top_bottom; y++) {
+        mvaddch(y, COLS - 1 - border_margin_left_right, style);
         refresh();
         usleep(15000);
     }
 
     // Desenha base gradualmente
-    for(int x = width - 2 - border_margin_left_right; x >= border_margin_left_right; x--) {
-        mvaddch(height - 1 - border_margin_top_bottom, x, style);
+    for(int x = COLS - 2 - border_margin_left_right; x >= border_margin_left_right; x--) {
+        mvaddch(LINES - 1 - border_margin_top_bottom, x, style);
         refresh();
         usleep(15000);
     }
 
     // Desenha esquerda gradualmente
-    for(int y = height - 2 - border_margin_top_bottom; y > border_margin_top_bottom; y--) {
+    for(int y = LINES - 2 - border_margin_top_bottom; y > border_margin_top_bottom; y--) {
         mvaddch(y, border_margin_left_right, style);
         refresh();
         usleep(15000);

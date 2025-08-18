@@ -4,7 +4,7 @@ CFLAGS = -Iinclude -lncurses -Wall
 
 # Arquivos do projeto
 SRC = main.c src/home.c
-OUT = test
+OUT = test.exe
 
 # Regra padrão
 all:

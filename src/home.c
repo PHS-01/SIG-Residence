@@ -23,19 +23,22 @@ void home(int y, int x)
     int length_options = sizeof(options) / sizeof(options[0]);
 
     int h = 2;
-
+    
+    // Desenha a arte ASCII
     for (int i = 0; i < length_ascii_art; i++)
     {
         /* code */
-        mvprintw(h, 53, "%s", ascii_art[i]);
+        mvprintw(h, ((x/2)-44), "%s", ascii_art[i]);
         h += 1;
     }
     
     h = (y / 2) + 2;
 
+
+    // Desenha as opções
     for (int i = 0; i < length_options; i++)
     {
-        mvprintw(h, ((x/2)-6), "%s", options[i]);
+        mvprintw(h, ((x/2)-5), "%s", options[i]);
         h += 2;
     }
 }
