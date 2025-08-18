@@ -22,16 +22,10 @@ git clone https://github.com/PHS-01/SIG-Residence.git
 cd SIG-Residence
 ```
 
-4. Compile o programa:
+4. Compilar e rodar o programa:
 
 ```bash
-gcc main.c -o sig_residence
-```
-
-5. Execute o programa:
-
-```bash
-./sig_residence
+make run
 ```
 
 ---
