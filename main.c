@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <unistd.h>
 #include <home.h>
+#include <credits.h>
 
 const char *PROJECT_VERSION = "1.0-alpha";
 
@@ -41,7 +42,7 @@ int main(void)
     draw_building_border('#',0, 0);
 
     char resp = '\n';
-    while (resp != '0')
+    while (resp != 27)
     {
         // Limpar a tela
         clear();
@@ -67,8 +68,10 @@ int main(void)
                 refresh(); 
                 break;
             case '2':
+                clear();
                 mvprintw(2, 2, "%s", "2");
-                refresh();
+                credits(LINES, COLS);
+                refresh(); 
                 break;
             case '0':
                 mvprintw(2, 2, "%s", "0");

@@ -16,7 +16,7 @@ void home(int y, int x)
     char *options[] = {
         "[1] Sobre",
         "[2] Créditos",
-        "[0] Sair"
+        "[ESC] Sair"
     };
 
     int length_ascii_art = sizeof(ascii_art) / sizeof(ascii_art[0]);

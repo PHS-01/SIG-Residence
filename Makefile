@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Iinclude -lncurses -Wall
 
 # Arquivos do projeto
-SRC = main.c src/home.c
+SRC = main.c src/home.c src/credits.c
 OUT = test.exe
 
 # Regra padrão
