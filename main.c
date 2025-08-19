@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <home.h>
 #include <credits.h>
+#include <exit.h>
 
 const char *PROJECT_VERSION = "1.0-alpha";
 
@@ -42,7 +43,8 @@ int main(void)
     draw_building_border('#',0, 0);
 
     char resp = '\n';
-    while (resp != 27)
+    bool loop = 1;
+    while (loop)
     {
         // Limpar a tela
         clear();
@@ -75,6 +77,12 @@ int main(void)
                 break;
             case '0':
                 mvprintw(2, 2, "%s", "0");
+                refresh();
+                break;
+            case 27:
+                clear();
+                mvprintw(2, 2, "%s", "ESC");
+                loop = sair(LINES, COLS, resp);
                 refresh();
                 break;
             default:
