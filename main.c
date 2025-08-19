@@ -2,6 +2,9 @@
 #include <ncurses.h>
 #include <unistd.h>
 #include <home.h>
+#include <credits.h>
+#include <exit.h>
+#include <about.h>
 
 const char *PROJECT_VERSION = "1.0-alpha";
 
@@ -41,7 +44,8 @@ int main(void)
     draw_building_border('#',0, 0);
 
     char resp = '\n';
-    while (resp != '0')
+    bool loop = 1;
+    while (loop)
     {
         // Limpar a tela
         clear();
@@ -63,15 +67,25 @@ int main(void)
                 mvprintw(2, 2, "%s", "Enter");
                 break;
             case '1':
+                clear();
                 mvprintw(2, 2, "%s", "1");
+                about(LINES, COLS);
                 refresh(); 
                 break;
             case '2':
+                clear();
                 mvprintw(2, 2, "%s", "2");
-                refresh();
+                credits(LINES, COLS);
+                refresh(); 
                 break;
             case '0':
                 mvprintw(2, 2, "%s", "0");
+                refresh();
+                break;
+            case 27:
+                clear();
+                mvprintw(2, 2, "%s", "ESC");
+                loop = sair(LINES, COLS, resp);
                 refresh();
                 break;
             default:
