@@ -38,7 +38,7 @@ int main(void)
     }
 
     // Função de animação da borda
-    draw_building_border('#',40, 0);
+    draw_building_border('#',0, 0);
 
     char resp = '\n';
     while (resp != '0')
@@ -47,12 +47,12 @@ int main(void)
         clear();
 
         // Função para imprimir a bordar da tela
-        draw_border('#',40, 0);
+        draw_border('#',0, 0);
 
         // Função para imprimir a tela home
         home(LINES, COLS);
         
-        mvprintw((LINES-3), (COLS-53), "v %s", PROJECT_VERSION);
+        mvprintw((LINES-3), (COLS-16), "v %s", PROJECT_VERSION);
 
         // Atualizar a tela
         refresh();
@@ -60,22 +60,22 @@ int main(void)
         switch (resp)
         {
             case '\n':
-                mvprintw(0, 0, "%s", "Enter");
+                mvprintw(2, 2, "%s", "Enter");
                 break;
             case '1':
-                mvprintw(0, 0, "%s", "1");
+                mvprintw(2, 2, "%s", "1");
                 refresh(); 
                 break;
             case '2':
-                mvprintw(0, 0, "%s", "2");
+                mvprintw(2, 2, "%s", "2");
                 refresh();
                 break;
             case '0':
-                mvprintw(0, 0, "%s", "0");
+                mvprintw(2, 2, "%s", "0");
                 refresh();
                 break;
             default:
-                mvprintw(0, 0, "%s", "default");
+                mvprintw(2, 2, "%s", "default");
                 refresh();
                 break;
         }
