@@ -4,6 +4,7 @@
 #include <home.h>
 #include <credits.h>
 #include <exit.h>
+#include <about.h>
 
 const char *PROJECT_VERSION = "1.0-alpha";
 
@@ -66,7 +67,9 @@ int main(void)
                 mvprintw(2, 2, "%s", "Enter");
                 break;
             case '1':
+                clear();
                 mvprintw(2, 2, "%s", "1");
+                about(LINES, COLS);
                 refresh(); 
                 break;
             case '2':
