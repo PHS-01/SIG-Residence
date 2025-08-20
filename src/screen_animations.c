@@ -3,7 +3,18 @@
 #include <unistd.h>
 #include <string.h>
 
-void fade_animation(char *type)
+// Variaveis globais do projeto
+#include <config.h>
+
+void animation_logo_staircase(int y, int x, int delay) {
+    for (int i = 0; i < LENGTH_ASCII_ART; i++) {
+        mvprintw(y + i, x + i, "%s", PROJECT_ASCII_ART[i]);
+        refresh();
+        usleep(delay);
+    }
+}
+
+void fade_animation(char *type, int delay)
 {
     // Caracteres para a animação
     char *fadeIn_chars[] = {"#", "+", ".", " "};
@@ -30,20 +41,18 @@ void fade_animation(char *type)
         }
         refresh();
         // Trava o terminal por alguns s/ms
-        usleep(500000);
+        usleep(delay);
     }
 }
 
-void draw_building_border(char style, int border_margin_left_right, int border_margin_top_bottom)
-{
-    clear();
-    
+void animation_building_border(char style, int border_margin_left_right, int border_margin_top_bottom, int delay)
+{   
     // Desenha topo gradualmente
     for(int x = border_margin_left_right; x < COLS - border_margin_left_right; x++) 
     {
         mvaddch(border_margin_top_bottom, x, style);
         refresh();
-        usleep(15000);
+        usleep(delay);
     }
 
     // Desenha direita gradualmente
@@ -51,7 +60,7 @@ void draw_building_border(char style, int border_margin_left_right, int border_m
     {
         mvaddch(y, COLS - 1 - border_margin_left_right, style);
         refresh();
-        usleep(15000);
+        usleep(delay);
     }
 
     // Desenha base gradualmente
@@ -59,7 +68,7 @@ void draw_building_border(char style, int border_margin_left_right, int border_m
     {
         mvaddch(LINES - 1 - border_margin_top_bottom, x, style);
         refresh();
-        usleep(15000);
+        usleep(delay);
     }
 
     // Desenha esquerda gradualmente
@@ -67,6 +76,6 @@ void draw_building_border(char style, int border_margin_left_right, int border_m
     {
         mvaddch(y, border_margin_left_right, style);
         refresh();
-        usleep(15000);
+        usleep(delay);
     }
 }
