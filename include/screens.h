@@ -9,7 +9,7 @@ Declaração das funções
 void home();
 void credits();
 void about();
-int sair();
+int confirm_exit(int y, int x);
 
 // Animações de tela
 void fade_animation(char *type, int delay);
@@ -18,5 +18,6 @@ void animation_logo_staircase(int y, int x, int delay);
 
 // Elementos de Interface
 void draw_border(char style, int border_margin_left_right, int border_margin_top_bottom);
+char draw_alert(const char *msg[], const int length_msg, int width);
 
 #endif

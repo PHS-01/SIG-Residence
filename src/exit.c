@@ -1,33 +1,50 @@
 #include <stdio.h>
 #include <ncurses.h>
 #include <unistd.h>
-#include <stdlib.h>
+#include <string.h>
 
-int sair(int y, int x, char resp) {
-    // Primeira tela - confirmação
-    clear();
-    mvprintw(y/2 - 4, (x/2) - 15, "Você realmente deseja sair?");
-    mvprintw(y/2 - 2, (x/2) - 15, "Aperte duas vezes para comfirmar!");
-    mvprintw(y/2,     (x/2) - 10, "[S] Sim   [N] Não");
-    refresh();
+#include "screens.h"
+
+int confirm_exit(int y, int x) 
+{
+    const char *msg_alert[] = {
+        "Você realmente deseja sair ?",
+        "[S] Sim    [N] Não"
+    };
+
+    const char *msg[] = {
+        "Obrigado por usar o SIG-Residence!",
+        "Até breve! :)",
+        "Pressione qualquer tecla para continuar..."
+    };
+
+    int length_msg = sizeof(msg_alert) / sizeof(msg_alert[0]);
+    int length_msg_final = sizeof(msg) / sizeof(msg[0]);
+    
+    char resp;
+
+    do 
+    {
+       resp = draw_alert(msg_alert, length_msg, 50);
+    } 
+    while (resp != 's' && resp != 'S' && resp != 'n' && resp != 'N');
 
     // Espera resposta do usuário
-    while (1) {
-        resp = getch();
-        if (resp == 's' || resp == 'S') {
-            // Tela de despedida
-            clear();
-            mvprintw(y/2 - 4, (x/2) - 15, "Obrigado por usar o SIG-Residence!");
-            mvprintw(y/2 - 2,     (x/2) - 12, "Até breve! :)");
-            mvprintw(y/2, (x/2) - 15, "pressione qualquer tecla para comtinua!");
-            refresh();
-            usleep(2000000); // espera 2 segundos
-            return 0;
-            break;
-        } else if (resp == 'n' || resp == 'N') {
-            // Cancela saída
-            return 1;
-            break;
+    if(resp == 's' || resp == 'S') {
+        clear();
+        
+        int h = 0;
+
+        for (int i = 0; i < length_msg_final; i++)
+        {
+            mvprintw( (y - length_msg_final) / 2 + h, (x - (int)strlen(msg[i])) / 2, "%s", msg[i]);
+
+            h += 2;
         }
+        refresh();
+        getch();
+        return 0; // encerra loop
+    } else {
+        return 1;
     }
 }

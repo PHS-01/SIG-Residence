@@ -4,9 +4,9 @@
 #include <string.h>
 
 // Funções que desenha as telas
-#include <screens.h>
+#include "screens.h"
 // Variaveis globais do projeto
-#include <config.h>
+#include "config.h"
 
 int main(void)
 {
@@ -34,8 +34,10 @@ int main(void)
     // Função de animação da borda
     animation_building_border('#',0, 0, 5000);
 
-    char resp = '\n';
+    char resp;
+
     bool loop = 1;
+
     while (loop)
     {
         // Limpar a tela
@@ -51,6 +53,8 @@ int main(void)
 
         // Atualizar a tela
         refresh();
+
+        resp = getch();
 
         switch (resp)
         {
@@ -70,13 +74,9 @@ int main(void)
                 refresh(); 
                 break;
             case '0':
-                mvprintw(2, 2, "%s", "0");
-                refresh();
-                break;
-            case 27:
                 clear();
-                mvprintw(2, 2, "%s", "ESC");
-                loop = sair(LINES, COLS, resp);
+                mvprintw(2, 2, "%s", "0");
+                loop = confirm_exit(LINES, COLS);
                 refresh();
                 break;
             default:
@@ -84,8 +84,6 @@ int main(void)
                 refresh();
                 break;
         }
-
-        resp = getch();
     }
 
     // Animação de saida
