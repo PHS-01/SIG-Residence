@@ -3,14 +3,14 @@
 #include <string.h>
 
 // Variaveis globais do projeto
-#include <config.h>
+#include "config.h"
 
 void home(int y, int x)
 {
     char *options[] = {
         "[1]   Sobre   ",
         "[2]   Créditos",
-        "[ESC]   Sair  "
+        "[0]   Sair  "
     };
     
     int length_options = sizeof(options) / sizeof(options[0]);
