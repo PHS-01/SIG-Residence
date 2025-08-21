@@ -1,0 +1,20 @@
+/* 
+Arquivo de configuração geral do projeto (Variavels globais)
+*/
+
+// Versão do projeto
+const char *PROJECT_VERSION = "1.0-alpha";
+
+// Logo do projeto
+const char *PROJECT_ASCII_ART[] = {
+    "  #####  ###  #####        ######                                                     ",
+    " #     #  #  #     #       #     # ######  ####  # #####  ###### #    #  ####  ###### ",
+    " #        #  #             #     # #      #      # #    # #      ##   # #    # #      ",
+    "  #####   #  #  #### ##### ######  #####   ####  # #    # #####  # #  # #      #####  ",
+    "       #  #  #     #       #   #   #           # # #    # #      #  # # #      #      ",
+    " #     #  #  #     #       #    #  #      #    # # #    # #      #   ## #    # #      ",
+    "  #####  ###  #####        #     # ######  ####  # #####  ###### #    #  ####  ###### "
+};
+
+// Tamanho da logo do projeto
+const int LENGTH_ASCII_ART = sizeof(PROJECT_ASCII_ART) / sizeof(PROJECT_ASCII_ART[0]);

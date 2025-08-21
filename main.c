@@ -1,15 +1,12 @@
 #include <stdio.h>
 #include <ncurses.h>
 #include <unistd.h>
-#include <home.h>
-#include <credits.h>
-#include <exit.h>
-#include <about.h>
+#include <string.h>
 
-const char *PROJECT_VERSION = "1.0-alpha";
-
-void draw_border(char style, int border_margin_left_right, int border_margin_top_bottom);
-void draw_building_border(char style, int border_margin_left_right, int border_margin_top_bottom);
+// Funções que desenha as telas
+#include <screens.h>
+// Variaveis globais do projeto
+#include <config.h>
 
 int main(void)
 {
@@ -26,22 +23,16 @@ int main(void)
     // Fechar a janela com ctrl + c
     cbreak();
     
-    /* code */
-    // Caracteres para a animação
-    char* fade_chars[] = {"#", "+", ".", " "}; // do mais escuro ao mais claro
+    // Animação de entrada
+    fade_animation("in", 250000);
 
-    for(int f = 0; f < 4; f++) {
-        for(int y = 0; y < LINES; y++) {
-            for(int x = 0; x < COLS; x++) {
-                mvprintw(y, x, "%s", fade_chars[f]);
-            }
-        }
-        refresh();
-        usleep(500000);
-    }
+    int WIDTH_ASCII_ART = strlen(PROJECT_ASCII_ART[0]);
+
+    // Função de animação da logo
+    animation_logo_staircase(2, ((COLS - WIDTH_ASCII_ART)/2), 150000);
 
     // Função de animação da borda
-    draw_building_border('#',0, 0);
+    animation_building_border('#',0, 0, 5000);
 
     char resp = '\n';
     bool loop = 1;
@@ -54,7 +45,7 @@ int main(void)
         draw_border('#',0, 0);
 
         // Função para imprimir a tela home
-        home(LINES, COLS);
+        home(LINES, ((COLS - WIDTH_ASCII_ART)/2));
         
         mvprintw((LINES-3), (COLS-16), "v %s", PROJECT_VERSION);
 
@@ -96,55 +87,12 @@ int main(void)
 
         resp = getch();
     }
+
+    // Animação de saida
+    fade_animation("out", 250000);
     
     // Finaliza ncurses
     endwin();
 
     return 0;
-}
-
-void draw_border(char style, int border_margin_left_right, int border_margin_top_bottom)
-{
-    // Desenha borda superior e inferior
-    for (int x = border_margin_left_right; x < (COLS - border_margin_left_right); x++) {
-        mvaddch(border_margin_top_bottom, x, style);                              // borda cima
-        mvaddch(LINES - 1- border_margin_top_bottom, x, style);                  // borda baixo
-    }
-
-    // Desenha borda esquerda e direita
-    for (int y = border_margin_top_bottom; y < (LINES - border_margin_top_bottom); y++) {
-        mvaddch(y, border_margin_left_right, style);               // borda esquerda
-        mvaddch(y, COLS - 1 - border_margin_left_right, style);   // borda direita
-    }
-}
-
-void draw_building_border(char style, int border_margin_left_right, int border_margin_top_bottom)
-{
-    // Desenha topo gradualmente
-    for(int x = border_margin_left_right; x < COLS - border_margin_left_right; x++) {
-        mvaddch(border_margin_top_bottom, x, style);
-        refresh();
-        usleep(15000);
-    }
-
-    // Desenha direita gradualmente
-    for(int y = border_margin_top_bottom + 1; y < LINES - border_margin_top_bottom; y++) {
-        mvaddch(y, COLS - 1 - border_margin_left_right, style);
-        refresh();
-        usleep(15000);
-    }
-
-    // Desenha base gradualmente
-    for(int x = COLS - 2 - border_margin_left_right; x >= border_margin_left_right; x--) {
-        mvaddch(LINES - 1 - border_margin_top_bottom, x, style);
-        refresh();
-        usleep(15000);
-    }
-
-    // Desenha esquerda gradualmente
-    for(int y = LINES - 2 - border_margin_top_bottom; y > border_margin_top_bottom; y--) {
-        mvaddch(y, border_margin_left_right, style);
-        refresh();
-        usleep(15000);
-    }
 }
