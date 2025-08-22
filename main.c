@@ -15,13 +15,11 @@ int main(void)
 
     // Desabilita buffer de linha 
     // Captura teclas sem precisar de ENTER
+    // Fechar a janela com ctrl + c
     cbreak();
 
     // Não mostrar teclas digitadas
     noecho();
-
-    // Fechar a janela com ctrl + c
-    cbreak();
     
     // Animação de entrada
     fade_animation("in", 250000);
@@ -58,29 +56,22 @@ int main(void)
 
         switch (resp)
         {
-            case '\n':
-                mvprintw(2, 2, "%s", "Enter");
-                break;
             case '1':
                 clear();
-                mvprintw(2, 2, "%s", "1");
                 about(LINES, COLS);
                 refresh(); 
                 break;
             case '2':
                 clear();
-                mvprintw(2, 2, "%s", "2");
                 credits(LINES, COLS);
                 refresh(); 
                 break;
             case '0':
                 clear();
-                mvprintw(2, 2, "%s", "0");
                 loop = confirm_exit(LINES, COLS);
                 refresh();
                 break;
             default:
-                mvprintw(2, 2, "%s", "default");
                 refresh();
                 break;
         }

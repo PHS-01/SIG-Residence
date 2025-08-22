@@ -6,7 +6,7 @@ void draw_border(char style, int border_margin_left_right, int border_margin_top
     // Desenha borda superior e inferior
     for (int x = border_margin_left_right; x < (COLS - border_margin_left_right); x++) {
         mvaddch(border_margin_top_bottom, x, style);                              // borda cima
-        mvaddch(LINES - 1- border_margin_top_bottom, x, style);                  // borda baixo
+        mvaddch(LINES - 1 - border_margin_top_bottom, x, style);                  // borda baixo
     }
 
     // Desenha borda esquerda e direita
@@ -16,7 +16,7 @@ void draw_border(char style, int border_margin_left_right, int border_margin_top
     }
 }
 
-char draw_alert(const char *msg[], const int length_msg, int width) 
+char draw_alert(const char *msg[], const int length_msg, int width, bool space) 
 {
     int h = length_msg + 5;
     int y = (LINES - h) / 2;
@@ -34,7 +34,13 @@ char draw_alert(const char *msg[], const int length_msg, int width)
     {
         mvwprintw(alert, h, (width - (int)strlen(msg[i])) / 2, "%s", msg[i]);
 
-        h += 2;
+        if (space)
+        {
+            h += 2;
+        } else
+        {
+            h += 1;
+        }
     }
 
     wrefresh(alert);

@@ -8,7 +8,7 @@ Declaração das funções
 // Telas
 void home();
 void credits();
-void about();
+void about(int y, int x);
 int confirm_exit(int y, int x);
 
 // Animações de tela
@@ -18,6 +18,6 @@ void animation_logo_staircase(int y, int x, int delay);
 
 // Elementos de Interface
 void draw_border(char style, int border_margin_left_right, int border_margin_top_bottom);
-char draw_alert(const char *msg[], const int length_msg, int width);
+char draw_alert(const char *msg[], const int length_msg, int width, bool space);
 
 #endif
