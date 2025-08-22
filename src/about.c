@@ -2,16 +2,24 @@
 #include <ncurses.h>
 #include <string.h>
 
+#include "screens.h"
+
 void about(int y, int x)
 {
-    char *titulo[] = {
-        "####################################################",
-        "-----                S O B R E                 -----",
-        "####################################################",
-        ""
-    };
-
-    char *texto[] = {
+    const char *text[] = {
+        "      ___           ___           ___           ___           ___      ",
+        "     /\\  \\         /\\  \\         /\\  \\         /\\  \\         /\\  \\     ",
+        "    /::\\  \\       /::\\  \\       /::\\  \\       /::\\  \\       /::\\  \\    ",
+        "   /:/\\ \\  \\     /:/\\:\\  \\     /:/\\:\\  \\     /:/\\:\\  \\     /:/\\:\\  \\   ",
+        "  _\\:\\~\\ \\  \\   /:/  \\:\\  \\   /::\\~\\:\\__\\   /::\\~\\:\\  \\   /::\\~\\:\\  \\  ",
+        " /\\ \\:\\ \\ \\__\\ /:/__/ \\:\\__\\ /:/\\:\\ \\:|__| /:/\\:\\ \\:\\__\\ /:/\\:\\ \\:\\__\\ ",
+        " \\:\\ \\:\\ \\/__/ \\:\\  \\ /:/  / \\:\\~\\:\\/:/  / \\/_|::\\/:/  / \\:\\~\\:\\ \\/__/ ",
+        "  \\:\\ \\:\\__\\    \\:\\  /:/  /   \\:\\ \\::/  /     |:|::/  /   \\:\\ \\:\\__\\   ",
+        "   \\:\\/:/  /     \\:\\/:/  /     \\:\\/:/  /      |:|\\/__/     \\:\\ \\/__/   ",
+        "    \\::/  /       \\::/  /       \\::/__/       |:|  |        \\:\\__\\     ",
+        "     \\/__/         \\/__/         ~~            \\|__|         \\/__/     ",
+        "",
+        "",
         "SIG-Residence é um sistema de gestão de despesas",
         "para repúblicas estudantis, desenvolvido em C.",
         "",
@@ -20,25 +28,20 @@ void about(int y, int x)
         "",
         "O projeto prevê evolução futura para C++,",
         "com novos recursos e melhorias.",
-        ""
+        "",
+        "",
+        "",
+        "",
+        "[0] Voltar"   
     };
 
-    int h = 2;
+    int length_text = sizeof(text) / sizeof(text[0]);
 
-    // Mostrar título
-    for (int i = 0; i < sizeof(titulo) / sizeof(titulo[0]); i++) {
-        mvprintw(h, (x / 2) - (strlen(titulo[i]) / 2), "%s", titulo[i]);
-        h++;
-    }
+    char resp;
 
-    h += 1;
-
-    // Mostrar texto
-    for (int i = 0; i < sizeof(texto) / sizeof(texto[0]); i++) {
-        mvprintw(h, (x / 2) - (strlen(texto[i]) / 2), "%s", texto[i]);
-        h++;
-    }
-
-    // Rodapé com instrução
-    mvprintw(y-3, 16, "[0] Voltar ao Menu");
+    do 
+    {
+        resp = draw_alert(text, length_text, strlen(text[0]) + 2, 0);
+    } 
+    while (resp != '0');
 }

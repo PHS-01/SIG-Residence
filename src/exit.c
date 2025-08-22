@@ -25,7 +25,7 @@ int confirm_exit(int y, int x)
 
     do 
     {
-       resp = draw_alert(msg_alert, length_msg, 50);
+       resp = draw_alert(msg_alert, length_msg, 50, 1);
     } 
     while (resp != 's' && resp != 'S' && resp != 'n' && resp != 'N');
 
