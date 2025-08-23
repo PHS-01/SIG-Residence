@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h> // para usar system()
 
 // Função principal - Módulo Usuário
 int user(void) {
@@ -20,7 +21,7 @@ int user(void) {
 }
 
 // Função - Cadastrar Usuário
-void login(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
+void login_user(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
     printf("╔══════════════════════════════════════════╗\n");
     printf("║            CADASTRAR_USUÁRIO             ║\n"); 
     printf("╚══════════════════════════════════════════╝\n");
@@ -46,5 +47,28 @@ void login(char nome[], char cpf[], char data_nascimento[], char matricula[], ch
     printf("[+] - Endereço: ");
     scanf(" %[^\n]", endereco);
 
-    printf("[✔] - Usuário cadastrado com sucesso!");
+    printf("[✔] - Usuário cadastrado com sucesso!\n");
+
+    printf("Pressione ENTER para continuar...");
+    getchar(); getchar(); // pausa
 }
+
+// Função - Verificar Usuário
+void check_user(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
+    printf("╔══════════════════════════════════════════╗\n");
+    printf("║            VERIFICAR_USUÁRIO             ║\n"); 
+    printf("╚══════════════════════════════════════════╝\n");
+    printf("[o] - Nome: %s\n", nome);
+    printf("[o] - CPF: %s\n", cpf);
+    printf("[o] - Data de Nascimento: %s\n", data_nascimento);
+    printf("[o] - Matrícula: %s\n",matricula); 
+    printf("[o] - E-mail: %s\n", email);
+    printf("[o] - Telefone: %s\n", telefone);
+    printf("[o] - Endereço: %s\n", endereco);
+    
+    printf("Pressione ENTER para sair...");
+    getchar();
+    getchar();
+}
+
+
