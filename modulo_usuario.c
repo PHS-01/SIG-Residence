@@ -20,7 +20,7 @@ int user(void) {
 }
 
 // Função - Cadastrar Usuário
-void login_user(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
+void create(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
     printf("╔══════════════════════════════════════════╗\n");
     printf("║            CADASTRAR_USUÁRIO             ║\n"); 
     printf("╚══════════════════════════════════════════╝\n");
@@ -49,11 +49,11 @@ void login_user(char nome[], char cpf[], char data_nascimento[], char matricula[
     printf("[✔] - Usuário cadastrado com sucesso!\n");
 
     printf("Pressione ENTER para sair...");
-    getchar(); getchar();
+    getchar();
 }
 
 // Função - Verificar Usuário
-void check_user(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
+void read(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
     printf("╔══════════════════════════════════════════╗\n");
     printf("║            VERIFICAR_USUÁRIO             ║\n"); // Adicionar o CPF para verificar os dados de cada usuário
     printf("╚══════════════════════════════════════════╝\n");
@@ -66,13 +66,13 @@ void check_user(char nome[], char cpf[], char data_nascimento[], char matricula[
     printf("[o] - Endereço: %s\n", endereco);
     
     printf("Pressione ENTER para sair...");
-    getchar(); getchar();
+    getchar();
 }
 
 // Função - Alterar Usuário
-void change_user(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
+void update(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
     printf("╔══════════════════════════════════════════╗\n");
-    printf("║              ALTERAR_USUÁRIO             ║\n"); 
+    printf("║             ATUALIZAR_USUÁRIO            ║\n"); 
     printf("╚══════════════════════════════════════════╝\n");
     printf("[o] - Digite seus novos dados: \n"); // Futuramente adicionar o CPF e exibir os dados para alteração 
     
@@ -100,11 +100,11 @@ void change_user(char nome[], char cpf[], char data_nascimento[], char matricula
     printf("[✔] - Dados alterados com sucesso!\n");
 
     printf("Pressione ENTER para sair...");
-    getchar(); getchar();
+    getchar();
 }
 
 // Função - Excluir Usuário
-void delete_user(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
+void delete(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
     char op_delete;
 
     printf("╔══════════════════════════════════════════╗\n");
@@ -124,17 +124,13 @@ void delete_user(char nome[], char cpf[], char data_nascimento[], char matricula
     scanf("%c", op_delete);
 
     if (op_delete == 'S' || op_delete == 's') {
-    printf("[✔] - Usuário excluído com sucesso!\n");
-    }
-
-    else if (op_delete == 'N' || op_delete == 'n') {
-    printf("[i] - Exclusão cancelada.\n");
-    }
-
-    else {
-    printf("[x] - Resposta inválida!\n");
+        printf("[✔] - Usuário excluído com sucesso!\n");
+    } else if (op_delete == 'N' || op_delete == 'n') {
+        printf("[i] - Exclusão cancelada.\n");
+    } else {
+        printf("[x] - Resposta inválida!\n");
     }
 
     printf("Pressione ENTER para sair...");
-    getchar(); getchar();
+    getchar();
 }
