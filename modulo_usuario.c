@@ -1,24 +1,5 @@
 #include <stdio.h>
 
-// Função principal - Módulo Usuário
-int user(void) {
-    int op_user;
-
-    printf("╔══════════════════════════════════════════╗\n");
-    printf("║              MODULO_USUARIO              ║\n");
-    printf("║ ---------------------------------------- ║\n");
-    printf("║         [1] - Cadastrar_Usuário          ║\n");
-    printf("║         [2] - Verificar_Usuário          ║\n");
-    printf("║         [3] - Alterar_Usuário            ║\n");
-    printf("║         [4] - Excluir_Usuário            ║\n");
-    printf("║         [0] - Sair                       ║\n");
-    printf("╚══════════════════════════════════════════╝\n");
-    printf("[?] Escolha uma opção: ");
-    scanf("%d", &op_user);
-
-    return op_user;
-}
-
 // Função - Cadastrar Usuário
 void create(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
     printf("╔══════════════════════════════════════════╗\n");

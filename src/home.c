@@ -8,8 +8,9 @@
 void home(int y, int x)
 {
     char *options[] = {
-        "[1]   Sobre   ",
-        "[2]   Créditos",
+        "[1]   Modulo Pessoas   ",
+        "[2]   Sobre   ",
+        "[3]   Créditos",
         "[0]   Sair  "
     };
     

@@ -57,11 +57,14 @@ int main(void)
         switch (resp)
         {
             case '1':
+                dashboard_people(LINES, COLS);
+                break;
+            case '2':
                 clear();
                 about(LINES, COLS);
                 refresh(); 
                 break;
-            case '2':
+            case '3':
                 clear();
                 credits(LINES, COLS);
                 refresh(); 

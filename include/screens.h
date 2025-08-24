@@ -11,6 +11,9 @@ void credits(int y, int x);
 void about(int y, int x);
 int confirm_exit(int y, int x);
 
+// Telas do modulo pessoas
+void dashboard_people(int y, int x);
+
 // Animações de tela
 void fade_animation(char *type, int delay);
 void animation_building_border(char style, int border_margin_left_right, int border_margin_top_bottom, int delay);
