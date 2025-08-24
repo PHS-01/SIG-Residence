@@ -6,8 +6,8 @@ Declaração das funções
 */
 
 // Telas
-void home();
-void credits();
+void home(int y, int x);
+void credits(int y, int x);
 void about(int y, int x);
 int confirm_exit(int y, int x);
 
