@@ -13,6 +13,11 @@ void create_people(int y, int x)
         "Vazio"
     };
 
+    const char *msg[] = {
+        "Pessoa criada com sucesso!",
+        "Pressione qualquer tecla para continuar..."
+    };
+
     const char *title[] = {                        
                                 
         "        ##########        ",
@@ -37,6 +42,7 @@ void create_people(int y, int x)
         "[4]   Email",
         "",
         "",
+        "[C]   Criar    "
         "[0]   Cancelar"
     };
     
@@ -48,6 +54,9 @@ void create_people(int y, int x)
     do
     {
         clear();
+
+        // Função para imprimir a bordar da tela
+        draw_border('#', 50, 0);
 
         int h = 2;
 
@@ -91,6 +100,13 @@ void create_people(int y, int x)
 
             case '4': // Email
                 input_box(40, "Digite o Email:", people[3], 50);
+                break;
+
+            case 'c':
+                int length_msg_final = sizeof(msg) / sizeof(msg[0]);
+                clear();
+                draw_alert(msg, length_msg_final, 50, 1);
+                refresh();
                 break;
 
             case '0': // Cancelar

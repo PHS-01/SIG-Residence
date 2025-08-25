@@ -42,6 +42,9 @@ void update_people(int y, int x, char people[4][50])
     {
         clear();
 
+        // Função para imprimir a bordar da tela
+        draw_border('#', 50, 0);
+
         int h = 2;
 
         // Desenha o título centralizado

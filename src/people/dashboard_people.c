@@ -40,6 +40,9 @@ void dashboard_people(int y, int x)
     {
         clear(); // limpa a tela
 
+        // Função para imprimir a bordar da tela
+        draw_border('#',0, 0);
+
         int h = 2;
 
         // Desenha o título centralizado
