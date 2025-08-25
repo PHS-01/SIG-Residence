@@ -1,22 +1,5 @@
 #include <stdio.h>
 
-// Função - Verificar Usuário
-void read(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
-    printf("╔══════════════════════════════════════════╗\n");
-    printf("║            VERIFICAR_USUÁRIO             ║\n"); // Adicionar o CPF para verificar os dados de cada usuário
-    printf("╚══════════════════════════════════════════╝\n");
-    printf("[o] - Nome: %s\n", nome); 
-    printf("[o] - CPF: %s\n", cpf);
-    printf("[o] - Data de Nascimento: %s\n", data_nascimento);
-    printf("[o] - Matrícula: %s\n",matricula); 
-    printf("[o] - E-mail: %s\n", email);
-    printf("[o] - Telefone: %s\n", telefone);
-    printf("[o] - Endereço: %s\n", endereco);
-    
-    printf("Pressione ENTER para sair...");
-    getchar();
-}
-
 // Função - Alterar Usuário
 void update(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
     printf("╔══════════════════════════════════════════╗\n");

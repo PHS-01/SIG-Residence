@@ -4,6 +4,13 @@
 
 #include "screens.h"
 
+char people[4][50] = {
+    "Test",
+    "Test",
+    "Test",
+    "Test"
+};
+
 void dashboard_people(int y, int x)
 {
     const char *title[] = {
@@ -64,13 +71,11 @@ void dashboard_people(int y, int x)
                 break;
 
             case '2':
-                char people[4][50] = {
-                    "Test",
-                    "Test",
-                    "Test",
-                    "Test"
-                };
                 read_people(y, x, people);
+                break;
+
+            case '3':
+                update_people(y, x, people);
                 break;
 
             case '0':                
