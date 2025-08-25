@@ -59,25 +59,34 @@ int main(void)
             case '1':
                 dashboard_people(LINES, COLS);
                 break;
+
             case '2':
+                dashboard_residence(LINES, COLS);
+                break;
+
+            case '3':
                 clear();
                 about(LINES, COLS);
                 refresh(); 
                 break;
-            case '3':
+
+            case '4':
                 clear();
                 credits(LINES, COLS);
                 refresh(); 
                 break;
+
             case '0':
                 clear();
                 loop = confirm_exit(LINES, COLS);
                 refresh();
                 break;
+
             default:
                 refresh();
                 break;
         }
+
     }
 
     // Animação de saida

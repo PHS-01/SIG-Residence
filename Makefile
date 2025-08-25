@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Iinclude -lncurses -Wall
 
 # Arquivos do projeto
-SRC = main.c config.c $(wildcard src/*.c) $(wildcard src/people/*.c)
+SRC = main.c config.c $(wildcard src/*.c) $(wildcard src/people/*.c) $(wildcard src/residence/*.c)
 OUT = test.exe
 
 # Regra padrão
