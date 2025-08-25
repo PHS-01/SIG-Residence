@@ -77,6 +77,10 @@ void dashboard_people(int y, int x)
             case '3':
                 update_people(y, x, people);
                 break;
+            
+            case '4':
+                delete_people(y, x, people);
+                break;
 
             case '0':                
                 break;

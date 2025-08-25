@@ -2,6 +2,8 @@
 #include <ncurses.h>
 #include <string.h>
 
+#include "screens.h"
+
 void read_people(int y, int x, char people[4][50])
 {
     const char *title[] = {                        
@@ -28,6 +30,8 @@ void read_people(int y, int x, char people[4][50])
         "Email",
         "",
         "",
+        "[1]   Deletar    "
+        "[2]   Atualizar    "
         "[0]   Voltar"
     };
     
@@ -58,12 +62,30 @@ void read_people(int y, int x, char people[4][50])
             if (i < 4) // os 4 campos de dados
                 mvprintw(h, col, "%s: %s", options[i], people[i]);
             else
-                mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]); // opção Cancelar
+                mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]);
             h += 2;
         }
 
         refresh();
 
         resp = getch();
+
+        switch (resp)
+        {
+            case '1':
+                delete_people(y, x, people);
+                break;
+
+            case '2':
+                update_people(y, x, people);
+                break;
+
+            case '0':                
+                break;
+            
+            default:
+                break;
+        }
+
     } while (resp != '0');
 }

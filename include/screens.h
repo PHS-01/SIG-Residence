@@ -16,6 +16,7 @@ void dashboard_people(int y, int x);
 void create_people(int y, int x);
 void read_people(int y, int x, char people[4][50]);
 void update_people(int y, int x, char people[4][50]);
+void delete_people(int y, int x, char people[4][50]);
 
 // Animações de tela
 void fade_animation(char *type, int delay);
