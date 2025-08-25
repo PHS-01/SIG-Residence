@@ -63,8 +63,17 @@ void dashboard_people(int y, int x)
                 create_people(y, x);
                 break;
 
-            case '0':
-                
+            case '2':
+                char people[4][50] = {
+                    "Test",
+                    "Test",
+                    "Test",
+                    "Test"
+                };
+                read_people(y, x, people);
+                break;
+
+            case '0':                
                 break;
             
             default:
