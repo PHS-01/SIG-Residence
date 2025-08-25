@@ -55,3 +55,25 @@ char draw_alert(const char *msg[], const int length_msg, int width, bool space)
 
     return resp;
 }
+
+// Função genérica para entrada de texto em caixa (window)
+void input_box(int width, const char *prompt, char *buffer, int max_len)
+{
+    int h = 5;
+    int y = (LINES - h) / 2;
+    int x = (COLS - width) / 2;
+
+    // Cria a janela
+    WINDOW *win = newwin(h, width, y, x);
+    box(win, 0, 0);
+    mvwprintw(win, h/2, 2, "%s ", prompt);
+    wrefresh(win);
+
+    // Habilita eco e lê entrada
+    echo();
+    wgetnstr(win, buffer, max_len - 1);
+    noecho();
+
+    // Remove a janela
+    delwin(win);
+}
