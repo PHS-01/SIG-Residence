@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include <string.h>
 
+#include "screens.h"
 
 void dashboard_people(int y, int x)
 {
@@ -55,6 +56,20 @@ void dashboard_people(int y, int x)
         refresh(); // atualiza a tela
 
         resp = getch();
+
+        switch (resp)
+        {
+            case '1':
+                create_people(y, x);
+                break;
+
+            case '0':
+                
+                break;
+            
+            default:
+                break;
+        }
     } 
     while (resp != '0');
 }

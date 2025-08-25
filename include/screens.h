@@ -13,6 +13,7 @@ int confirm_exit(int y, int x);
 
 // Telas do modulo pessoas
 void dashboard_people(int y, int x);
+void create_people(int y, int x);
 
 // Animações de tela
 void fade_animation(char *type, int delay);
@@ -22,5 +23,6 @@ void animation_logo_staircase(int y, int x, int delay);
 // Elementos de Interface
 void draw_border(char style, int border_margin_left_right, int border_margin_top_bottom);
 char draw_alert(const char *msg[], const int length_msg, int width, bool space);
+void input_box(int width, const char *prompt, char *buffer, int max_len);
 
 #endif

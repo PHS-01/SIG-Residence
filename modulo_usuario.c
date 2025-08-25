@@ -1,38 +1,5 @@
 #include <stdio.h>
 
-// Função - Cadastrar Usuário
-void create(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
-    printf("╔══════════════════════════════════════════╗\n");
-    printf("║            CADASTRAR_USUÁRIO             ║\n"); 
-    printf("╚══════════════════════════════════════════╝\n");
-
-    printf("[+] - Nome: ");
-    scanf(" %[^\n]", nome);
-
-    printf("[+] - CPF: ");
-    scanf(" %[^\n]", cpf);
-
-    printf("[+] - Data de Nascimento: ");
-    scanf(" %[^\n]", data_nascimento);
-
-    printf("[+] - Matrícula: ");
-    scanf(" %[^\n]", matricula);
-
-    printf("[+] - E-mail: ");
-    scanf(" %[^\n]", email);
-
-    printf("[+] - Telefone: ");
-    scanf(" %[^\n]", telefone);
-
-    printf("[+] - Endereço: ");
-    scanf(" %[^\n]", endereco);
-
-    printf("[✔] - Usuário cadastrado com sucesso!\n");
-
-    printf("Pressione ENTER para sair...");
-    getchar();
-}
-
 // Função - Verificar Usuário
 void read(char nome[], char cpf[], char data_nascimento[], char matricula[], char email[], char telefone[], char endereco[]) {
     printf("╔══════════════════════════════════════════╗\n");
