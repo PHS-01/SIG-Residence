@@ -4,7 +4,7 @@
 
 #include "screens.h"
 
-void update_residence(int y, int x, char residence [4][50])
+void update_residence(int y, int x, char residence [2][50])
 {
     const char *title[] = {                        
                                 
@@ -25,8 +25,6 @@ void update_residence(int y, int x, char residence [4][50])
     const char *options[] = {
         "[1]   Número",   
         "[2]   Endereço", 
-        "[3]   Capacidade",
-        "[4]   Gestão",
         "",
         "",
         "[0]   Cancelar"
@@ -42,7 +40,7 @@ void update_residence(int y, int x, char residence [4][50])
         clear();
 
         // Função para imprimir a bordar da tela
-        draw_border('#', 50, 0);
+        draw_border('#', 0, 0);
 
         int h = 2;
 
@@ -58,7 +56,7 @@ void update_residence(int y, int x, char residence [4][50])
         for (int i = 0; i < length_options; i++)
         {
             int col = (x - 40) / 2;
-            if (i < 4) // os 4 campos de dados
+            if (i < 2)
                 mvprintw(h, col, "%s: %s", options[i], residence[i]);
             else
                 mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]); // opção Cancelar
@@ -76,17 +74,9 @@ void update_residence(int y, int x, char residence [4][50])
                 break;
 
             case '2': // Endereço
-                input_box(40, "Endereço da Residência:", residence[1], 50);
+                input_box(60, "Endereço da Residência:", residence[1], 50);
                 break;
 
-            case '3': // Capacidade
-                input_box(40, "Capacidade da Residência: ", residence[2], 50);
-                break;
-
-            case '4': // Gestão
-                input_box(40, "Gestão da Residência: ", residence[3], 50);
-                break;
-        
             case '0': // Cancelar
                 break;
 

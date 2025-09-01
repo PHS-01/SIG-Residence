@@ -74,7 +74,7 @@ void read_residence(int y, int x, char residence[2][50])
                 break;
 
             case '2':
-                // update_residence(y, x, residence);
+                update_residence(y, x, residence);
                 break;
 
             case '0':                
