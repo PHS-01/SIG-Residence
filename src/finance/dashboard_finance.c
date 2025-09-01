@@ -84,14 +84,29 @@ void dashboard_finance(int y, int x)
                 break;
 
             case '2':
-                // list_transactions(y, x, transactions); // listar lançamentos
+                do 
+                {
+                    resp = draw_alert(msg_alert, length_msg, 50, 0);
+                } 
+                while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
+                read_finance(y, x, transaction, resp); // listar lançamentos
                 break;
 
             case '3':
+                do 
+                {
+                    resp = draw_alert(msg_alert, length_msg, 50, 0);
+                } 
+                while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
                 // update_transaction(y, x, transactions); // atualizar
                 break;
 
             case '4':
+                do 
+                {
+                    resp = draw_alert(msg_alert, length_msg, 50, 0);
+                } 
+                while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
                 // delete_transaction(y, x, transactions); // excluir
                 break;
 
