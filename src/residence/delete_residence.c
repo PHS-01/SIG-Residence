@@ -5,7 +5,7 @@
 
 #include "screens.h"
 
-void delete_residence(int y, int x, char residence[4][50]) 
+void delete_residence(int y, int x, char residence[2][50]) 
 {
     const char *msg_alert[] = {
         "Deseja realmente excluir esta residência?",

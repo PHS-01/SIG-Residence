@@ -79,7 +79,7 @@ void dashboard_residence(int y, int x)
                 break;
             
             case '4':
-                // delete_residence(y, x, residences);
+                delete_residence(y, x, residences);
                 break;
 
             case '0':                

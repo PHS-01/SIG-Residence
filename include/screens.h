@@ -21,9 +21,9 @@ void delete_people(int y, int x, char people[4][50]);
 // Telas do módulo residência
 void dashboard_residence(int y, int x);
 void create_residence(int y, int x);
-// void read_residence(int y, int x, char residences[4][50]);
-// void update_residence(int y, int x, char residences[4][50]);
-// void delete_residence(int y, int x, char residences[4][50]);
+// void read_residence(int y, int x, char residences[2][50]);
+// void update_residence(int y, int x, char residences[2][50]);
+void delete_residence(int y, int x, char residences[2][50]);
 
 
 // Animações de tela
