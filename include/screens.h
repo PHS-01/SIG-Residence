@@ -18,6 +18,14 @@ void read_people(int y, int x, char people[4][50]);
 void update_people(int y, int x, char people[4][50]);
 void delete_people(int y, int x, char people[4][50]);
 
+// Telas do módulo residência
+void dashboard_residence(int y, int x);
+void create_residence(int y, int x);
+void read_residence(int y, int x, char residences[2][50]);
+void update_residence(int y, int x, char residences[2][50]);
+void delete_residence(int y, int x, char residences[2][50]);
+
+
 // Animações de tela
 void fade_animation(char *type, int delay);
 void animation_building_border(char style, int border_margin_left_right, int border_margin_top_bottom, int delay);

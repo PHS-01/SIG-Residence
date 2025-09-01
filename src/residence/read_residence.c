@@ -4,37 +4,34 @@
 
 #include "screens.h"
 
-void read_people(int y, int x, char people[4][50])
+void read_residence(int y, int x, char residence[2][50])
 {
-    const char *title[] = {                        
-                                
-        "        ##########        ",
+    const char *title[] = {                                          
+        "            ##	     	   ",
+        "          ###### 	       ",
+        "        ##########   	   ",
         "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "        ##########        ",
-        "    ####          ####    ",
+        "    ##################    ",
         "  ######################  ",
         "##########################",
-        "##########################",
-        "##########################",
         " ######################## ",
+        " ######################## ",
+        " #######          ####### ",
+        " #######          ####### ",
+        " #######          ####### ",
+        " #######          ####### ",
     };
 
     const char *options[] = {
-        "Nome",   
-        "Matricula",     
-        "Telefone", 
-        "Email",
+        "Número",  
+        "Endereço", 
         "",
         "",
         "[1]   Deletar    "
         "[2]   Atualizar    "
         "[0]   Voltar"
     };
-    
+
     int length_options = sizeof(options) / sizeof(options[0]);
     int length_title = sizeof(title) / sizeof(title[0]);
 
@@ -44,12 +41,10 @@ void read_people(int y, int x, char people[4][50])
     {
         clear();
 
-        // Função para imprimir a bordar da tela
         draw_border('#', 0, 0);
 
         int h = 2;
 
-        // Desenha o título centralizado
         for (int i = 0; i < length_title; i++)
         {
             mvprintw(h, (x - strlen(title[i])) / 2, "%s", title[i]);
@@ -58,29 +53,28 @@ void read_people(int y, int x, char people[4][50])
 
         h = (y / 2) + 1;
 
-        // Desenha as opções e os valores já preenchidos
         for (int i = 0; i < length_options; i++)
         {
             int col = (x - 40) / 2;
-            if (i < 4) // os 4 campos de dados
-                mvprintw(h, col, "%s: %s", options[i], people[i]);
+            if (i < 2)
+                mvprintw(h, col, "%s: %s", options[i], residence[i]);
             else
                 mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]);
             h += 2;
         }
 
         refresh();
-
+        
         resp = getch();
 
         switch (resp)
         {
             case '1':
-                delete_people(y, x, people);
+                delete_residence(y, x, residence);
                 break;
 
             case '2':
-                update_people(y, x, people);
+                update_residence(y, x, residence);
                 break;
 
             case '0':                

@@ -8,11 +8,13 @@
 void home(int y, int x)
 {
     char *options[] = {
-        "[1]   Modulo Pessoas   ",
-        "[2]   Sobre   ",
-        "[3]   Créditos",
-        "[0]   Sair  "
-    };
+    "[1]   Módulo Pessoas    ",
+    "[2]   Módulo Residência    ",
+    "[3]   Sobre    ",
+    "[4]   Créditos    ",
+    "[0]   Sair    "
+};
+
     
     int length_options = sizeof(options) / sizeof(options[0]);
 
