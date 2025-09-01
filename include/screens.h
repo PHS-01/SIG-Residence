@@ -27,7 +27,7 @@ void delete_residence(int y, int x, char residences[2][50]);
 
 // Telas do módulo Receita/Despesa
 void dashboard_finance(int y, int x);
-// void create_residence(int y, int x);
+void create_finance(int y, int x, char type);
 // void read_residence(int y, int x, char residences[2][50]);
 // void update_residence(int y, int x, char residences[2][50]);
 // void delete_residence(int y, int x, char residences[2][50]);

@@ -4,11 +4,11 @@
 
 #include "screens.h"
 
-char transactions[4][50] = {
-    "Salário - Receita",
-    "Aluguel - Despesa",
-    "Supermercado - Despesa",
-    "Freelance - Receita"
+char transaction[4][50] = {
+    "Vazio",        // Descrição
+    "0.00",         // Valor
+    "00/00/0000",   // Data
+    "Sem categoria" // Categoria
 };
 
 void dashboard_finance(int y, int x)
@@ -80,13 +80,7 @@ void dashboard_finance(int y, int x)
                     resp = draw_alert(msg_alert, length_msg, 50, 0);
                 } 
                 while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
-
-                if (resp == 'r' || resp == 'R') {
-
-                } else {
-
-                }
-                // create_transaction(y, x); // criar nova receita/despesa
+                create_finance(y, x, resp); // criar nova receita/despesa
                 break;
 
             case '2':
