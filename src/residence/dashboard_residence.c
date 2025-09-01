@@ -71,7 +71,7 @@ void dashboard_residence(int y, int x)
                 break;
 
             case '2':
-                // read_residence(y, x, residences);
+                read_residence(y, x, residences);
                 break;
 
             case '3':

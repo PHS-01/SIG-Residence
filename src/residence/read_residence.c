@@ -6,8 +6,7 @@
 
 void read_residence(int y, int x, char residence[2][50])
 {
-    const char *title[] = {                        
-                                
+    const char *title[] = {                                          
         "            ##	     	   ",
         "          ###### 	       ",
         "        ##########   	   ",
@@ -29,7 +28,7 @@ void read_residence(int y, int x, char residence[2][50])
         "",
         "",
         "[1]   Deletar    "
-        "[2]   Atualizar"
+        "[2]   Atualizar    "
         "[0]   Voltar"
     };
 
@@ -42,7 +41,7 @@ void read_residence(int y, int x, char residence[2][50])
     {
         clear();
 
-        draw_border('#', 50, 0);
+        draw_border('#', 0, 0);
 
         int h = 2;
 
@@ -57,7 +56,7 @@ void read_residence(int y, int x, char residence[2][50])
         for (int i = 0; i < length_options; i++)
         {
             int col = (x - 40) / 2;
-            if (i < 4)
+            if (i < 2)
                 mvprintw(h, col, "%s: %s", options[i], residence[i]);
             else
                 mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]);
@@ -71,11 +70,11 @@ void read_residence(int y, int x, char residence[2][50])
         switch (resp)
         {
             case '1':
-                delete_people(y, x, residence);
+                delete_residence(y, x, residence);
                 break;
 
             case '2':
-                update_people(y, x, residence);
+                // update_residence(y, x, residence);
                 break;
 
             case '0':                

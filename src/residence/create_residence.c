@@ -16,8 +16,7 @@ void create_residence(int y, int x)
         "Pressione qualquer tecla para continuar..."
     };
 
-    const char *title[] = {                        
-                                
+    const char *title[] = {                                            
         "            ##	     	   ",
         "          ###### 	       ",
         "        ##########   	   ",
