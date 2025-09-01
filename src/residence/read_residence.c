@@ -4,7 +4,7 @@
 
 #include "screens.h"
 
-void create_residence(int y, int x, char residence[4][50])
+void read_residence(int y, int x, char residence[2][50])
 {
     const char *title[] = {                        
                                 
@@ -26,8 +26,6 @@ void create_residence(int y, int x, char residence[4][50])
     const char *options[] = {
         "Número",  
         "Endereço", 
-        "Capacidade",
-        "Gestão", 
         "",
         "",
         "[1]   Deletar    "

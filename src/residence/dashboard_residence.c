@@ -4,9 +4,7 @@
 
 #include "screens.h"
 
-char residences[4][50] = {
-    "Test",
-    "Test",
+char residences[2][50] = {
     "Test",
     "Test"
 };
@@ -69,7 +67,7 @@ void dashboard_residence(int y, int x)
         switch (resp)
         {
             case '1':
-                // create_residence(y, x);
+                create_residence(y, x);
                 break;
 
             case '2':
