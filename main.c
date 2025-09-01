@@ -65,12 +65,16 @@ int main(void)
                 break;
 
             case '3':
+                dashboard_finance(LINES, COLS);
+                break;
+
+            case '4':
                 clear();
                 about(LINES, COLS);
                 refresh(); 
                 break;
 
-            case '4':
+            case '5':
                 clear();
                 credits(LINES, COLS);
                 refresh(); 

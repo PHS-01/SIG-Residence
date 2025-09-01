@@ -10,8 +10,9 @@ void home(int y, int x)
     char *options[] = {
     "[1]   Módulo Pessoas    ",
     "[2]   Módulo Residência    ",
-    "[3]   Sobre    ",
-    "[4]   Créditos    ",
+    "[3]   Módulo Financia    ",
+    "[4]   Sobre    ",
+    "[5]   Créditos    ",
     "[0]   Sair    "
 };
 
