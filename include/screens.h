@@ -30,7 +30,7 @@ void dashboard_finance(int y, int x);
 void create_finance(int y, int x, char type);
 void read_finance(int y, int x, char transaction[4][50], char type);
 void update_finance(int y, int x, char transaction[4][50], char type);
-// void delete_finance(int y, int x, char transaction[4][50]);
+void delete_finance(int y, int x, char transaction[4][50], char type);
 
 // Animações de tela
 void fade_animation(char *type, int delay);

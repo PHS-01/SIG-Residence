@@ -107,7 +107,7 @@ void dashboard_finance(int y, int x)
                     resp = draw_alert(msg_alert, length_msg, 50, 0);
                 } 
                 while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
-                // delete_transaction(y, x, transactions); // excluir
+                delete_finance(y, x, transaction, resp); // excluir
                 break;
 
             case '0':

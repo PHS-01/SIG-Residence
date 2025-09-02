@@ -87,7 +87,7 @@ void read_finance(int y, int x, char transactions[4][50], char type)
         switch (resp)
         {
             case '1':
-                // delete_transaction(y, x, transactions, type);
+                delete_finance(y, x, transactions, type);
                 break;
 
             case '2':
