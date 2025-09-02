@@ -4,7 +4,7 @@
 
 #include "screens.h"
 
-void read_finance(int y, int x, char transactions[4][50], char type)
+void update_finance(int y, int x, char transactions[4][50], char type)
 {
     // Define título da ação conforme tipo
     const char *type_title = (type == 'r' || type == 'R') ? "Receita" : "Despesa";
@@ -35,12 +35,12 @@ void read_finance(int y, int x, char transactions[4][50], char type)
     };
 
     const char *options[] = {
-        "Descrição",   
-        "Valor",     
-        "Data", 
-        "Categoria",
+        "[1]   Descrição",   
+        "[2]   Valor",     
+        "[3]   Data", 
+        "[4]   Categoria",
         "",
-        "[1]   Deletar    [2]   Atualizar    [0]   Voltar"
+        "[0]   Cancelar"
     };
     
     int length_options = sizeof(options) / sizeof(options[0]);
@@ -57,7 +57,7 @@ void read_finance(int y, int x, char transactions[4][50], char type)
 
         int h = 2;
 
-        // Desenha o título ASCII
+        // Desenha o título centralizado
         for (int i = 0; i < length_title; i++)
         {
             mvprintw(h, (x - strlen(title[i])) / 2, "%s", title[i]);
@@ -76,7 +76,7 @@ void read_finance(int y, int x, char transactions[4][50], char type)
             if (i < 4) // os 4 campos de dados
                 mvprintw(h, col, "%s: %s", options[i], transactions[i]);
             else
-                mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]);
+                mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]); // opção Cancelar
             h += 2;
         }
 
@@ -86,20 +86,27 @@ void read_finance(int y, int x, char transactions[4][50], char type)
 
         switch (resp)
         {
-            case '1':
-                // delete_transaction(y, x, transactions, type);
+            case '1': // Descrição
+                input_box(40, "Digite a Descrição:", transactions[0], 50);
                 break;
 
-            case '2':
-                update_finance(y, x, transactions, type);
+            case '2': // Valor
+                input_box(40, "Digite o Valor:", transactions[1], 50);
                 break;
 
-            case '0':                
+            case '3': // Data
+                input_box(40, "Digite a Data (dd/mm/aaaa):", transactions[2], 50);
                 break;
-            
+
+            case '4': // Categoria
+                input_box(40, "Digite a Categoria:", transactions[3], 50);
+                break;
+
+            case '0': // Cancelar
+                break;
+
             default:
                 break;
         }
-
     } while (resp != '0');
 }

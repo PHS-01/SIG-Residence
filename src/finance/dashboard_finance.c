@@ -98,7 +98,7 @@ void dashboard_finance(int y, int x)
                     resp = draw_alert(msg_alert, length_msg, 50, 0);
                 } 
                 while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
-                // update_transaction(y, x, transactions); // atualizar
+                update_finance(y, x, transaction, resp); // atualizar
                 break;
 
             case '4':

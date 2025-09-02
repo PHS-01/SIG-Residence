@@ -29,7 +29,7 @@ void delete_residence(int y, int x, char residences[2][50]);
 void dashboard_finance(int y, int x);
 void create_finance(int y, int x, char type);
 void read_finance(int y, int x, char transaction[4][50], char type);
-// void update_finance(int y, int x, char transaction[4][50]);
+void update_finance(int y, int x, char transaction[4][50], char type);
 // void delete_finance(int y, int x, char transaction[4][50]);
 
 // Animações de tela
