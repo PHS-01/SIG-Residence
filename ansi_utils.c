@@ -47,6 +47,14 @@ void update_terminal_size(int *last_rows, int *last_cols) {
         *last_rows = w.ws_row;
         *last_cols = w.ws_col;
         // Redesenha a tela
-        system("clear");
+        clear_screen();
     }
+}
+
+// Função para definir o tamanho do terminal
+void set_terminal_size(int rows, int cols) {
+    struct winsize size;
+    size.ws_row = rows;   // Número de linhas
+    size.ws_col = cols;   // Número de colunas
+    ioctl(STDOUT_FILENO, TIOCSWINSZ, &size);
 }

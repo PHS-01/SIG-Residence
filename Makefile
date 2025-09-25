@@ -1,9 +1,9 @@
 # Variáveis
 CC = gcc
-CFLAGS = -Iinclude -lncurses -Wall
+CFLAGS = -Iinclude -Wall
 
 # Arquivos do projeto
-SRC = main.c config.c $(wildcard src/*.c) $(wildcard src/people/*.c) $(wildcard src/residence/*.c) $(wildcard src/finance/*.c)
+SRC = main.c config.c termios_utils.c ansi_utils.c src/ui_elements.c src/home.c # $(wildcard src/*.c) $(wildcard src/people/*.c) $(wildcard src/residence/*.c) $(wildcard src/finance/*.c)
 OUT = test.exe
 
 # Regra padrão

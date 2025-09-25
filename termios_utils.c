@@ -1,5 +1,7 @@
 #include <termios.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 
 static struct termios original_termios;
 
@@ -29,4 +31,12 @@ char get_keypress(void) {
 
     disable_raw_mode();
     return resp;
+}
+
+// Função para restaurar o terminal ao estado original
+void restore_terminal(void) {
+    // Restabelece o modo normal do terminal (desativa cores, etc)
+    printf("\033[0m");   // Reseta cores e atributos
+    printf("\033[H");    // Restaura o cursor para a posição inicial
+    fflush(stdout);
 }
