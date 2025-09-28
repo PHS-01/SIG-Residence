@@ -9,7 +9,7 @@ Declaração das funções
 // Telas
 bool home(void);
 void credits(void);
-// void about(int y, int x);
+void about(void);
 bool confirm_exit(void);
 
 // // Telas do modulo pessoas

@@ -66,7 +66,7 @@ bool home(void) {
             break;
 
         case '4':
-            ansi_print(3, 3, (const char[]){resp, '\0'});
+            about();
             break;
 
         case '5':
