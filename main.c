@@ -34,9 +34,11 @@ int main(void) {
         // Atualiza o tamanho do terminal
         update_terminal_size(&rows, &cols);
 
+        system("clear");
+        clear_screen();
+
         // Funções para desenhar a tela
-        draw_border(rows, cols);
-        loop = home(rows, cols);
+        loop = home();
 
     } while (loop);
 

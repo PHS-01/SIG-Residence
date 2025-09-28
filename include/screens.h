@@ -4,12 +4,13 @@
 /*
 Declaração das funções
 */
+#include <stdbool.h>
 
 // Telas
-bool home(int, int);
+bool home(void);
 // void credits(int y, int x);
 // void about(int y, int x);
-// int confirm_exit(int y, int x);
+bool confirm_exit(void);
 
 // // Telas do modulo pessoas
 // void dashboard_people(int y, int x);
@@ -36,10 +37,10 @@ bool home(int, int);
 void fade_animation(const char*);
 
 // Elementos de Interface
-void draw_border(int, int);
+void draw_box(int, int, int, int);
 void draw_menu_options(int, int, char *[], int);
 void draw_logo(int, int);
-// char draw_alert(const char *msg[], const int length_msg, int width, bool space);
+char draw_alert(const char*[], const int, int);
 // void input_box(int width, const char *prompt, char *buffer, int max_len);
 
 #endif

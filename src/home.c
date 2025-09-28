@@ -10,9 +10,13 @@
 // Funções para controle do terminal, e manipulação do texto
 #include "terminal_control.h"
 
-bool home(int rows, int cols) {
+bool home(void) {
 
     char resp;
+    bool test = true;
+
+    int cols = 0, rows = 0;
+    update_terminal_size(&rows, &cols);
 
     char *options[] = {
         "[1]   Módulo Pessoas",
@@ -25,6 +29,8 @@ bool home(int rows, int cols) {
 
     int length_options = sizeof(options) / sizeof(options[0]);
 
+    // Desenha uma borda ao redor da tela toda
+    draw_box(1, 1, rows, cols);
     // Chama a função para desenhar a logo na parte superior
     draw_logo(rows, cols);
     
@@ -34,7 +40,7 @@ bool home(int rows, int cols) {
     draw_menu_options(rows, cols, options, length_options);
 
     // Desenha na tela a versão do projeto
-    ansi_print(rows - 3 , cols - 15, PROJECT_VERSION);
+    ansi_print(rows - 2 , cols - 15, PROJECT_VERSION);
 
     disable_bold();
 
@@ -70,9 +76,8 @@ bool home(int rows, int cols) {
             break;
 
         case '0':
-            ansi_print(3, 3, (const char[]){resp, '\0'});
             reset_text_color();
-            return false;  // Confirma saída do programa
+            test = confirm_exit();
             break;
 
         default:
@@ -82,5 +87,5 @@ bool home(int rows, int cols) {
 
     reset_text_color();
 
-    return true;
+    return test;
 }

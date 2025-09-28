@@ -10,32 +10,6 @@
 // Funções para controle do terminal, e manipulação do texto
 #include "terminal_control.h"
 
-void draw_border(int rows, int cols) {
-    // Canto superior esquerdo
-    ansi_print(0, 0, "┌");
-
-    // Canto superior direito
-    ansi_print(0, cols - 1, "┐");
-
-    // Canto inferior esquerdo
-    ansi_print(rows - 1, 0, "└");
-
-    // Canto inferior direito
-    ansi_print(rows - 1, cols - 1, "┘");
-
-    // Bordas horizontais (superior e inferior)
-    for (int x = 2; x < cols - 1; x++) {
-        ansi_print(0, x, "─");             // linha horizontal superior
-        ansi_print(rows - 1, x, "─");      // linha horizontal inferior
-    }
-
-    // Bordas verticais (laterais esquerda e direita)
-    for (int y = 2; y < rows - 1; y++) {
-        ansi_print(y, 0, "│");             // linha lateral esquerda
-        ansi_print(y, cols - 1, "│");      // linha lateral direita
-    }
-}
-
 // Função para desenhar as opções do menu
 void draw_menu_options(int rows, int cols, char *options[], int length_options) {
     // Calcular a maior string para ajustar a posição horizontal
@@ -85,45 +59,74 @@ void draw_logo(int rows, int cols) {
     }
 }
 
-// char draw_alert(const char *msg[], const int length_msg, int width, bool space) 
-// {
-//     int h = length_msg + 5;
-//     int y = (LINES - h) / 2;
-//     int x = (COLS - width) / 2;  
-            
-//     char resp;
+// Função que desenha uma caixa com tamanho e posição
+void draw_box(int y, int x, int height, int width) {
+    // Canto superior esquerdo
+    ansi_print(y, x, "┌");
 
-//     WINDOW *alert = newwin(h, width, y, x);
-//     box(alert, 0, 0);
+    // Canto superior direito
+    ansi_print(y, x + width - 1, "┐");
 
-//     h = 2;
+    // Canto inferior esquerdo
+    ansi_print(y + height - 1, x, "└");
 
-//     // escreve a mensagem centralizada
-//     for (int i = 0; i < length_msg; i++)
-//     {
-//         mvwprintw(alert, h, (width - (int)strlen(msg[i])) / 2, "%s", msg[i]);
+    // Canto inferior direito
+    ansi_print(y + height - 1, x + width - 1, "┘");
 
-//         if (space)
-//         {
-//             h += 2;
-//         } else
-//         {
-//             h += 1;
-//         }
-//     }
+    // Linha superior e inferior
+    for (int i = 1; i < width - 1; i++) {
+        ansi_print(y, x + i, "─");                               // superior
+        ansi_print(y + height - 1, x + i, "─");                  // inferior
+    }
 
-//     wrefresh(alert);
+    // Lados verticais
+    for (int i = 1; i < height - 1; i++) {
+        ansi_print(y + i, x, "│");                               // esquerdo
+        ansi_print(y + i, x + width - 1, "│");                   // direito
+    }
 
-//     // Espera uma até tecla ser digitada
-//     resp = wgetch(alert);
+    fflush(stdout);
+}
 
-//     // apaga a janela
-//     werase(alert);
-//     wrefresh(alert);
-//     delwin(alert);
+char draw_alert(const char *msg[], const int length_msg, int width) {
+    int rows = 0, cols = 0;
+    update_terminal_size(&rows, &cols);
 
-//     return resp;
-// }
+    int spacing = 2;
+
+    // Altura da caixa = linhas da mensagem + espaçamentos + topo + base
+    int content_lines = length_msg + (spacing - 1) * (length_msg - 1);
+    int height = content_lines + 4;  // +2 para bordas, +2 para padding
+
+    int x = (cols - width) / 2;
+    int y = (rows - height) / 2;
+
+    draw_box(y, x, height, width);
+
+    // Centraliza mensagens no conteúdo da caixa
+    int content_y = y + 2;
+    for (int i = 0; i < length_msg; i++) {
+        int msg_len = strlen(msg[i]);
+        int padding = (width - 2 - msg_len) / 2;
+        move_cursor(content_y, x + 1 + padding);
+        printf("%s", msg[i]);
+        content_y += spacing;
+    }
+
+    fflush(stdout);
+
+    // Espera tecla do usuário
+    char key = get_keypress();
+
+    // Limpa a área do alerta com espaços
+    for (int i = 0; i < height; i++) {
+        move_cursor(y + i, x);
+        for (int j = 0; j < width; j++) printf(" ");
+    }
+
+    fflush(stdout);
+    return key;
+}
 
 // // Função genérica para entrada de texto em caixa (window)
 // void input_box(int width, const char *prompt, char *buffer, int max_len)

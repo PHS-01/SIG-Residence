@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Variáveis globais do projeto
@@ -13,6 +14,8 @@ void fade_animation(const char *type) {
 
     int rows = 0, cols = 0;
     update_terminal_size(&rows, &cols);
+
+    system("clear");
     clear_screen();
 
     for (int f = 0; f < 4; f++) {
@@ -32,4 +35,7 @@ void fade_animation(const char *type) {
 
         usleep(500000);  // Aguarda tempo fixo
     }
+
+    system("clear");
+    clear_screen();
 }

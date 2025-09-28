@@ -1,12 +1,14 @@
 #include <stdio.h>
-#include <ncurses.h>
-#include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
+// Funções que desenha as telas
 #include "screens.h"
+// Funções para controle do terminal, e manipulação do texto
+#include "terminal_control.h"
 
-int confirm_exit(int y, int x) 
-{
+bool confirm_exit(void) {
     const char *msg_alert[] = {
         "Você realmente deseja sair ?",
         "[S] Sim    [N] Não"
@@ -20,31 +22,33 @@ int confirm_exit(int y, int x)
 
     int length_msg = sizeof(msg_alert) / sizeof(msg_alert[0]);
     int length_msg_final = sizeof(msg) / sizeof(msg[0]);
-    
+
+    int cols = 0, rows = 0;
+    update_terminal_size(&rows, &cols);
+
     char resp;
 
-    do 
-    {
-       resp = draw_alert(msg_alert, length_msg, 50, 1);
-    } 
-    while (resp != 's' && resp != 'S' && resp != 'n' && resp != 'N');
+    do {
+        resp = draw_alert(msg_alert, length_msg, 50);
+    } while (resp != 's' && resp != 'S' && resp != 'n' && resp != 'N');
 
-    // Espera resposta do usuário
-    if(resp == 's' || resp == 'S') {
-        clear();
+    if (resp == 's' || resp == 'S') {
+        system("clear");
+        clear_screen();
         
-        int h = 0;
+        int start_y = (rows - (length_msg_final * 2 - 1)) / 2;
 
-        for (int i = 0; i < length_msg_final; i++)
-        {
-            mvprintw( (y - length_msg_final) / 2 + h, (x - (int)strlen(msg[i])) / 2, "%s", msg[i]);
+        for (int i = 0; i < length_msg_final; i++) {
+            int len = strlen(msg[i]);
+            int pos_x = (cols - len) / 2;
+            int pos_y = start_y + i * 2;  // espaçamento de 1 linha entre mensagens
 
-            h += 2;
+            ansi_print(pos_y, pos_x, msg[i]);
         }
-        refresh();
-        getch();
-        return 0; // encerra loop
+
+        get_keypress();  // Espera uma tecla
+        return false;  // encerra
     } else {
-        return 1;
+        return true;  // continua
     }
 }
