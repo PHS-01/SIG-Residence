@@ -8,7 +8,7 @@ Declaração das funções
 
 // Telas
 bool home(void);
-// void credits(int y, int x);
+void credits(void);
 // void about(int y, int x);
 bool confirm_exit(void);
 

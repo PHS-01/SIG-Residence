@@ -120,8 +120,9 @@ char draw_alert(const char *msg[], const int length_msg, int width) {
 
     // Limpa a área do alerta com espaços
     for (int i = 0; i < height; i++) {
-        move_cursor(y + i, x);
-        for (int j = 0; j < width; j++) printf(" ");
+        for (int j = 0; j < width; j++) {
+            ansi_print(y + i, x + j, " ");
+        }
     }
 
     fflush(stdout);

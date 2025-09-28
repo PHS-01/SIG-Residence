@@ -50,8 +50,6 @@ bool home(void) {
 
     system("clear");
     clear_screen();
-    
-    set_text_color(COLOR_RED);
 
     // Lógica de navegação no menu
     switch (resp) {
@@ -72,11 +70,10 @@ bool home(void) {
             break;
 
         case '5':
-            ansi_print(3, 3, (const char[]){resp, '\0'});
+            credits();
             break;
 
         case '0':
-            reset_text_color();
             test = confirm_exit();
             break;
 
@@ -84,8 +81,6 @@ bool home(void) {
             ansi_print(3, 3, "default");
             break;
     }
-
-    reset_text_color();
 
     return test;
 }
