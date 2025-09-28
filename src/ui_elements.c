@@ -1,5 +1,9 @@
+#include <stdio.h>
+#include <stdlib.h>    // ✅ Para mbstowcs
 #include <string.h>
 #include <unistd.h>
+#include <locale.h>
+#include <wchar.h>     // ✅ Para wchar_t, wcslen, etc.
 
 // Variáveis globais do projeto
 #include "config.h"
@@ -36,7 +40,7 @@ void draw_border(int rows, int cols) {
 void draw_menu_options(int rows, int cols, char *options[], int length_options) {
     // Calcular a maior string para ajustar a posição horizontal
     int max_width = 0;
-    for (size_t i = 0; i < length_options; i++) {
+    for (int i = 0; i < length_options; i++) {
         int option_length = strlen(options[i]);
         if (option_length > max_width) {
             max_width = option_length;
@@ -51,7 +55,7 @@ void draw_menu_options(int rows, int cols, char *options[], int length_options) 
     int vertical_spacing = 1;
 
     // Imprimir as opções na metade inferior da tela com efeito de escada
-    for (size_t i = 0; i < length_options; i++) {
+    for (int i = 0; i < length_options; i++) {
         // Calcular a posição vertical para distribuir as opções na metade inferior
         int vertical_pos = start_y + (i + 1) * vertical_spacing + i;  // Efeito de escada
 
@@ -60,18 +64,24 @@ void draw_menu_options(int rows, int cols, char *options[], int length_options) 
     }
 }
 
-// Função para desenhar a logo do projeto na parte superior
+// Função que desenha a logo
 void draw_logo(int rows, int cols) {
-    // Ajuste a posição vertical para a parte superior
-    int start_y = 5;  // Um espaço livre no topo para a logo
+    setlocale(LC_ALL, "");  // Já pode ser feito no main uma vez também
 
-    // Desenha a logo linha por linha
+    int start_y = rows / 5;
+
     for (int i = 0; i < LENGTH_ASCII_ART; i++) {
-        // Posição horizontal: centraliza a logo
-        int horizontal_pos = (cols - strlen(PROJECT_ASCII_ART[i])) / 2;
-        
-        // Imprime a linha da logo na posição calculada
-        ansi_print(start_y + i, horizontal_pos, PROJECT_ASCII_ART[i]);
+        const char *utf8_str = PROJECT_ASCII_ART[i];
+
+        // Buffer para wchar_t (tamanho máximo = strlen + 1, para garantir)
+        wchar_t wide_str[512];
+        mbstowcs(wide_str, utf8_str, sizeof(wide_str) / sizeof(wchar_t));
+
+        // Calcula largura visível corretamente
+        int width = wcslen(wide_str);
+        int horizontal_pos = (cols - width) / 2;
+
+        ansi_print(start_y + i, horizontal_pos, utf8_str);
     }
 }
 

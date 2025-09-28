@@ -6,7 +6,7 @@ Declaração das funções
 */
 
 // Telas
-void home(int, int);
+bool home(int, int);
 // void credits(int y, int x);
 // void about(int y, int x);
 // int confirm_exit(int y, int x);
@@ -40,6 +40,7 @@ void home(int, int);
 // Elementos de Interface
 void draw_border(int, int);
 void draw_menu_options(int, int, char *[], int);
+void draw_logo(int, int);
 // char draw_alert(const char *msg[], const int length_msg, int width, bool space);
 // void input_box(int width, const char *prompt, char *buffer, int max_len);
 

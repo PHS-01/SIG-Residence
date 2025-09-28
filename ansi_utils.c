@@ -3,6 +3,20 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+#include "terminal_control.h"  // ✅ Inclui a declaração de enum Color e os protótipos
+
+// Função para mudar a cor do texto
+void set_text_color(enum Color color) {
+    printf("\033[%dm", color);
+    fflush(stdout);
+}
+
+// Função para resetar para cor padrão
+void reset_text_color(void) {
+    printf("\033[39m");  // ou \033[0m para resetar tudo (cor, estilo, etc)
+    fflush(stdout);
+}
+
 // Move o cursor para a posição (linha, coluna)
 void move_cursor(int row, int col) {
     printf("\033[%d;%dH", row, col);
@@ -57,4 +71,16 @@ void set_terminal_size(int rows, int cols) {
     size.ws_row = rows;   // Número de linhas
     size.ws_col = cols;   // Número de colunas
     ioctl(STDOUT_FILENO, TIOCSWINSZ, &size);
+}
+
+// Ativa o negrito no terminal
+void enable_bold(void) {
+    printf("\033[1m");
+    fflush(stdout);
+}
+
+// Desativa o negrito (volta ao estilo normal)
+void disable_bold(void) {
+    printf("\033[22m");  // Ou "\033[0m" para resetar todos os estilos
+    fflush(stdout);
 }
