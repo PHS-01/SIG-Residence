@@ -25,6 +25,10 @@ int main(void) {
     system("clear");
     clear_screen();
 
+    hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
+
+    fade_animation("in");
+
     do {
 
         // Atualiza o tamanho do terminal
@@ -35,6 +39,8 @@ int main(void) {
         loop = home(rows, cols);
 
     } while (loop);
+
+    fade_animation("out");
 
     exit_program(); // Função para limpar e restaurar o terminal
 

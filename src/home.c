@@ -40,8 +40,6 @@ bool home(int rows, int cols) {
 
     fflush(stdout);
 
-    hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
-
     resp = get_keypress();  // Obtém a tecla pressionada
 
     system("clear");
@@ -73,6 +71,7 @@ bool home(int rows, int cols) {
 
         case '0':
             ansi_print(3, 3, (const char[]){resp, '\0'});
+            reset_text_color();
             return false;  // Confirma saída do programa
             break;
 

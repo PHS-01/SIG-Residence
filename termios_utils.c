@@ -2,6 +2,10 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/ioctl.h>
+
+// Funções para controle do terminal, e manipulação do texto
+#include "terminal_control.h"
 
 static struct termios original_termios;
 
@@ -39,4 +43,28 @@ void restore_terminal(void) {
     printf("\033[0m");   // Reseta cores e atributos
     printf("\033[H");    // Restaura o cursor para a posição inicial
     fflush(stdout);
+}
+
+// Função para verificar mudanças no tamanho do terminal
+void update_terminal_size(int *last_rows, int *last_cols) {
+    struct winsize w;
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == -1) {
+        return; // Falha ao pegar tamanho
+    }
+
+    // Se o tamanho do terminal mudou, atualiza as variáveis
+    if (*last_rows != w.ws_row || *last_cols != w.ws_col) {
+        *last_rows = w.ws_row;
+        *last_cols = w.ws_col;
+        // Redesenha a tela
+        clear_screen();
+    }
+}
+
+// Função para definir o tamanho do terminal
+void set_terminal_size(int rows, int cols) {
+    struct winsize size;
+    size.ws_row = rows;   // Número de linhas
+    size.ws_col = cols;   // Número de colunas
+    ioctl(STDOUT_FILENO, TIOCSWINSZ, &size);
 }

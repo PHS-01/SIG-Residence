@@ -32,10 +32,8 @@ bool home(int, int);
 // void update_finance(int y, int x, char transaction[4][50], char type);
 // void delete_finance(int y, int x, char transaction[4][50], char type);
 
-// // Animações de tela
-// void fade_animation(char *type, int delay);
-// void animation_building_border(char style, int border_margin_left_right, int border_margin_top_bottom, int delay);
-// void animation_logo_staircase(int y, int x, int delay);
+// Animações de tela
+void fade_animation(const char*);
 
 // Elementos de Interface
 void draw_border(int, int);
