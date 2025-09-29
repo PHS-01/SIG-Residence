@@ -54,7 +54,8 @@ bool home(void) {
     // Lógica de navegação no menu
     switch (resp) {
         case '1':
-            ansi_print(3, 3, (const char[]){resp, '\0'});
+            // Chama a função do dashboard
+            dashboard_people();
             break;
 
         case '2':

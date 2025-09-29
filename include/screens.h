@@ -13,7 +13,7 @@ void about(void);
 bool confirm_exit(void);
 
 // // Telas do modulo pessoas
-// void dashboard_people(int y, int x);
+void dashboard_people(void);
 // void create_people(int y, int x);
 // void read_people(int y, int x, char people[4][50]);
 // void update_people(int y, int x, char people[4][50]);

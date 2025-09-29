@@ -47,13 +47,13 @@ void fade_animation(const char *type) {
 void draw_rainbow_logo(int rows, int cols) {
     // Cores do arco-íris usando o enum Color
     enum Color rainbow_colors[] = {
-        COLOR_RED,           // Vermelho
-        COLOR_YELLOW,        // Amarelo
-        COLOR_GREEN,         // Verde
-        COLOR_CYAN,          // Azul Claro
-        COLOR_BLUE,          // Azul
-        COLOR_MAGENTA,       // Magenta
-        COLOR_LIGHT_MAGENTA  // Violeta (mais claro)
+        MY_COLOR_RED,           // Vermelho
+        MY_COLOR_YELLOW,        // Amarelo
+        MY_COLOR_GREEN,         // Verde
+        MY_COLOR_CYAN,          // Azul Claro
+        MY_COLOR_BLUE,          // Azul
+        MY_COLOR_MAGENTA,       // Magenta
+        MY_COLOR_LIGHT_MAGENTA  // Violeta (mais claro)
     };
 
     // Atualiza o tamanho do terminal
