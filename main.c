@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <locale.h>
 
 // Funções que desenha as telas
 #include "screens.h"
@@ -25,9 +26,13 @@ int main(void) {
     system("clear");
     clear_screen();
 
+    setlocale(LC_ALL, "");
+
     hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
 
     fade_animation("in");
+
+    draw_rainbow_logo(rows, cols);
 
     do {
 

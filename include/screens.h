@@ -35,6 +35,7 @@ bool confirm_exit(void);
 
 // Animações de tela
 void fade_animation(const char*);
+void draw_rainbow_logo(int, int);
 
 // Elementos de Interface
 void draw_box(int, int, int, int);

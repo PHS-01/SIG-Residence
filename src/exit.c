@@ -10,7 +10,7 @@
 
 bool confirm_exit(void) {
     const char *msg_alert[] = {
-        "Você realmente deseja sair ?",
+        "Você realmente deseja sair?",
         "[S] Sim    [N] Não"
     };
 

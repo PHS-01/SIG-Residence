@@ -40,7 +40,6 @@ void draw_menu_options(int rows, int cols, char *options[], int length_options) 
 
 // Função que desenha a logo
 void draw_logo(int rows, int cols) {
-    setlocale(LC_ALL, "");  // Já pode ser feito no main uma vez também
 
     int start_y = rows / 5;
 

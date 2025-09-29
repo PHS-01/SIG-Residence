@@ -2,7 +2,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>     // ✅ Para wchar_t, wcslen, etc.
 
+// Funções que desenha as telas
+#include "screens.h"
 // Variáveis globais do projeto
 #include "config.h"
 // Funções para controle do terminal, e manipulação do texto
@@ -33,9 +36,42 @@ void fade_animation(const char *type) {
             }
         }
 
-        usleep(500000);  // Aguarda tempo fixo
+        usleep(300000);  // Aguarda tempo fixo
     }
 
     system("clear");
     clear_screen();
+}
+
+// Função que anima a logo com cores do arco-íris
+void draw_rainbow_logo(int rows, int cols) {
+    // Cores do arco-íris usando o enum Color
+    enum Color rainbow_colors[] = {
+        COLOR_RED,           // Vermelho
+        COLOR_YELLOW,        // Amarelo
+        COLOR_GREEN,         // Verde
+        COLOR_CYAN,          // Azul Claro
+        COLOR_BLUE,          // Azul
+        COLOR_MAGENTA,       // Magenta
+        COLOR_LIGHT_MAGENTA  // Violeta (mais claro)
+    };
+
+    // Atualiza o tamanho do terminal
+    update_terminal_size(&rows, &cols);
+
+    // Fazendo a animação para a logo com mudança de cores
+    for (int frame = 0; frame < 7; frame++) {  // 7 frames (um para cada cor)
+        clear_screen();
+        system("clear");
+        
+        set_text_color(rainbow_colors[frame]);
+
+        draw_logo(rows, cols);
+
+        fflush(stdout);
+        usleep(300000);  // Delay entre frames
+    }
+
+    // Reseta para a cor normal após a animação
+    reset_text_color();
 }
