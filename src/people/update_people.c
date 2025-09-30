@@ -1,99 +1,48 @@
 #include <stdio.h>
-#include <ncurses.h>
 #include <string.h>
 
-#include "screens.h"
+void update_people(char people[4][50]) {
+    int index;
+    char buffer[50];
 
-void update_people(int y, int x, char people[4][50])
-{
-    const char *title[] = {                        
-                                
-        "        ##########        ",
-        "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "        ##########        ",
-        "    ####          ####    ",
-        "  ######################  ",
-        "##########################",
-        "##########################",
-        "##########################",
-        " ######################## ",
-    };
-
-    const char *options[] = {
-        "[1]   Nome",   
-        "[2]   Matricula",     
-        "[3]   Telefone", 
-        "[4]   Email",
-        "",
-        "",
-        "[0]   Cancelar"
-    };
-    
-    int length_options = sizeof(options) / sizeof(options[0]);
-    int length_title = sizeof(title) / sizeof(title[0]);
-
-    char resp;
-
-    do
-    {
-        clear();
-
-        // Função para imprimir a bordar da tela
-        draw_border('#', 0, 0);
-
-        int h = 2;
-
-        // Desenha o título centralizado
-        for (int i = 0; i < length_title; i++)
-        {
-            mvprintw(h, (x - strlen(title[i])) / 2, "%s", title[i]);
-            h += 1;
+    printf("\nAtualizar Pessoa\n");
+    for (int i = 0; i < 4; i++) {
+        if (people[i][0] == '\0' || strcmp(people[i], "Vazio") == 0) {
+            printf(" [%d] (vazio)\n", i + 1);
+        } else {
+            printf(" [%d] %s\n", i + 1, people[i]);
         }
+    }
 
-        h = (y / 2) + 1;
+    printf("Escolha o número da pessoa a atualizar (1-4): ");
+    if (scanf("%d", &index) != 1) {
+        while (getchar() != '\n'); // limpar stdin
+        printf("Entrada inválida.\n");
+        return;
+    }
+    while (getchar() != '\n'); // limpar \n do buffer
 
-        // Desenha as opções e os valores já preenchidos
-        for (int i = 0; i < length_options; i++)
-        {
-            int col = (x - 40) / 2;
-            if (i < 4) // os 4 campos de dados
-                mvprintw(h, col, "%s: %s", options[i], people[i]);
-            else
-                mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]); // opção Cancelar
-            h += 2;
-        }
+    if (index < 1 || index > 4) {
+        printf("Opção inválida.\n");
+        return;
+    }
 
-        refresh();
+    if (people[index-1][0] == '\0' || strcmp(people[index-1], "Vazio") == 0) {
+        printf("Essa posição está vazia, não é possível atualizar.\n");
+        return;
+    }
 
-        resp = getch();
+    printf("Digite o novo nome: ");
+    fgets(buffer, sizeof(buffer), stdin);
+    buffer[strcspn(buffer, "\n")] = '\0';
 
-        switch (resp)
-        {
-            case '1': // Nome
-                input_box(40, "Digite o Nome:", people[0], 50);
-                break;
+    if (strlen(buffer) == 0) {
+        printf("Nome vazio, atualização cancelada.\n");
+        return;
+    }
 
-            case '2': // Matrícula
-                input_box(40, "Digite a Matrícula:", people[1], 50);
-                break;
+    strncpy(people[index-1], buffer, 49);
+    people[index-1][49] = '\0';
 
-            case '3': // Telefone
-                input_box(40, "Digite o Telefone:", people[2], 50);
-                break;
-
-            case '4': // Email
-                input_box(40, "Digite o Email:", people[3], 50);
-                break;
-
-            case '0': // Cancelar
-                break;
-
-            default:
-                break;
-        }
-    } while (resp != '0');
+    printf("Pessoa atualizada para '%s'.\n", people[index-1]);
 }

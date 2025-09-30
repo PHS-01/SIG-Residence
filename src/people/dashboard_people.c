@@ -1,96 +1,78 @@
 #include <stdio.h>
-#include <ncurses.h>
 #include <string.h>
-
 #include "screens.h"
 
-char people[4][50] = {
-    "Test",
-    "Test",
-    "Test",
-    "Test"
-};
+// Array global de pessoas
+char people[4][50];
 
-void dashboard_people(int y, int x)
-{
-    const char *title[] = {
-        "  __  __           _       _         _____                              ",
-        " |  \\/  |         | |     | |       |  __ \\                             ",
-        " | \\  / | ___   __| |_   _| | ___   | |__) |__ ___ ___  ___   __ _ ___  ",
-        " | |\\/| |/ _ \\ / _` | | | | |/ _ \\  |  ___/ _ \\ __/ __|/ _ \\ / _` / __| ",
-        " | |  | | (_) | (_| | |_| | | (_) | | |  |  __\\__ \\__ \\ (_) | (_| \\__ \\ ",
-        " |_|  |_|\\___/ \\__,_|\\__,_|_|\\___/  |_|   \\___|___/___/\\___/ \\__,_|___/ "
-    };
+// --- Funções auxiliares para desenhar a tela ---
+// (essas você já deve ter em ansi_utils.c / ui_elements.c)
+void clear_screen(void);
+void draw_box(int x, int y, int w, int h);
+void set_cursor(int x, int y);
 
-
-    const char *options[] = {
-        "[1]   Criar Pessoa    ",   
-        "[2]   Ler Pessoa      ",     
-        "[3]   Atualizar Pessoa", 
-        "[4]   Excluir Pessoa  ",
-        "[0]   Voltar"
-    };
-    
-    int length_options = sizeof(options) / sizeof(options[0]);
-    int length_title = sizeof(title) / sizeof(title[0]);
-
-    char resp;
-
-    do 
-    {
-        clear(); // limpa a tela
-
-        // Função para imprimir a bordar da tela
-        draw_border('#',0, 0);
-
-        int h = 2;
-
-        // Desenha o título centralizado
-        for (int i = 0; i < length_title; i++)
-        {
-            mvprintw(h, (x - strlen(title[i])) / 2, "%s", title[i]);
-            h += 1;
+// Redesenha o painel de pessoas
+static void draw_people_list(void) {
+    printf("\nPessoas cadastradas:\n");
+    for (int i = 0; i < 4; i++) {
+        if (strcmp(people[i], "Vazio") == 0 || people[i][0] == '\0') {
+            printf(" [%d] (vazio)\n", i + 1);
+        } else {
+            printf(" [%d] %s\n", i + 1, people[i]);
         }
+    }
+}
 
-        h = (y / 2) + 2; // espaço depois do título
+// Redesenha o menu
+static void draw_options_panel(void) {
+    printf("\nOpções:\n");
+    printf(" [1] Criar Pessoa\n");
+    printf(" [2] Listar Pessoas\n");
+    printf(" [3] Atualizar Pessoa\n");
+    printf(" [4] Deletar Pessoa\n");
+    printf(" [0] Voltar\n");
+}
 
-        int width_options = strlen(options[0]);
+// --- Menu principal ---
+void dashboard_people(void) {
+    int option = -1;
 
-        // Desenha as opções centralizadas
-        for (int i = 0; i < length_options; i++)
-        {
-            mvprintw(h, ((x - width_options)/2) + i, "%s", options[i]);
-            h += 2;
+    load_people("people.txt", people);
+
+    while (1) {
+        clear_screen();          // limpa a tela
+        draw_people_list();      // mostra lista
+        draw_options_panel();    // mostra menu
+        printf("\nEscolha uma opção: ");
+        if (scanf("%d", &option) != 1) {
+            while (getchar() != '\n'); // limpa stdin
+            continue;
         }
+        while (getchar() != '\n'); // limpa buffer
 
-        refresh(); // atualiza a tela
-
-        resp = getch();
-
-        switch (resp)
-        {
-            case '1':
-                create_people(y, x);
+        switch (option) {
+            case 1:
+                create_people(people);
+                save_people("people.txt", people);
                 break;
-
-            case '2':
-                read_people(y, x, people);
+            case 2:
+                read_people(people);
                 break;
-
-            case '3':
-                update_people(y, x, people);
+            case 3:
+                update_people(people);
+                save_people("people.txt", people);
                 break;
-            
-            case '4':
-                delete_people(y, x, people);
+            case 4:
+                delete_people(people);
+                save_people("people.txt", people);
                 break;
-
-            case '0':                
-                break;
-            
+            case 0:
+                return; // volta ao menu anterior
             default:
-                break;
+                printf("Opção inválida.\n");
         }
-    } 
-    while (resp != '0');
+
+        printf("\nPressione ENTER para continuar...");
+        getchar();
+    }
 }

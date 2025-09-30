@@ -1,103 +1,55 @@
 #include <stdio.h>
-#include <ncurses.h>
-#include <unistd.h>
-#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <locale.h>
 
 // Funções que desenha as telas
 #include "screens.h"
-// Variaveis globais do projeto
+// Variáveis globais do projeto
 #include "config.h"
+// Funções para controle do terminal, e manipulação do texto
+#include "terminal_control.h"
 
-int main(void)
-{
-    // Inicia modo ncurses
-    initscr();
+// Função de saída do programa
+void exit_program(void) {
+    clear_screen();
+    disable_raw_mode();
+    show_cursor();
+    restore_terminal();
+}
 
-    // Desabilita buffer de linha 
-    // Captura teclas sem precisar de ENTER
-    // Fechar a janela com ctrl + c
-    cbreak();
+int main(void) {
 
-    // Não mostrar teclas digitadas
-    noecho();
-    
-    // Animação de entrada
-    fade_animation("in", 250000);
+    bool loop = true;
+    int rows = 0, cols = 0;
 
-    int WIDTH_ASCII_ART = strlen(PROJECT_ASCII_ART[0]);
+    system("clear");
+    clear_screen();
 
-    // Função de animação da logo
-    animation_logo_staircase(2, ((COLS - WIDTH_ASCII_ART)/2), 150000);
+    setlocale(LC_ALL, "");
 
-    // Função de animação da borda
-    animation_building_border('#',0, 0, 5000);
+    hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
 
-    char resp;
+    fade_animation("in");
 
-    bool loop = 1;
+    draw_rainbow_logo(rows, cols);
 
-    while (loop)
-    {
-        // Limpar a tela
-        clear();
+    do {
 
-        // Função para imprimir a bordar da tela
-        draw_border('#',0, 0);
+        // Atualiza o tamanho do terminal
+        update_terminal_size(&rows, &cols);
 
-        // Função para imprimir a tela home
-        home(LINES, ((COLS - WIDTH_ASCII_ART)/2));
-        
-        mvprintw((LINES-3), (COLS-16), "v %s", PROJECT_VERSION);
+        system("clear");
+        clear_screen();
 
-        // Atualizar a tela
-        refresh();
+        // Funções para desenhar a tela
+        loop = home();
 
-        resp = getch();
+    } while (loop);
 
-        switch (resp)
-        {
-            case '1':
-                dashboard_people(LINES, COLS);
-                break;
+    fade_animation("out");
 
-            case '2':
-                dashboard_residence(LINES, COLS);
-                break;
-
-            case '3':
-                dashboard_finance(LINES, COLS);
-                break;
-
-            case '4':
-                clear();
-                about(LINES, COLS);
-                refresh(); 
-                break;
-
-            case '5':
-                clear();
-                credits(LINES, COLS);
-                refresh(); 
-                break;
-
-            case '0':
-                clear();
-                loop = confirm_exit(LINES, COLS);
-                refresh();
-                break;
-
-            default:
-                refresh();
-                break;
-        }
-
-    }
-
-    // Animação de saida
-    fade_animation("out", 250000);
-    
-    // Finaliza ncurses
-    endwin();
+    exit_program(); // Função para limpar e restaurar o terminal
 
     return 0;
 }

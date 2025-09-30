@@ -1,39 +1,36 @@
 #include <stdio.h>
-#include <ncurses.h>
-#include <unistd.h>
 #include <string.h>
 
-#include "screens.h"
+void delete_people(char people[4][50]) {
+    int index;
 
-void delete_people(int y, int x, char people[4][50]) 
-{
-    const char *msg_alert[] = {
-        "Deseja realmente excluir esta pessoa?",
-        "[S] Sim    [N] Não"
-    };
-
-    const char *msg[] = {
-        "Pessoa excluída com sucesso!",
-        "Pressione qualquer tecla para continuar..."
-    };
-
-    int length_msg = sizeof(msg_alert) / sizeof(msg_alert[0]);
-    int length_msg_final = sizeof(msg) / sizeof(msg[0]);
-    
-    char resp;
-
-    do 
-    {
-       resp = draw_alert(msg_alert, length_msg, 50, 1);
-    } 
-    while (resp != 's' && resp != 'S' && resp != 'n' && resp != 'N');
-
-    // Espera resposta do usuário
-    if(resp == 's' || resp == 'S') {
-        clear();
-        
-        draw_alert(msg, length_msg_final, 50, 1);
-
-        refresh();
+    printf("\nDeletar Pessoa\n");
+    for (int i = 0; i < 4; i++) {
+        if (people[i][0] == '\0' || strcmp(people[i], "Vazio") == 0) {
+            printf(" [%d] (vazio)\n", i + 1);
+        } else {
+            printf(" [%d] %s\n", i + 1, people[i]);
+        }
     }
+
+    printf("Escolha o número da pessoa a deletar (1-4): ");
+    if (scanf("%d", &index) != 1) {
+        while (getchar() != '\n'); // limpar stdin
+        printf("Entrada inválida.\n");
+        return;
+    }
+    while (getchar() != '\n'); // limpar \n do buffer
+
+    if (index < 1 || index > 4) {
+        printf("Opção inválida.\n");
+        return;
+    }
+
+    if (people[index-1][0] == '\0' || strcmp(people[index-1], "Vazio") == 0) {
+        printf("Essa posição já está vazia.\n");
+        return;
+    }
+
+    strcpy(people[index-1], "Vazio");
+    printf("Pessoa na posição %d removida.\n", index);
 }
