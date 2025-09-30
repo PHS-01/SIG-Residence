@@ -1,119 +1,36 @@
 #include <stdio.h>
-#include <ncurses.h>
 #include <string.h>
 
-#include "screens.h"
+void create_people(char people[4][50]) {
+    int slot = -1;
 
-void create_people(int y, int x)
-{
-    char people[4][50] = {
-        "Vazio",
-        "Vazio",
-        "Vazio",
-        "Vazio"
-    };
-
-    const char *msg[] = {
-        "Pessoa criada com sucesso!",
-        "Pressione qualquer tecla para continuar..."
-    };
-
-    const char *title[] = {                        
-                                
-        "        ##########        ",
-        "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "      ##############      ",
-        "        ##########        ",
-        "    ####          ####    ",
-        "  ######################  ",
-        "##########################",
-        "##########################",
-        "##########################",
-        " ######################## ",
-    };
-
-    const char *options[] = {
-        "[1]   Nome",   
-        "[2]   Matricula",     
-        "[3]   Telefone", 
-        "[4]   Email",
-        "",
-        "",
-        "[C]   Criar    "
-        "[0]   Cancelar"
-    };
-    
-    int length_options = sizeof(options) / sizeof(options[0]);
-    int length_title = sizeof(title) / sizeof(title[0]);
-
-    char resp;
-
-    do
-    {
-        clear();
-
-        // Função para imprimir a bordar da tela
-        draw_border('#', 0, 0);
-
-        int h = 2;
-
-        // Desenha o título centralizado
-        for (int i = 0; i < length_title; i++)
-        {
-            mvprintw(h, (x - strlen(title[i])) / 2, "%s", title[i]);
-            h += 1;
+    // Procura posição livre
+    for (int i = 0; i < 4; i++) {
+        if (people[i][0] == '\0' || strcmp(people[i], "Vazio") == 0) {
+            slot = i;
+            break;
         }
+    }
 
-        h = (y / 2) + 1;
+    if (slot == -1) {
+        printf("Limite de pessoas atingido.\n");
+        return;
+    }
 
-        // Desenha as opções e os valores já preenchidos
-        for (int i = 0; i < length_options; i++)
-        {
-            int col = (x - 40) / 2;
-            if (i < 4) // os 4 campos de dados
-                mvprintw(h, col, "%s: %s", options[i], people[i]);
-            else
-                mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]); // opção Cancelar
-            h += 2;
-        }
+    char buffer[50];
+    printf("Digite o nome da nova pessoa: ");
+    fgets(buffer, sizeof(buffer), stdin);
 
-        refresh();
+    // remover \n
+    buffer[strcspn(buffer, "\n")] = '\0';
 
-        resp = getch();
+    if (strlen(buffer) == 0) {
+        printf("Nome vazio, operação cancelada.\n");
+        return;
+    }
 
-        switch (resp)
-        {
-            case '1': // Nome
-                input_box(40, "Digite o Nome:", people[0], 50);
-                break;
+    strncpy(people[slot], buffer, 49);
+    people[slot][49] = '\0'; // garantir terminação
 
-            case '2': // Matrícula
-                input_box(40, "Digite a Matrícula:", people[1], 50);
-                break;
-
-            case '3': // Telefone
-                input_box(40, "Digite o Telefone:", people[2], 50);
-                break;
-
-            case '4': // Email
-                input_box(40, "Digite o Email:", people[3], 50);
-                break;
-
-            case 'c':
-                int length_msg_final = sizeof(msg) / sizeof(msg[0]);
-                clear();
-                draw_alert(msg, length_msg_final, 50, 1);
-                refresh();
-                break;
-
-            case '0': // Cancelar
-                break;
-
-            default:
-                break;
-        }
-    } while (resp != '0');
+    printf("Pessoa '%s' criada com sucesso!\n", people[slot]);
 }
