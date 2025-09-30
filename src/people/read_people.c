@@ -1,22 +1,18 @@
 #include <stdio.h>
-#include <string.h>
+#include "people.h"
 
-void read_people(char people[4][50]) {
-    printf("\nLista de Pessoas:\n");
-
-    int vazias = 0;
-    for (int i = 0; i < 4; i++) {
-        if (people[i][0] == '\0' || strcmp(people[i], "Vazio") == 0) {
-            printf(" [%d] (vazio)\n", i + 1);
-            vazias++;
-        } else {
-            printf(" [%d] %s\n", i + 1, people[i]);
-        }
+void read_people(Pessoa people[], int count) {
+    printf("\n=== Lista de Pessoas (%d) ===\n", count);
+    if (count == 0) {
+        printf("Nenhuma pessoa cadastrada.\n");
+        return;
     }
-
-    if (vazias == 4) {
-        printf("Nenhuma pessoa cadastrada ainda.\n");
+    for (int i = 0; i < count; ++i) {
+        printf("[%d] Nome: %s | Idade: %d | CPF: %s | Email: %s\n",
+            i + 1,
+            people[i].nome[0] ? people[i].nome : "(sem nome)",
+            people[i].idade,
+            people[i].cpf[0] ? people[i].cpf : "(sem cpf)",
+            people[i].email[0] ? people[i].email : "(sem email)");
     }
-
-    printf("\n");
 }

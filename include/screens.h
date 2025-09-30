@@ -14,15 +14,6 @@ bool confirm_exit(void);
 
 // Telas do modulo pessoas
 void dashboard_people(void);
-void create_people(char people[4][50]);
-void read_people(char people[4][50]);
-void update_people(char people[4][50]);
-void delete_people(char people[4][50]);
-
-// Persistência de dados
-void save_people(const char *filename, char people[4][50]);
-void load_people(const char *filename, char people[4][50]);
-
 
 // // Telas do módulo residência
 // void dashboard_residence(int y, int x);
