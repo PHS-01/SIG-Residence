@@ -1,36 +1,70 @@
 #include <stdio.h>
 #include <string.h>
+#include "people.h"
 
-void create_people(char people[4][50]) {
-    int slot = -1;
+static void trim_newline(char *s) {
+    if (!s) return;
+    size_t len = strlen(s);
+    while (len > 0 && (s[len-1] == '\n' || s[len-1] == '\r')) {
+        s[len-1] = '\0';
+        len--;
+    }
+}
 
-    // Procura posição livre
-    for (int i = 0; i < 4; i++) {
-        if (people[i][0] == '\0' || strcmp(people[i], "Vazio") == 0) {
-            slot = i;
-            break;
+void create_people(Pessoa people[], int *count) {
+    if (*count >= MAX_PEOPLE) {
+        printf("Limite de pessoas atingido (%d).\n", MAX_PEOPLE);
+        return;
+    }
+
+    Pessoa p;
+    char buf[256];
+
+    printf("\n=== Criar nova pessoa ===\n");
+
+    /* Nome */
+    printf("Nome: ");
+    if (!fgets(p.nome, sizeof(p.nome), stdin)) {
+        printf("Entrada falhou.\n");
+        return;
+    }
+    trim_newline(p.nome);
+    if (p.nome[0] == '\0') {
+        printf("Nome vazio. Operação cancelada.\n");
+        return;
+    }
+
+    /* Idade (validação simples) */
+    while (1) {
+        printf("Idade: ");
+        if (!fgets(buf, sizeof(buf), stdin)) return;
+        trim_newline(buf);
+        if (buf[0] == '\0') {
+            printf("Idade vazia. Operação cancelada.\n");
+            return;
         }
+        int idade = atoi(buf);
+        if (idade <= 0) {
+            printf("Idade inválida. Digite um número maior que 0.\n");
+            continue;
+        }
+        p.idade = idade;
+        break;
     }
 
-    if (slot == -1) {
-        printf("Limite de pessoas atingido.\n");
-        return;
-    }
+    /* CPF */
+    printf("CPF: ");
+    if (!fgets(p.cpf, sizeof(p.cpf), stdin)) return;
+    trim_newline(p.cpf);
 
-    char buffer[50];
-    printf("Digite o nome da nova pessoa: ");
-    fgets(buffer, sizeof(buffer), stdin);
+    /* Email (novo atributo) */
+    printf("Email: ");
+    if (!fgets(p.email, sizeof(p.email), stdin)) return;
+    trim_newline(p.email);
 
-    // remover \n
-    buffer[strcspn(buffer, "\n")] = '\0';
+    /* adiciona */
+    people[*count] = p;
+    (*count)++;
 
-    if (strlen(buffer) == 0) {
-        printf("Nome vazio, operação cancelada.\n");
-        return;
-    }
-
-    strncpy(people[slot], buffer, 49);
-    people[slot][49] = '\0'; // garantir terminação
-
-    printf("Pessoa '%s' criada com sucesso!\n", people[slot]);
+    printf("Pessoa '%s' adicionada com sucesso.\n", p.nome);
 }
