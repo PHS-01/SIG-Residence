@@ -3,10 +3,10 @@ Arquivo de configuração geral do projeto (Variavels globais)
 */
 
 // Versão do projeto
-const char *PROJECT_VERSION = "1.0-alpha";
+const char* PROJECT_VERSION = "1.0-alpha";
 
 // Logo do projeto
-const char *PROJECT_ASCII_ART[] = {
+const char* PROJECT_ASCII_ART[] = {
     "███████╗██╗ ██████╗       ██████╗ ███████╗███████╗██╗██████╗ ███████╗███╗   ██╗ ██████╗███████╗",
     "██╔════╝██║██╔════╝       ██╔══██╗██╔════╝██╔════╝██║██╔══██╗██╔════╝████╗  ██║██╔════╝██╔════╝",
     "███████╗██║██║  ███╗█████╗██████╔╝█████╗  ███████╗██║██║  ██║█████╗  ██╔██╗ ██║██║     █████╗  ",
