@@ -19,37 +19,44 @@ void exit_program(void) {
 }
 
 int main(void) {
+    // Verifica se o banco de dados já existe
+    if (database_exists()) {
+        printf("O banco de dados já existe.\n");
+    } else {
+        printf("O banco de dados não existe. Criando o banco...\n");
+        create_database();  // Chama a função para criar o banco se não existir
+    }
 
-    bool loop = true;
-    int rows = 0, cols = 0;
+    // bool loop = true;
+    // int rows = 0, cols = 0;
 
-    system("clear");
-    clear_screen();
+    // system("clear");
+    // clear_screen();
 
-    setlocale(LC_ALL, "");
+    // setlocale(LC_ALL, "");
 
-    hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
+    // hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
 
-    fade_animation("in");
+    // fade_animation("in");
 
-    draw_rainbow_logo(rows, cols);
+    // draw_rainbow_logo(rows, cols);
 
-    do {
+    // do {
 
-        // Atualiza o tamanho do terminal
-        update_terminal_size(&rows, &cols);
+    //     // Atualiza o tamanho do terminal
+    //     update_terminal_size(&rows, &cols);
 
-        system("clear");
-        clear_screen();
+    //     system("clear");
+    //     clear_screen();
 
-        // Funções para desenhar a tela
-        loop = home();
+    //     // Funções para desenhar a tela
+    //     loop = home();
 
-    } while (loop);
+    // } while (loop);
 
-    fade_animation("out");
+    // fade_animation("out");
 
-    exit_program(); // Função para limpar e restaurar o terminal
+    // exit_program(); // Função para limpar e restaurar o terminal
 
     return 0;
 }
