@@ -1,9 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c,c++,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,visualstudiocode
 
-database.dat
-database.csv
-database.json
+*.dat
+*.csv
+*.json
 
 ### C ###
 # Prerequisites

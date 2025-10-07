@@ -30,21 +30,36 @@ int main(void) {
     }
 
     // Teste de criação de pessoas
-    People p1 = {1, "João", "01/01/1990", "joao@example.com", "123456789"};
+    People p1 = {1, "João", "01/01/1990", "joao@example.com", "123456789", true};
+    People p2 = {2, "Teste", "02/01/1990", "test@example.com", "123123132", true};
+    People p3 = {3, "Marias", "03/01/1990", "marias@example.com", "020202020", true};
+
     create_people(p1);
+    create_people(p2);
+    create_people(p3);
+    
+    getchar();
+
+    read_people(1);
+
+    getchar();
 
     // Listar pessoas
     list_people();
 
     // Atualizar pessoa
-    People p2 = {1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321"};
-    update_people(1, p2);
+    People pupdate = {1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321", true};
+    update_people(1, pupdate);
 
-    // Listar pessoas
-    list_people();
+    read_people(1);
+
+    getchar();
 
     // Excluir pessoa
     delete_people(1);
+
+    // Listar pessoas
+    list_people();
 
     // bool loop = true;
     // int rows = 0, cols = 0;
