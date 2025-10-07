@@ -10,6 +10,8 @@
 // Funções para controle do terminal, e manipulação do texto
 #include "terminal_control.h"
 
+#include "people.h"
+
 // Função de saída do programa
 void exit_program(void) {
     clear_screen();
@@ -27,8 +29,25 @@ int main(void) {
         create_database();  // Chama a função para criar o banco se não existir
     }
 
-    bool loop = true;
-    int rows = 0, cols = 0;
+    // Teste de criação de pessoas
+    People p1 = {1, "João", "01/01/1990", "joao@example.com", "123456789"};
+    create_people(p1);
+
+    // Listar pessoas
+    list_people();
+
+    // Atualizar pessoa
+    People p2 = {1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321"};
+    update_people(1, p2);
+
+    // Listar pessoas
+    list_people();
+
+    // Excluir pessoa
+    delete_people(1);
+
+    // bool loop = true;
+    // int rows = 0, cols = 0;
 
     system("clear");
     clear_screen();
