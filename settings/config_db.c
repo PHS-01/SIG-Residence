@@ -4,17 +4,20 @@
 
 // Variáveis constantes para o banco de dados (Nome do arquivo/banco de dados, Tipo do arquivo)
 const char* DATABASE_NAME = "database";
-const char* FILE_TYPE = "json"; // (dat, csv, json)
+const char* FILE_TYPE = "csv"; // (dat, csv, json)
+char FILE_NAME[100];
+
+// Função para criar o nome completo do arquivo
+void create_file_name(void) {
+    // Monta o nome do arquivo com a extensão e preenche o array FILE_NAME
+    snprintf(FILE_NAME, sizeof(FILE_NAME), "%s.%s", DATABASE_NAME, FILE_TYPE);
+}
 
 void create_database(void) {
-    // Variável para armazenar o nome completo do arquivo
-    char file_name[100];  // Tamanho suficiente para o nome do arquivo
-
-    // Monta o nome do arquivo com a extensão
-    snprintf(file_name, sizeof(file_name), "%s.%s", DATABASE_NAME, FILE_TYPE);
+    create_file_name();
 
     // Cria o arquivo com o nome completo
-    FILE *arquivo = fopen(file_name, "w"); // 'w' para criar o arquivo de texto
+    FILE *arquivo = fopen(FILE_NAME, "w"); // 'w' para criar o arquivo de texto
     if (arquivo == NULL) {
         exit(EXIT_FAILURE);
     } else {
@@ -24,14 +27,10 @@ void create_database(void) {
 
 // Função para verificar se o arquivo de banco de dados existe
 int database_exists(void) {
-    // Variável para armazenar o nome completo do arquivo
-    char database_name[100];
-
-    // Monta o nome do arquivo com a extensão
-    snprintf(database_name, sizeof(database_name), "%s.%s", DATABASE_NAME, FILE_TYPE);
-
+    create_file_name();
+    
     // Tenta abrir o arquivo no modo de leitura
-    FILE *arquivo = fopen(database_name, "r"); // 'r' para verificar a existência do arquivo
+    FILE *arquivo = fopen(FILE_NAME, "r"); // 'r' para verificar a existência do arquivo
     if (arquivo == NULL) {
         // Se o arquivo não existir, retorna 0 (não existe)
         return 0;

@@ -1,27 +1,25 @@
 #ifndef PEOPLE_H
 #define PEOPLE_H
 
-#include <stddef.h>
-
-#define MAX_PEOPLE 100
-#define NAME_LEN 50
-#define CPF_LEN 16
-#define EMAIL_LEN 100
-
+// Definindo a estrutura People
 typedef struct {
-    char nome[NAME_LEN];
-    int idade;
-    char cpf[CPF_LEN];
-    char email[EMAIL_LEN];
-} Pessoa;
+    int id;                  // Identificador único
+    char name[100];          // Nome da pessoa
+    char birth_date[11];     // Data de nascimento (formato: dd/mm/yyyy)
+    char email[100];         // Email
+    char phone[20];          // Telefone
+    // char role[50];           // Papel ou função (ex: chefe de família, responsável pelas finanças)
+    // float participation;     // Percentual de participação nas despesas compartilhadas (0.0 a 1.0)
+    // int expense_type;        // Tipo de despesa (Pessoal ou Compartilhada)
+} People;
 
-void create_people(Pessoa people[], int *count);
-void read_people(Pessoa people[], int count);
-void update_people(Pessoa people[], int count);
-void delete_people(Pessoa people[], int *count);
-
-// Persistência de dados
-void save_people(const char *filename, Pessoa people[], int count);
-void load_people(const char *filename, Pessoa people[], int *count);
+// Função para criar uma nova pessoa no arquivo
+void create_people(People new_person);
+// Função para listar as pessoas do arquivo
+void list_people(void);
+// Função para atualizar os dados de uma pessoa no arquivo
+void update_people(int id, People updated_person);
+// Função para excluir uma pessoa do arquivo
+void delete_people(int id);
 
 #endif
