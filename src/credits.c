@@ -18,6 +18,7 @@ void credits(void) {
         "A U T O R E S",
         "Pedro Henrique da Silva",
         "Gleydson Henrique Dantas da Silva",
+        "Paulo André Alves de Moura",
         "",
         "O R I E N T A D O R",
         "Flavius da Luz e Gorgônio",
