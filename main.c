@@ -22,32 +22,12 @@ void exit_program(void) {
 
 int main(void) {
     // Verifica se o banco de dados já existe
-    if (database_exists()) {
-        printf("O banco de dados já existe.\n");
-    } else {
-        printf("O banco de dados não existe. Criando o banco...\n");
-        create_database();  // Chama a função para criar o banco se não existir
+    if (!database_exists()) {
+        create_database();
     }
 
-    // Teste de criação de pessoas
-    People p1 = {1, "João", "01/01/1990", "joao@example.com", "123456789"};
-    create_people(p1);
-
-    // Listar pessoas
-    list_people();
-
-    // Atualizar pessoa
-    People p2 = {1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321"};
-    update_people(1, p2);
-
-    // Listar pessoas
-    list_people();
-
-    // Excluir pessoa
-    delete_people(1);
-
-    // bool loop = true;
-    // int rows = 0, cols = 0;
+    bool loop = true;
+    int rows = 0, cols = 0;
 
     system("clear");
     clear_screen();
