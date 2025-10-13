@@ -7,7 +7,6 @@
 
 void dashboard_people() {
     int opcao;
-    char input[10];
 
     do {
         printf("\n=== MENU DE PESSOAS ===\n");
@@ -18,17 +17,15 @@ void dashboard_people() {
         printf("5 - Atualizar pessoa\n");
         printf("6 - Excluir pessoa (inativar)\n");
         printf("0 - Voltar\n");
-        printf("Escolha uma opção: ");
         
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            printf("Erro na leitura da opção.\n");
-            continue;
-        }
-        
-        if (sscanf(input, "%d", &opcao) != 1) {
+        if (!read_int_input("Escolha uma opção: ", &opcao)) {
             printf("Opção inválida. Digite um número.\n");
+            wait_for_enter();
+            system("clear");
             continue;
         }
+
+        system("clear");  // Limpa a tela ANTES de executar a opção
 
         switch (opcao) {
             case 1:
@@ -56,9 +53,10 @@ void dashboard_people() {
                 printf("Opção inválida. Tente novamente.\n");
         }
 
-        if (opcao != 0) {
-            printf("\nPressione Enter para continuar...");
-            getchar();
+        // Se não for voltar, pausa
+        if (opcao != 0 && opcao >= 1 && opcao <= 6) {
+            wait_for_enter();
+            system("clear");
         }
 
     } while (opcao != 0);

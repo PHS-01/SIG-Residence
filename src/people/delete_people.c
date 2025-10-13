@@ -2,20 +2,22 @@
 #include <string.h>
 #include <stdlib.h>
 #include "people.h"
+#include "terminal_control.h"
 
 void delete_people_ui() {
     int id;
-    char confirm;
+    char confirm[3];
 
-    printf("=== EXCLUIR PESSOA ===\n");
-    printf("Digite o ID da pessoa a ser excluída: ");
-    scanf("%d", &id);
-    getchar();
+    printf("=== EXCLUIR PESSOA ===\n\n");
+    
+    if (!read_int_input("Digite o ID da pessoa a ser excluída: ", &id)) {
+        printf("ID inválido.\n");
+        return;
+    }
 
-    printf("Tem certeza que deseja inativar a pessoa com ID %d? (s/N): ", id);
-    scanf("%c", &confirm);
+    read_string_input("Tem certeza que deseja inativar a pessoa? (s/N): ", confirm, sizeof(confirm));
 
-    if (confirm == 's' || confirm == 'S') {
+    if (confirm[0] == 's' || confirm[0] == 'S') {
         delete_people(id);
     } else {
         printf("Operação cancelada.\n");
