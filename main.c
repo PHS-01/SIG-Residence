@@ -10,6 +10,7 @@
 // Funções para controle do terminal, e manipulação do texto
 #include "terminal_control.h"
 
+#include "controllers.h"
 #include "people.h"
 
 // Função de saída do programa
@@ -30,36 +31,36 @@ int main(void) {
     }
 
     // Teste de criação de pessoas
-    People p1 = {1, "João", "01/01/1990", "joao@example.com", "123456789", true};
-    People p2 = {2, "Teste", "02/01/1990", "test@example.com", "123123132", true};
-    People p3 = {3, "Marias", "03/01/1990", "marias@example.com", "020202020", true};
+    People p1 = {1, 1, "João", "01/01/1990", "joao@example.com", "123456789", true};
+    People p2 = {1, 2, "Teste", "02/01/1990", "test@example.com", "123123132", true};
+    People p3 = {1, 3, "Marias", "03/01/1990", "marias@example.com", "020202020", true};
 
-    create_people(p1);
-    create_people(p2);
-    create_people(p3);
+    create(&p1, sizeof(People));
+    create(&p2, sizeof(People));
+    create(&p3, sizeof(People));
     
     getchar();
 
-    read_people(1);
+    read_people(2);
 
-    getchar();
+    // getchar();
 
-    // Listar pessoas
-    list_people();
+    // // Listar pessoas
+    // list_people();
 
-    // Atualizar pessoa
-    People pupdate = {1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321", true};
-    update_people(1, pupdate);
+    // // Atualizar pessoa
+    // People pupdate = {1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321", true};
+    // update_people(1, pupdate);
 
-    read_people(1);
+    // read_people(1);
 
-    getchar();
+    // getchar();
 
-    // Excluir pessoa
-    delete_people(1);
+    // // Excluir pessoa
+    // delete_people(1);
 
-    // Listar pessoas
-    list_people();
+    // // Listar pessoas
+    // list_people();
 
     // bool loop = true;
     // int rows = 0, cols = 0;

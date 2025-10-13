@@ -7,21 +7,6 @@
 
 #include "people.h"
 
-// Função para criar uma nova pessoa no arquivo CSV
-void create_people(People new_person) {
-    FILE *file = fopen(FILE_NAME, "ab");
-
-    if (file == NULL) {
-        printf("Erro ao abrir o arquivo.\n");
-        return;
-    } else {
-        // Escreve a estrutura 'People' diretamente no arquivo binário
-        fwrite(&new_person, sizeof(People), 1, file);
-    }
-
-    fclose(file);
-}
-
 void read_people(int id) {
     FILE *file = fopen(FILE_NAME, "rb");
 
