@@ -5,61 +5,61 @@
 #include "people.h"
 #include "terminal_control.h"
 
-Pessoa people[MAX_PEOPLE];
-int people_count = 0;
-
-void dashboard_people(void) {
-    // Carrega ao iniciar
-    load_people("people.txt", people, &people_count);
-
-    int option;
-    char buf[32];
+void dashboard_people() {
+    int opcao;
+    char input[10];
 
     do {
-        clear_screen();
-
-        // Mostra lista e opções
-        read_people(people, people_count);
-
-        printf("\nOpções:\n");
-        printf(" [1] Criar Pessoa\n");
-        printf(" [2] Atualizar Pessoa\n");
-        printf(" [3] Deletar Pessoa\n");
-        printf(" [0] Voltar\n");
-
-        printf("\nEscolha uma opção: ");
-        if (!fgets(buf, sizeof(buf), stdin)) {
-            option = 0; // Em caso de erro de leitura, assume a opção de sair.
-        } else {
-            option = atoi(buf); // Converte a entrada para número (simples, sem validação).
+        printf("\n=== MENU DE PESSOAS ===\n");
+        printf("1 - Cadastrar nova pessoa\n");
+        printf("2 - Consultar pessoa\n");
+        printf("3 - Listar todas as pessoas\n");
+        printf("4 - Listar pessoas ativas\n");
+        printf("5 - Atualizar pessoa\n");
+        printf("6 - Excluir pessoa (inativar)\n");
+        printf("0 - Voltar\n");
+        printf("Escolha uma opção: ");
+        
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            printf("Erro na leitura da opção.\n");
+            continue;
+        }
+        
+        if (sscanf(input, "%d", &opcao) != 1) {
+            printf("Opção inválida. Digite um número.\n");
+            continue;
         }
 
-        switch (option) {
+        switch (opcao) {
             case 1:
-                create_people(people, &people_count);
+                create_people_ui();
                 break;
             case 2:
-                update_people(people, people_count);
+                read_people_ui();
                 break;
             case 3:
-                delete_people(people, &people_count);
+                list_people();
+                break;
+            case 4:
+                list_active_people();
+                break;
+            case 5:
+                update_people_ui();
+                break;
+            case 6:
+                delete_people_ui();
                 break;
             case 0:
-                printf("Voltando ao menu principal...\n");
+                printf("Retornando ao menu principal...\n");
                 break;
             default:
-                printf("Opção inválida.\n");
-                break;
+                printf("Opção inválida. Tente novamente.\n");
         }
 
-        // Pausa a tela para o usuário ver o resultado, a menos que ele queira sair.
-        if (option != 0) {
-            printf("\nPressione ENTER para continuar...");
-            fgets(buf, sizeof(buf), stdin); // Apenas aguarda o Enter.
+        if (opcao != 0) {
+            printf("\nPressione Enter para continuar...");
+            getchar();
         }
 
-    } while (option != 0);
-
-    // Salva todas as alterações no arquivo uma única vez, ao sair da tela.
-    save_people("people.txt", people, people_count);
+    } while (opcao != 0);
 }

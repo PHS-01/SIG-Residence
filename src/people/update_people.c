@@ -3,74 +3,33 @@
 #include <stdlib.h>
 #include "people.h"
 
-static void trim_newline(char *s) {
-    if (!s) return;
-    size_t len = strlen(s);
-    while (len > 0 && (s[len-1] == '\n' || s[len-1] == '\r')) {
-        s[len-1] = '\0';
-        len--;
-    }
-}
+void update_people_ui() {
+    People updated_person;
+    int id;
 
-void update_people(Pessoa people[], int count) {
-    if (count == 0) {
-        printf("Nenhuma pessoa para atualizar.\n");
-        return;
-    }
+    printf("=== ATUALIZAR PESSOA ===\n");
+    printf("Digite o ID da pessoa que deseja atualizar: ");
+    scanf("%d", &id);
+    getchar();
 
-    read_people(people, count);
-    char buf[256];
-    int idx = 0;
+    printf("Novo nome: ");
+    fgets(updated_person.name, sizeof(updated_person.name), stdin);
+    updated_person.name[strcspn(updated_person.name, "\n")] = '\0';
 
-    printf("Escolha o número da pessoa a atualizar (1-%d): ", count);
-    if (!fgets(buf, sizeof(buf), stdin)) return;
-    trim_newline(buf);
-    idx = atoi(buf);
-    if (idx < 1 || idx > count) {
-        printf("Índice inválido.\n");
-        return;
-    }
-    idx -= 1; // zero-based
+    printf("Nova data de nascimento (dd/mm/aaaa): ");
+    fgets(updated_person.birth_date, sizeof(updated_person.birth_date), stdin);
+    updated_person.birth_date[strcspn(updated_person.birth_date, "\n")] = '\0';
 
-    printf("\nAtualizando [%d] %s\n", idx+1, people[idx].nome);
-    printf("Deixe em branco e pressione ENTER para manter o valor atual.\n");
+    printf("Novo email: ");
+    fgets(updated_person.email, sizeof(updated_person.email), stdin);
+    updated_person.email[strcspn(updated_person.email, "\n")] = '\0';
 
-    /* Nome */
-    printf("Novo nome (atual: %s): ", people[idx].nome);
-    if (!fgets(buf, sizeof(buf), stdin)) return;
-    trim_newline(buf);
-    if (buf[0] != '\0') {
-        strncpy(people[idx].nome, buf, NAME_LEN-1);
-        people[idx].nome[NAME_LEN-1] = '\0';
-    }
+    printf("Novo telefone: ");
+    fgets(updated_person.phone, sizeof(updated_person.phone), stdin);
+    updated_person.phone[strcspn(updated_person.phone, "\n")] = '\0';
 
-    /* Idade */
-    printf("Nova idade (atual: %d): ", people[idx].idade);
-    if (!fgets(buf, sizeof(buf), stdin)) return;
-    trim_newline(buf);
-    if (buf[0] != '\0') {
-        int v = atoi(buf);
-        if (v > 0) people[idx].idade = v;
-        else printf("Idade inválida, manteve-se o valor anterior.\n");
-    }
+    updated_person.id = id;
+    updated_person.status = true;
 
-    /* CPF */
-    printf("Novo CPF (atual: %s): ", people[idx].cpf);
-    if (!fgets(buf, sizeof(buf), stdin)) return;
-    trim_newline(buf);
-    if (buf[0] != '\0') {
-        strncpy(people[idx].cpf, buf, CPF_LEN-1);
-        people[idx].cpf[CPF_LEN-1] = '\0';
-    }
-
-    /* Email */
-    printf("Novo email (atual: %s): ", people[idx].email);
-    if (!fgets(buf, sizeof(buf), stdin)) return;
-    trim_newline(buf);
-    if (buf[0] != '\0') {
-        strncpy(people[idx].email, buf, EMAIL_LEN-1);
-        people[idx].email[EMAIL_LEN-1] = '\0';
-    }
-
-    printf("Registro atualizado.\n");
+    update_people(id, updated_person);
 }

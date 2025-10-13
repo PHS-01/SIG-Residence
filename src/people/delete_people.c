@@ -3,31 +3,21 @@
 #include <stdlib.h>
 #include "people.h"
 
-void delete_people(Pessoa people[], int *count) {
-    if (*count == 0) {
-        printf("Nenhuma pessoa para deletar.\n");
-        return;
-    }
+void delete_people_ui() {
+    int id;
+    char confirm;
 
-    read_people(people, *count);
-    char buf[32];
-    int idx = 0;
-    printf("Escolha o número da pessoa a deletar (1-%d): ", *count);
-    if (!fgets(buf, sizeof(buf), stdin)) return;
-    idx = atoi(buf);
-    if (idx < 1 || idx > *count) {
-        printf("Índice inválido.\n");
-        return;
-    }
-    idx -= 1; // zero-based
+    printf("=== EXCLUIR PESSOA ===\n");
+    printf("Digite o ID da pessoa a ser excluída: ");
+    scanf("%d", &id);
+    getchar();
 
-    // shift left
-    for (int i = idx; i < (*count) - 1; ++i) {
-        people[i] = people[i + 1];
-    }
-    // limpa último
-    memset(&people[*count - 1], 0, sizeof(Pessoa));
-    (*count)--;
+    printf("Tem certeza que deseja inativar a pessoa com ID %d? (s/N): ", id);
+    scanf("%c", &confirm);
 
-    printf("Pessoa removida.\n");
+    if (confirm == 's' || confirm == 'S') {
+        delete_people(id);
+    } else {
+        printf("Operação cancelada.\n");
+    }
 }
