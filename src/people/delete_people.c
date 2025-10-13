@@ -2,32 +2,24 @@
 #include <string.h>
 #include <stdlib.h>
 #include "people.h"
+#include "terminal_control.h"
 
-void delete_people(Pessoa people[], int *count) {
-    if (*count == 0) {
-        printf("Nenhuma pessoa para deletar.\n");
+void delete_people_ui() {
+    int id;
+    char confirm[3];
+
+    printf("=== EXCLUIR PESSOA ===\n\n");
+    
+    if (!read_int_input("Digite o ID da pessoa a ser excluída: ", &id)) {
+        printf("ID inválido.\n");
         return;
     }
 
-    read_people(people, *count);
-    char buf[32];
-    int idx = 0;
-    printf("Escolha o número da pessoa a deletar (1-%d): ", *count);
-    if (!fgets(buf, sizeof(buf), stdin)) return;
-    idx = atoi(buf);
-    if (idx < 1 || idx > *count) {
-        printf("Índice inválido.\n");
-        return;
-    }
-    idx -= 1; // zero-based
+    read_string_input("Tem certeza que deseja inativar a pessoa? (s/N): ", confirm, sizeof(confirm));
 
-    // shift left
-    for (int i = idx; i < (*count) - 1; ++i) {
-        people[i] = people[i + 1];
+    if (confirm[0] == 's' || confirm[0] == 'S') {
+        delete_people(id);
+    } else {
+        printf("Operação cancelada.\n");
     }
-    // limpa último
-    memset(&people[*count - 1], 0, sizeof(Pessoa));
-    (*count)--;
-
-    printf("Pessoa removida.\n");
 }

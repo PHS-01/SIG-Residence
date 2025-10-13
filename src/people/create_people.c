@@ -1,49 +1,23 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include "people.h"
+#include "config.h"
+#include "terminal_control.h"
 
-// Função auxiliar para remover a quebra de linha ('\n') do final das strings.
-static void trim_newline(char *s) {
-    if (!s) return;
-    size_t len = strlen(s);
-    while (len > 0 && (s[len-1] == '\n' || s[len-1] == '\r')) {
-        s[len-1] = '\0';
-        len--;
-    }
-}
+void create_people_ui() {
+    People new_person;
 
-void create_people(Pessoa people[], int *count) {
-    if (*count >= MAX_PEOPLE) {
-        printf("Limite de pessoas atingido (%d).\n", MAX_PEOPLE);
-        return;
-    }
+    printf("=== CADASTRO DE PESSOA ===\n\n");
+    
+    new_person.id = 0;
+    
+    read_string_input("Nome: ", new_person.name, sizeof(new_person.name));
+    read_string_input("Data de nascimento (dd/mm/aaaa): ", new_person.birth_date, sizeof(new_person.birth_date));
+    read_string_input("Email: ", new_person.email, sizeof(new_person.email));
+    read_string_input("Telefone: ", new_person.phone, sizeof(new_person.phone));
 
-    Pessoa nova_pessoa;
-    char buffer_idade[256]; // Buffer para ler idade como texto
+    new_person.status = true;
 
-    printf("\n=== Criar nova pessoa ===\n");
-
-    printf("Nome: ");
-    fgets(nova_pessoa.nome, sizeof(nova_pessoa.nome), stdin);
-    trim_newline(nova_pessoa.nome);
-
-    printf("Idade: ");
-    fgets(buffer_idade, sizeof(buffer_idade), stdin);
-    trim_newline(buffer_idade);
-    nova_pessoa.idade = atoi(buffer_idade); // Converte a string para inteiro
-
-    printf("CPF: ");
-    fgets(nova_pessoa.cpf, sizeof(nova_pessoa.cpf), stdin);
-    trim_newline(nova_pessoa.cpf);
-
-    printf("Email: ");
-    fgets(nova_pessoa.email, sizeof(nova_pessoa.email), stdin);
-    trim_newline(nova_pessoa.email);
-
-    // Adiciona pessoa ao array
-    people[*count] = nova_pessoa;
-    (*count)++;
-
-    printf("\nPessoa '%s' adicionada com sucesso.\n", nova_pessoa.nome);
+    printf("\n");
+    create_people(new_person);
 }

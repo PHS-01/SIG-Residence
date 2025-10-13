@@ -41,4 +41,10 @@ void restore_terminal(void);
 void set_terminal_size(int, int);
 void update_terminal_size(int*, int*);
 
+// Input Utils
+void clear_input_buffer(void);
+int read_int_input(const char* prompt, int* value);
+int read_string_input(const char* prompt, char* buffer, size_t size);
+void wait_for_enter(void);
+
 #endif
