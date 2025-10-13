@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "people.h"
 
+// Função auxiliar para remover a quebra de linha ('\n') do final das strings.
 static void trim_newline(char *s) {
     if (!s) return;
     size_t len = strlen(s);
@@ -17,54 +19,31 @@ void create_people(Pessoa people[], int *count) {
         return;
     }
 
-    Pessoa p;
-    char buf[256];
+    Pessoa nova_pessoa;
+    char buffer_idade[256]; // Buffer para ler idade como texto
 
     printf("\n=== Criar nova pessoa ===\n");
 
-    /* Nome */
     printf("Nome: ");
-    if (!fgets(p.nome, sizeof(p.nome), stdin)) {
-        printf("Entrada falhou.\n");
-        return;
-    }
-    trim_newline(p.nome);
-    if (p.nome[0] == '\0') {
-        printf("Nome vazio. Operação cancelada.\n");
-        return;
-    }
+    fgets(nova_pessoa.nome, sizeof(nova_pessoa.nome), stdin);
+    trim_newline(nova_pessoa.nome);
 
-    /* Idade (validação simples) */
-    while (1) {
-        printf("Idade: ");
-        if (!fgets(buf, sizeof(buf), stdin)) return;
-        trim_newline(buf);
-        if (buf[0] == '\0') {
-            printf("Idade vazia. Operação cancelada.\n");
-            return;
-        }
-        int idade = atoi(buf);
-        if (idade <= 0) {
-            printf("Idade inválida. Digite um número maior que 0.\n");
-            continue;
-        }
-        p.idade = idade;
-        break;
-    }
+    printf("Idade: ");
+    fgets(buffer_idade, sizeof(buffer_idade), stdin);
+    trim_newline(buffer_idade);
+    nova_pessoa.idade = atoi(buffer_idade); // Converte a string para inteiro
 
-    /* CPF */
     printf("CPF: ");
-    if (!fgets(p.cpf, sizeof(p.cpf), stdin)) return;
-    trim_newline(p.cpf);
+    fgets(nova_pessoa.cpf, sizeof(nova_pessoa.cpf), stdin);
+    trim_newline(nova_pessoa.cpf);
 
-    /* Email (novo atributo) */
     printf("Email: ");
-    if (!fgets(p.email, sizeof(p.email), stdin)) return;
-    trim_newline(p.email);
+    fgets(nova_pessoa.email, sizeof(nova_pessoa.email), stdin);
+    trim_newline(nova_pessoa.email);
 
-    /* adiciona */
-    people[*count] = p;
+    // Adiciona pessoa ao array
+    people[*count] = nova_pessoa;
     (*count)++;
 
-    printf("Pessoa '%s' adicionada com sucesso.\n", p.nome);
+    printf("\nPessoa '%s' adicionada com sucesso.\n", nova_pessoa.nome);
 }
