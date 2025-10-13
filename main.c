@@ -22,75 +22,40 @@ void exit_program(void) {
 
 int main(void) {
     // Verifica se o banco de dados já existe
-    if (database_exists()) {
-        printf("O banco de dados já existe.\n");
-    } else {
-        printf("O banco de dados não existe. Criando o banco...\n");
-        create_database();  // Chama a função para criar o banco se não existir
+    if (!database_exists()) {
+        create_database();
     }
 
-    // Teste de criação de pessoas
-    People p1 = {1, "João", "01/01/1990", "joao@example.com", "123456789", true};
-    People p2 = {2, "Teste", "02/01/1990", "test@example.com", "123123132", true};
-    People p3 = {3, "Marias", "03/01/1990", "marias@example.com", "020202020", true};
+    bool loop = true;
+    int rows = 0, cols = 0;
 
-    create_people(p1);
-    create_people(p2);
-    create_people(p3);
-    
-    getchar();
+    system("clear");
+    clear_screen();
 
-    read_people(1);
+    setlocale(LC_ALL, "");
 
-    getchar();
+    hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
 
-    // Listar pessoas
-    list_people();
+    fade_animation("in");
 
-    // Atualizar pessoa
-    People pupdate = {1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321", true};
-    update_people(1, pupdate);
+    draw_rainbow_logo(rows, cols);
 
-    read_people(1);
+    do {
 
-    getchar();
+        // Atualiza o tamanho do terminal
+        update_terminal_size(&rows, &cols);
 
-    // Excluir pessoa
-    delete_people(1);
+        system("clear");
+        clear_screen();
 
-    // Listar pessoas
-    list_people();
+        // Funções para desenhar a tela
+        loop = home();
 
-    // bool loop = true;
-    // int rows = 0, cols = 0;
+    } while (loop);
 
-    // system("clear");
-    // clear_screen();
+    fade_animation("out");
 
-    // setlocale(LC_ALL, "");
-
-    // hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
-
-    // fade_animation("in");
-
-    // draw_rainbow_logo(rows, cols);
-
-    // do {
-
-    //     // Atualiza o tamanho do terminal
-    //     update_terminal_size(&rows, &cols);
-
-    //     system("clear");
-    //     clear_screen();
-
-    //     // Funções para desenhar a tela
-    //     loop = home();
-
-    // } while (loop);
-
-    // fade_animation("out");
-
-    // exit_program(); // Função para limpar e restaurar o terminal
+    exit_program(); // Função para limpar e restaurar o terminal
 
     return 0;
 }
