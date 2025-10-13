@@ -16,15 +16,22 @@ typedef struct {
     // int expense_type;        // Tipo de despesa (Pessoal ou Compartilhada)
 } People;
 
-void read_people(int);
-
-// Função para criar uma nova pessoa no arquivo
+// Funções CRUD
 void create_people(People new_person);
-// Função para listar as pessoas do arquivo
+void read_people(int id);
 void list_people(void);
-// Função para atualizar os dados de uma pessoa no arquivo
 void update_people(int id, People updated_person);
-// Função para excluir uma pessoa do arquivo
-void delete_people(int id);
+void delete_people(int id);  // Exclusão lógica (inativa)
+
+// Funções de interface do usuário
+void create_people_ui(void);
+void read_people_ui(void);
+void update_people_ui(void);
+void delete_people_ui(void);
+
+// Nova função para gerar ID automático
+int generate_people_id(void);
+// Função para listar apenas pessoas ativas
+void list_active_people(void);
 
 #endif
