@@ -17,5 +17,6 @@
     } People;
 
     void create(const void*, size_t);
+    int update(const void*, size_t, int (*match)(const void *));
 
 #endif

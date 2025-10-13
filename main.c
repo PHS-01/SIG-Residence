@@ -41,20 +41,21 @@ int main(void) {
     
     getchar();
 
-    read_people(2);
+    read_people(1);
 
-    // getchar();
+    getchar();
 
     // // Listar pessoas
     // list_people();
 
-    // // Atualizar pessoa
-    // People pupdate = {1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321", true};
-    // update_people(1, pupdate);
+    // Atualizar pessoa
+    set_search_id(1);
+    People updated = {1,1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321", true};
+    update(&updated, sizeof(People), match_people_by_id);
 
-    // read_people(1);
+    read_people(1);
 
-    // getchar();
+    getchar();
 
     // // Excluir pessoa
     // delete_people(1);

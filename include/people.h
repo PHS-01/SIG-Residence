@@ -1,13 +1,12 @@
 #ifndef PEOPLE_H
 #define PEOPLE_H
-#include "controllers.h"
-void read_people(int);
 
-// // Função para listar as pessoas do arquivo
-// void list_people(void);
-// // Função para atualizar os dados de uma pessoa no arquivo
-// void update_people(int id, People updated_person);
-// // Função para excluir uma pessoa do arquivo
-// void delete_people(int id);
+#include "controllers.h"
+
+// Funções auxiliares
+int match_people_by_id(const void*);
+void print_people(const void*);
+void set_search_id(int);
+void read_people(int);
 
 #endif
