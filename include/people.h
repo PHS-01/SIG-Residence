@@ -18,7 +18,7 @@ typedef struct {
 } People;
 
 // Funções auxiliares
-void set_search_id(int);
+void set_search_id(int);     
 int match_people_by_id(const void*);
 void print_people(const void*);
 
