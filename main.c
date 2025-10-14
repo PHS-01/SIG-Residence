@@ -30,18 +30,24 @@ int main(void) {
         create_database();  // Chama a função para criar o banco se não existir
     }
 
-    // Teste de criação de pessoas
-    People p1 = {1, 1, "João", "01/01/1990", "joao@example.com", "123456789", true};
-    People p2 = {1, 2, "Teste", "02/01/1990", "test@example.com", "123123132", true};
-    People p3 = {1, 3, "Marias", "03/01/1990", "marias@example.com", "020202020", true};
+    // // Teste de criação de pessoas
+    // People p1 = {1, 1, "João", "01/01/1990", "joao@example.com", "123456789", true};
+    // People p2 = {1, 2, "Teste", "02/01/1990", "test@example.com", "123123132", true};
+    // People p3 = {1, 3, "Marias", "03/01/1990", "marias@example.com", "020202020", true};
 
-    create(&p1, sizeof(People));
-    create(&p2, sizeof(People));
-    create(&p3, sizeof(People));
+    // create(&p1, sizeof(People));
+    // create(&p2, sizeof(People));
+    // create(&p3, sizeof(People));
     
     getchar();
 
-    read_people(1);
+    set_search_id(1);
+    People test;
+    if (read(&test, sizeof(People), match_people_by_id)) {
+        /* code */
+        print_people(&test);
+    }
+
 
     getchar();
 
@@ -53,8 +59,12 @@ int main(void) {
     People updated = {1,1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321", true};
     update(&updated, sizeof(People), match_people_by_id);
 
-    read_people(1);
-
+    set_search_id(1);
+    if (read(&test, sizeof(People), match_people_by_id)) {
+        /* code */
+        print_people(&test);
+    }
+    
     getchar();
 
     // // Excluir pessoa

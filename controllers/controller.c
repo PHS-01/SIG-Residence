@@ -18,6 +18,27 @@ void create(const void* data, size_t size) {
     fclose(file);
 }
 
+int read(void *output, size_t size, int (*match)(const void *)) {
+    FILE *file = fopen(FILE_NAME, "rb");
+    if (!file) {
+        perror("Erro ao abrir arquivo");
+        return 0;
+    } else {
+        void *buffer = malloc(size);
+        while (fread(buffer, size, 1, file)) {
+            if (match(buffer)) {
+                memcpy(output, buffer, size);
+                free(buffer);
+                fclose(file);
+                return 1;
+            }
+        }
+        free(buffer);
+    }
+    fclose(file);
+    return 0;
+}
+
 // void list_records(size_t size, const char *filename, void (*print)(const void *)) {
 //     FILE *file = fopen(filename, "rb");
 //     if (!file) {
@@ -30,26 +51,6 @@ void create(const void* data, size_t size) {
 //     }
 //     free(buffer);
 //     fclose(file);
-// }
-
-// int read_record(int id, void *output, size_t size, const char *filename, int (*match)(const void *)) {
-//     FILE *file = fopen(filename, "rb");
-//     if (!file) {
-//         perror("Erro ao abrir arquivo");
-//         return 0;
-//     }
-//     void *buffer = malloc(size);
-//     while (fread(buffer, size, 1, file)) {
-//         if (match(buffer)) {
-//             memcpy(output, buffer, size);
-//             free(buffer);
-//             fclose(file);
-//             return 1;
-//         }
-//     }
-//     free(buffer);
-//     fclose(file);
-//     return 0;
 // }
 
 int update(const void *new_data, size_t size, int (*match)(const void *)) {
