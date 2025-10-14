@@ -2,9 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-// Variáveis globais do projeto
-#include "config.h"
-
 #include "people.h"
 
 static int search_id = -1;

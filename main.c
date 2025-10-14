@@ -30,18 +30,18 @@ int main(void) {
         create_database();  // Chama a função para criar o banco se não existir
     }
 
-    // // Teste de criação de pessoas
-    // People p1 = {true, 1, "João", "01/01/1990", "joao@example.com", "123456789"};
-    // People p2 = {true, 2, "Teste", "02/01/1990", "test@example.com", "123123132"};
-    // People p3 = {true, 3, "Marias", "03/01/1990", "marias@example.com", "020202020"};
+    // Teste de criação de pessoas
+    People p1 = {true, 1, "João", "01/01/1990", "joao@example.com", "123456789"};
+    People p2 = {true, 2, "Teste", "02/01/1990", "test@example.com", "123123132"};
+    People p3 = {true, 3, "Marias", "03/01/1990", "marias@example.com", "020202020"};
 
-    // create(&p1, sizeof(People));
-    // create(&p2, sizeof(People));
-    // create(&p3, sizeof(People));
+    create(&p1, sizeof(People));
+    create(&p2, sizeof(People));
+    create(&p3, sizeof(People));
     
     getchar();
 
-    set_search_id(2);
+    set_search_id(1);
     People test;
     if (read(&test, sizeof(People), match_people_by_id)) {
         /* code */

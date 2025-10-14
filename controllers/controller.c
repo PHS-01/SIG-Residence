@@ -5,8 +5,6 @@
 // Variáveis globais do projeto
 #include "config.h"
 
-#include "controllers.h"
-
 void create(const void* data, size_t size) {
     FILE* file = fopen(FILE_NAME, "ab");
     if (!file) {
