@@ -31,9 +31,9 @@ int main(void) {
     }
 
     // // Teste de criação de pessoas
-    // People p1 = {1, 1, "João", "01/01/1990", "joao@example.com", "123456789", true};
-    // People p2 = {1, 2, "Teste", "02/01/1990", "test@example.com", "123123132", true};
-    // People p3 = {1, 3, "Marias", "03/01/1990", "marias@example.com", "020202020", true};
+    // People p1 = {true, 1, "João", "01/01/1990", "joao@example.com", "123456789"};
+    // People p2 = {true, 2, "Teste", "02/01/1990", "test@example.com", "123123132"};
+    // People p3 = {true, 3, "Marias", "03/01/1990", "marias@example.com", "020202020"};
 
     // create(&p1, sizeof(People));
     // create(&p2, sizeof(People));
@@ -41,7 +41,7 @@ int main(void) {
     
     getchar();
 
-    set_search_id(1);
+    set_search_id(2);
     People test;
     if (read(&test, sizeof(People), match_people_by_id)) {
         /* code */
@@ -51,12 +51,9 @@ int main(void) {
 
     getchar();
 
-    // // Listar pessoas
-    // list_people();
-
     // Atualizar pessoa
     set_search_id(1);
-    People updated = {1,1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321", true};
+    People updated = {true,1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321"};
     update(&updated, sizeof(People), match_people_by_id);
 
     set_search_id(1);
@@ -67,11 +64,15 @@ int main(void) {
     
     getchar();
 
-    // // Excluir pessoa
-    // delete_people(1);
+    set_search_id(1);
+    delete(sizeof(People), match_people_by_id);
 
-    // // Listar pessoas
-    // list_people();
+    if (read(&test, sizeof(People), match_people_by_id)) {
+        /* code */
+        print_people(&test);
+    } else {
+        printf("Pessoa deletada");
+    }
 
     // bool loop = true;
     // int rows = 0, cols = 0;
