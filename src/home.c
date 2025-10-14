@@ -55,7 +55,7 @@ bool home(void) {
     switch (resp) {
         case '1':
             // Chama a função do dashboard
-            // dashboard_people();
+            dashboard_people();
             break;
 
         case '2':
