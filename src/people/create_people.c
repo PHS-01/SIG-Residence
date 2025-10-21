@@ -10,7 +10,8 @@ void create_people_ui() {
 
     printf("=== CADASTRO DE PESSOA ===\n\n");
     
-    new_person.id = 0;
+    // Gera ID automaticamente
+    new_person.id = generate_people_id();
     
     read_string_input("Nome: ", new_person.name, sizeof(new_person.name));
     read_string_input("Data de nascimento (dd/mm/aaaa): ", new_person.birth_date, sizeof(new_person.birth_date));
@@ -21,4 +22,5 @@ void create_people_ui() {
 
     printf("\n");
     create(&new_person, sizeof(People));
+    printf("Pessoa cadastrada com sucesso! ID: %d\n", new_person.id);
 }

@@ -11,10 +11,11 @@ void read_people_ui() {
     if (read_int_input("Digite o ID da pessoa: ", &id)) {
         printf("\n");
         set_search_id(id);
-        People test;
-        if (read(&test, sizeof(People), match_people_by_id)) {
-            /* code */
-            print_people(&test);
+        People person;
+        if (read(&person, sizeof(People), match_people_by_id)) {
+            print_people(&person);
+        } else {
+            printf("Pessoa com ID %d não encontrada ou está inativa.\n", id);
         }
     } else {
         printf("ID inválido.\n");
