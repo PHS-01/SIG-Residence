@@ -25,7 +25,7 @@ void dashboard_people() {
             continue;
         }
 
-        system("clear");  // Limpa a tela ANTES de executar a opção
+        system("clear");
 
         switch (opcao) {
             case 1:
@@ -35,7 +35,7 @@ void dashboard_people() {
                 read_people_ui();
                 break;
             case 3:
-                list_people();
+                list_all_people();
                 break;
             case 4:
                 list_active_people();
@@ -53,7 +53,6 @@ void dashboard_people() {
                 printf("Opção inválida. Tente novamente.\n");
         }
 
-        // Se não for voltar, pausa
         if (opcao != 0 && opcao >= 1 && opcao <= 6) {
             wait_for_enter();
             system("clear");

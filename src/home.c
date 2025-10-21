@@ -52,7 +52,7 @@ bool home(void) {
     clear_screen();
 
     // Lógica de navegação no menu
-    switch (resp) {
+    switch(resp) {
         case '1':
             // Chama a função do dashboard
             dashboard_people();
