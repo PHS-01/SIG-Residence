@@ -25,6 +25,4 @@ void print_people(const void *data) {
         printf("ID: %d, Name: %s, Birth Date: %s, Email: %s, Phone: %s\n",
             p->id, p->name, p->birth_date, p->email, p->phone);
     }
-
-    fclose(file);
 }

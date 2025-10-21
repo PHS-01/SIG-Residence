@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "people.h"
 #include "terminal_control.h"
+#include "controllers.h"
 
 void update_people_ui() {
     People updated_person;
@@ -26,5 +27,7 @@ void update_people_ui() {
     updated_person.status = true;
 
     printf("\n");
-    update_people(id, updated_person);
+    // Atualizar pessoa
+    set_search_id(id);
+    update(&updated_person, sizeof(People), match_people_by_id);
 }

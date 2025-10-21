@@ -24,17 +24,28 @@ void disable_raw_mode(void) {
     tcsetattr(STDIN_FILENO, TCSANOW, &original_termios); // Restaura config original
 }
 
+// Entra em modo "sem ENTER"
+void enable_getchar_raw_mode() {
+    struct termios term;
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_lflag &= ~(ICANON | ECHO); // Sem buffer, sem echo
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
+// Restaura modo normal
+void disable_getchar_raw_mode() {
+    struct termios term;
+    tcgetattr(STDIN_FILENO, &term);
+    term.c_lflag |= (ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
 // Função que espera uma tecla sem precisar de ENTER
 char get_keypress(void) {
-    char resp;
-    enable_raw_mode();
-
-    if (read(STDIN_FILENO, &resp, 1) != 1) {
-        resp = '\0';  // Erro de leitura
-    }
-
-    disable_raw_mode();
-    return resp;
+    enable_getchar_raw_mode();
+    int ch = getchar(); // agora funciona como get_keypress
+    disable_getchar_raw_mode();
+    return (char) ch;
 }
 
 // Função para restaurar o terminal ao estado original

@@ -35,10 +35,10 @@ void dashboard_people() {
                 read_people_ui();
                 break;
             case 3:
-                list_people();
+                // list_people();
                 break;
             case 4:
-                list_active_people();
+                // list_active_people();
                 break;
             case 5:
                 update_people_ui();

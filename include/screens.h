@@ -15,6 +15,12 @@ bool confirm_exit(void);
 // Telas do modulo pessoas
 void dashboard_people(void);
 
+// Funções de interface do usuário
+void create_people_ui(void);
+void read_people_ui(void);
+void update_people_ui(void);
+void delete_people_ui(void);
+
 // // Telas do módulo residência
 // void dashboard_residence(int y, int x);
 // void create_residence(int y, int x);

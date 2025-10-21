@@ -27,55 +27,55 @@ int main(void) {
         create_database();
     }
 
-    // Teste de criação de pessoas
-    People p1 = {true, 1, "João", "01/01/1990", "joao@example.com", "123456789"};
-    People p2 = {true, 2, "Teste", "02/01/1990", "test@example.com", "123123132"};
-    People p3 = {true, 3, "Marias", "03/01/1990", "marias@example.com", "020202020"};
+    // // Teste de criação de pessoas
+    // People p1 = {true, 1, "João", "01/01/1990", "joao@example.com", "123456789"};
+    // People p2 = {true, 2, "Teste", "02/01/1990", "test@example.com", "123123132"};
+    // People p3 = {true, 3, "Marias", "03/01/1990", "marias@example.com", "020202020"};
 
-    create(&p1, sizeof(People));
-    create(&p2, sizeof(People));
-    create(&p3, sizeof(People));
+    // create(&p1, sizeof(People));
+    // create(&p2, sizeof(People));
+    // create(&p3, sizeof(People));
     
-    getchar();
+    // getchar();
 
-    set_search_id(1);
-    People test;
-    if (read(&test, sizeof(People), match_people_by_id)) {
-        /* code */
-        print_people(&test);
-    }
+    // set_search_id(1);
+    // People test;
+    // if (read(&test, sizeof(People), match_people_by_id)) {
+    //     /* code */
+    //     print_people(&test);
+    // }
 
 
-    getchar();
+    // getchar();
 
-    // Atualizar pessoa
-    set_search_id(1);
-    People updated = {true,1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321"};
-    update(&updated, sizeof(People), match_people_by_id);
+    // // Atualizar pessoa
+    // set_search_id(1);
+    // People updated = {true,1, "João Silva", "01/01/1990", "joao.silva@example.com", "987654321"};
+    // update(&updated, sizeof(People), match_people_by_id);
 
-    set_search_id(1);
-    if (read(&test, sizeof(People), match_people_by_id)) {
-        /* code */
-        print_people(&test);
-    }
+    // set_search_id(1);
+    // if (read(&test, sizeof(People), match_people_by_id)) {
+    //     /* code */
+    //     print_people(&test);
+    // }
     
-    getchar();
+    // getchar();
 
-    set_search_id(1);
-    delete(sizeof(People), match_people_by_id);
+    // set_search_id(1);
+    // delete(sizeof(People), match_people_by_id);
 
-    if (read(&test, sizeof(People), match_people_by_id)) {
-        /* code */
-        print_people(&test);
-    } else {
-        printf("Pessoa deletada");
-    }
+    // if (read(&test, sizeof(People), match_people_by_id)) {
+    //     /* code */
+    //     print_people(&test);
+    // } else {
+    //     printf("Pessoa deletada");
+    // }
 
-    // bool loop = true;
-    // int rows = 0, cols = 0;
+    bool loop = true;
+    int rows = 0, cols = 0;
 
-    // system("clear");
-    // clear_screen();
+    system("clear");
+    clear_screen();
 
     setlocale(LC_ALL, "");
 
@@ -96,7 +96,7 @@ int main(void) {
         // Funções para desenhar a tela
         loop = home();
 
-    } while (loop);
+    } while(loop);
 
     fade_animation("out");
 

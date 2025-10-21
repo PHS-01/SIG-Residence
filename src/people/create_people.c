@@ -3,6 +3,7 @@
 #include "people.h"
 #include "config.h"
 #include "terminal_control.h"
+#include "controllers.h"
 
 void create_people_ui() {
     People new_person;
@@ -19,5 +20,5 @@ void create_people_ui() {
     new_person.status = true;
 
     printf("\n");
-    create_people(new_person);
+    create(&new_person, sizeof(People));
 }
