@@ -4,97 +4,114 @@
 
 // Variáveis globais do projeto
 #include "config.h"
+#include "people.h"
 
 // Cria ou adiciona dados ao arquivo
 void create(const void* data, size_t size) {
-    FILE* file = fopen(FILE_NAME, "ab");  // Abre o arquivo para escrita binária (append)
+    FILE* file = fopen(FILE_NAME, "ab");
     if (!file) {
-        perror("Erro ao abrir arquivo");  // Se falhar, exibe erro
+        perror("Erro ao abrir arquivo");
         return;
-    } else {
-        fwrite(data, size, 1, file);  // Escreve os dados no arquivo
     }
-    fclose(file);  // Fecha o arquivo
+    fwrite(data, size, 1, file);
+    fclose(file);
 }
 
 // Lê dados do arquivo e verifica se há correspondência com a função `match`
 int read(void *output, size_t size, int (*match)(const void *)) {
-    FILE *file = fopen(FILE_NAME, "rb");  // Abre o arquivo para leitura binária
+    FILE *file = fopen(FILE_NAME, "rb");
     if (!file) {
-        perror("Erro ao abrir arquivo");  // Se falhar, exibe erro
-    } else {
-        void *buffer = malloc(size);  // Aloca buffer para armazenar os dados lidos
-        while (fread(buffer, size, 1, file)) {  // Lê os dados do arquivo
-            if (match(buffer)) {  // Se encontrar uma correspondência
-                memcpy(output, buffer, size);  // Copia os dados para o `output`
-                free(buffer);  // Libera o buffer
-                fclose(file);  // Fecha o arquivo
-                return 1;  // Retorna 1 se encontrar a correspondência
-            }
-        }
-        free(buffer);  // Libera o buffer se não encontrar correspondência
+        perror("Erro ao abrir arquivo");
+        return 0;
     }
-    fclose(file);  // Fecha o arquivo
-    return 0;  // Retorna 0 se não encontrar a correspondência
+    
+    void *buffer = malloc(size);
+    int found = 0;
+    
+    while (fread(buffer, size, 1, file)) {
+        if (match(buffer)) {
+            memcpy(output, buffer, size);
+            found = 1;
+            break;
+        }
+    }
+    
+    free(buffer);
+    fclose(file);
+    return found;
 }
 
-// Função comentada para listar registros
-// void list_records(size_t size, const char *filename, void (*print)(const void *)) {
-//     FILE *file = fopen(filename, "rb");
-//     if (!file) {
-//         perror("Erro ao abrir arquivo");
-//         return;
-//     }
-//     void *buffer = malloc(size);
-//     while (fread(buffer, size, 1, file)) {
-//         print(buffer);
-//     }
-//     free(buffer);
-//     fclose(file);
-// }
+// Lista todos os registros
+void list_records(size_t size, void (*print)(const void *), int (*match)(const void *)) {
+    FILE *file = fopen(FILE_NAME, "rb");
+    if (!file) {
+        perror("Erro ao abrir arquivo");
+        return;
+    }
+    
+    void *buffer = malloc(size);
+    
+    while (fread(buffer, size, 1, file)) {
+        if (match == NULL || match(buffer)) {
+            print(buffer);
+        }
+    }
+    
+    free(buffer);
+    fclose(file);
+}
 
-// Atualiza dados no arquivo, se encontrar uma correspondência
+// Atualiza dados no arquivo
 int update(const void *new_data, size_t size, int (*match)(const void *)) {
-    FILE *file = fopen(FILE_NAME, "r+b");  // Abre o arquivo para leitura e escrita binária
+    FILE *file = fopen(FILE_NAME, "r+b");
     if (!file) {
-        perror("Erro ao abrir arquivo");  // Se falhar, exibe erro
-    } else {
-        void *buffer = malloc(size);  // Aloca buffer para os dados lidos
-        while (fread(buffer, size, 1, file)) {  // Lê o arquivo
-            if (match(buffer)) {  // Se encontrar correspondência
-                fseek(file, -((long)size), SEEK_CUR);  // Volta para sobrescrever os dados
-                fwrite(new_data, size, 1, file);  // Escreve os novos dados
-                free(buffer);  // Libera o buffer
-                fclose(file);  // Fecha o arquivo
-                return 1;  // Retorna 1 se for bem-sucedido
-            }
-        }
-        free(buffer);  // Libera o buffer se não encontrar correspondência
+        perror("Erro ao abrir arquivo");
+        return 0;
     }
-    fclose(file);  // Fecha o arquivo
-    return 0;  // Retorna 0 se não encontrar correspondência
+    
+    void *buffer = malloc(size);
+    int found = 0;
+    
+    while (fread(buffer, size, 1, file)) {
+        if (match(buffer)) {
+            fseek(file, -((long)size), SEEK_CUR);
+            fwrite(new_data, size, 1, file);
+            found = 1;
+            break;
+        }
+    }
+    
+    free(buffer);
+    fclose(file);
+    return found;
 }
 
-// Marca o registro como deletado (mudando o status para 0)
+// Marca o registro como deletado (mudando o status para falso) - CORRIGIDA
 int delete(size_t size, int (*match)(const void *)) {
-    FILE *file = fopen(FILE_NAME, "r+b");  // Abre o arquivo para leitura e escrita binária
+    FILE *file = fopen(FILE_NAME, "r+b");
     if (!file) {
-        perror("Erro ao abrir arquivo");  // Se falhar, exibe erro
-    } else {
-        void *buffer = malloc(size);  // Aloca buffer para os dados lidos
-        while (fread(buffer, size, 1, file)) {  // Lê o arquivo
-            if (match(buffer)) {  // Se encontrar correspondência
-                fseek(file, -((long)size), SEEK_CUR);  // Volta para sobrescrever os dados
-                int false_status = 0;  // Marca o status como 0 (inativo)
-                memcpy(buffer, &false_status, sizeof(int));  // Substitui o status no buffer
-                fwrite(buffer, size, 1, file);  // Escreve os dados modificados de volta
-                free(buffer);  // Libera o buffer
-                fclose(file);  // Fecha o arquivo
-                return 1;  // Retorna 1 se a exclusão for bem-sucedida
-            }
-        }
-        free(buffer);  // Libera o buffer se não encontrar correspondência
+        perror("Erro ao abrir arquivo");
+        return 0;
     }
-    fclose(file);  // Fecha o arquivo
-    return 0;  // Retorna 0 se não encontrar correspondência
+    
+    void *buffer = malloc(size);
+    int found = 0;
+    
+    while (fread(buffer, size, 1, file)) {
+        if (match(buffer)) {
+            // Para a estrutura People, precisamos preservar todos os dados
+            // apenas alterando o status para false
+            People *person = (People *)buffer;
+            person->status = false;
+            
+            fseek(file, -((long)size), SEEK_CUR);
+            fwrite(buffer, size, 1, file);
+            found = 1;
+            break;
+        }
+    }
+    
+    free(buffer);
+    fclose(file);
+    return found;
 }
