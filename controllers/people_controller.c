@@ -16,7 +16,7 @@ void set_search_id(int id) {
 // Verifica se o ID da pessoa é igual ao de pesquisa e se está ativa
 int match_people_by_id(const void *data) {
     People *p = (People *)data;
-    return (p->id == search_id && p->status == 1);
+    return (p->id == search_id);
 }
 
 // Match para listar apenas pessoas ativas
