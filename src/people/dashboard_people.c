@@ -15,11 +15,13 @@ void dashboard_people() {
         printf("3 - Listar todas as pessoas\n");
         printf("4 - Listar pessoas ativas\n");
         printf("5 - Atualizar pessoa\n");
-        printf("6 - Excluir pessoa (inativar)\n");
+        printf("6 - Exclusão lógica (inativar)\n");
+        printf("7 - Exclusão física (permanente)\n");
         printf("0 - Voltar\n");
         
         if (!read_int_input("Escolha uma opção: ", &opcao)) {
             printf("Opção inválida. Digite um número.\n");
+            clear_input_buffer(); // Limpa buffer em caso de erro
             wait_for_enter();
             system("clear");
             continue;
@@ -46,6 +48,9 @@ void dashboard_people() {
             case 6:
                 delete_people_ui();
                 break;
+            case 7:
+                physical_delete_people_ui();
+                break;
             case 0:
                 printf("Retornando ao menu principal...\n");
                 break;
@@ -53,7 +58,8 @@ void dashboard_people() {
                 printf("Opção inválida. Tente novamente.\n");
         }
 
-        if (opcao != 0 && opcao >= 1 && opcao <= 6) {
+        // Para opções que não são voltar, pausa apenas se não houve erro de input
+        if (opcao != 0 && opcao >= 1 && opcao <= 7) {
             wait_for_enter();
             system("clear");
         }
