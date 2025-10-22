@@ -16,7 +16,15 @@ int read_int_input(const char* prompt, int* value) {
     }
     
     if (fgets(input, sizeof(input), stdin) == NULL) {
+        // Se fgets falhar, limpar buffer e retornar erro
+        clear_input_buffer();
         return 0;
+    }
+    
+    // Verificar se leu uma linha completa
+    if (strchr(input, '\n') == NULL) {
+        // Linha muito longa, limpar o resto do buffer
+        clear_input_buffer();
     }
     
     return sscanf(input, "%d", value) == 1;
@@ -29,6 +37,7 @@ int read_string_input(const char* prompt, char* buffer, size_t size) {
     }
     
     if (fgets(buffer, size, stdin) == NULL) {
+        clear_input_buffer();
         return 0;
     }
     
@@ -36,24 +45,19 @@ int read_string_input(const char* prompt, char* buffer, size_t size) {
     size_t len = strlen(buffer);
     if (len > 0 && buffer[len-1] == '\n') {
         buffer[len-1] = '\0';
+        return 1;
     } else {
-        // Se não tinha \n, limpa o buffer até encontrar um
+        // Se não tinha \n, a linha era muito longa - limpar buffer
         clear_input_buffer();
+        return 1; // Ainda retorna sucesso, mas com string truncada
     }
-    
-    return 1;
 }
 
 void wait_for_enter(void) {
     printf("Pressione Enter para continuar...");
     fflush(stdout);
     
-    // Limpa qualquer coisa que esteja no buffer ANTES de esperar
-    clear_input_buffer();
-    
-    // Espera pelo Enter
+    // Limpa qualquer caractere residual no buffer
     int c;
-    do {
-        c = getchar();
-    } while (c != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF);
 }

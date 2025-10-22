@@ -20,6 +20,7 @@ void create_people_ui(void);
 void read_people_ui(void);
 void update_people_ui(void);
 void delete_people_ui(void);
+void physical_delete_people_ui(void);
 
 // // Telas do módulo residência
 // void dashboard_residence(int y, int x);

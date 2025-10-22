@@ -115,3 +115,73 @@ int delete(size_t size, int (*match)(const void *)) {
     fclose(file);
     return found;
 }
+
+// Exclusão física - remove completamente o registro do arquivo
+int physical_delete(size_t size, int (*match)(const void *)) {
+    FILE *file = fopen(FILE_NAME, "rb");
+    if (!file) {
+        perror("Erro ao abrir arquivo");
+        return 0;
+    }
+    
+    // Criar arquivo temporário com nome único
+    char temp_file[256];  // Aumentado para 256 bytes
+    const char *base_name = FILE_NAME;
+    const char *ext = strrchr(base_name, '.');
+    
+    if (ext != NULL) {
+        // Se o arquivo tem extensão, insere .tmp antes da extensão
+        size_t base_len = ext - base_name;
+        snprintf(temp_file, sizeof(temp_file), "%.*s.tmp%s", (int)base_len, base_name, ext);
+    } else {
+        // Se não tem extensão, apenas adiciona .tmp
+        snprintf(temp_file, sizeof(temp_file), "%s.tmp", FILE_NAME);
+    }
+    
+    FILE *temp = fopen(temp_file, "wb");
+    if (!temp) {
+        perror("Erro ao criar arquivo temporário");
+        fclose(file);
+        return 0;
+    }
+    
+    void *buffer = malloc(size);
+    int found = 0;
+    int count = 0;
+    
+    // Copiar todos os registros, exceto o que será excluído
+    while (fread(buffer, size, 1, file)) {
+        if (match(buffer)) {
+            found = 1;  // Registro encontrado, não copia (exclui)
+        } else {
+            fwrite(buffer, size, 1, temp);
+            count++;
+        }
+    }
+    
+    free(buffer);
+    fclose(file);
+    fclose(temp);
+    
+    if (found) {
+        // Substituir arquivo original pelo temporário
+        if (remove(FILE_NAME) != 0) {
+            perror("Erro ao remover arquivo original");
+            remove(temp_file);
+            return 0;
+        }
+        
+        if (rename(temp_file, FILE_NAME) != 0) {
+            perror("Erro ao renomear arquivo temporário");
+            return 0;
+        }
+        
+        printf("Registro excluído fisicamente. %d registros restantes.\n", count);
+        return 1;
+    } else {
+        // Se não encontrou, remove o arquivo temporário
+        remove(temp_file);
+        printf("Registro não encontrado para exclusão física.\n");
+        return 0;
+    }
+}
