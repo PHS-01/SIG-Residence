@@ -27,17 +27,16 @@ int match_active_people(const void *data) {
 
 // Match para listar todas as pessoas (independente do status)
 int match_all_people(const void *data) {
-    (void)data;  // ✅ Marcar parâmetro como usado para evitar warning
+    (void)data;  // Marcar parâmetro como usado para evitar warning
     return 1; // Sempre retorna verdadeiro
 }
 
 // Imprime os dados da pessoa
 void print_people(const void *data) {
     People *p = (People *)data;
-    if (p->status) {
-        printf("ID: %d, Name: %s, Birth Date: %s, Email: %s, Phone: %s\n",
-            p->id, p->name, p->birth_date, p->email, p->phone);
-    }
+    printf("ID: %d, Nome: %s, Data: %s, Email: %s, Telefone: %s, Status: %s\n",
+        p->id, p->name, p->birth_date, p->email, p->phone, 
+        p->status ? "Ativo" : "Inativo");
 }
 
 // Gera um novo ID automaticamente
