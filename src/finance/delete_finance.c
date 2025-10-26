@@ -1,48 +1,44 @@
 #include <stdio.h>
-#include <ncurses.h>
-#include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
+#include "finance.h"
+#include "terminal_control.h"
+#include "controllers.h"
+#include "config.h"
 
-#include "screens.h"
+void delete_finance_ui() {
+    int id;
+    char confirm[3];
 
-void delete_finance(int y, int x, char transactions[4][50], char type) 
-{
-    // Define título e mensagens conforme tipo
-    const char *type_title = (type == 'r' || type == 'R') ? "Receita" : "Despesa";
-
-    char msg_alert_1[100];
-    snprintf(msg_alert_1, sizeof(msg_alert_1), "Deseja realmente excluir esta %s?", type_title);
-
-    char msg_final_1[100];
-    snprintf(msg_final_1, sizeof(msg_final_1), "%s excluída com sucesso!", type_title);
-
-    const char *msg_alert[] = {
-        msg_alert_1,
-        "[S] Sim    [N] Não"
-    };
-
-    const char *msg[] = {
-        msg_final_1,
-        "Pressione qualquer tecla para continuar..."
-    };
-
-    int length_msg = sizeof(msg_alert) / sizeof(msg_alert[0]);
-    int length_msg_final = sizeof(msg) / sizeof(msg[0]);
+    printf("=== EXCLUIR TRANSAÇÃO (LÓGICA) ===\n\n");
     
-    char resp;
+    if (!read_int_input("Digite o ID da transação a ser excluída: ", &id)) {
+        printf("ID inválido.\n");
+        return;
+    }
 
-    do 
-    {
-       resp = draw_alert(msg_alert, length_msg, 50, 1);
-    } 
-    while (resp != 's' && resp != 'S' && resp != 'n' && resp != 'N');
+    // Primeiro verifica se a transação existe
+    set_search_finance_id(id);
+    Finance finance;
+    if (!read(&finance, sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+        printf("Transação com ID %d não encontrada ou já está inativa.\n", id);
+        return;
+    }
 
-    // Espera resposta do usuário
-    if(resp == 's' || resp == 'S') {
-        clear();
-        
-        draw_alert(msg, length_msg_final, 50, 1);
+    printf("\nDados da transação:\n");
+    print_finance(&finance);
+    printf("\n");
 
-        refresh();
+    read_string_input("Tem certeza que deseja inativar esta transação? (s/N): ", confirm, sizeof(confirm));
+
+    if (confirm[0] == 's' || confirm[0] == 'S') {
+        set_search_finance_id(id);
+        if (delete(sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+            printf("Transação inativada com sucesso.\n");
+        } else {
+            printf("Erro ao inativar transação.\n");
+        }
+    } else {
+        printf("Operação cancelada.\n");
     }
 }

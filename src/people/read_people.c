@@ -2,6 +2,7 @@
 #include "people.h"
 #include "terminal_control.h"
 #include "controllers.h"
+#include "config.h"
 
 void read_people_ui() {
     int id;
@@ -12,7 +13,7 @@ void read_people_ui() {
         printf("\n");
         set_search_id(id);
         People person;
-        if (read(&person, sizeof(People), match_people_by_id)) {
+        if (read(&person, sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
             print_people(&person);
         } else {
             printf("Pessoa com ID %d não encontrada ou está inativa.\n", id);

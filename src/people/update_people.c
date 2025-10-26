@@ -4,6 +4,7 @@
 #include "people.h"
 #include "terminal_control.h"
 #include "controllers.h"
+#include "config.h"
 
 void update_people_ui() {
     People updated_person;
@@ -19,7 +20,7 @@ void update_people_ui() {
     // Primeiro verifica se a pessoa existe
     set_search_id(id);
     People existing_person;
-    if (!read(&existing_person, sizeof(People), match_people_by_id)) {
+    if (!read(&existing_person, sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
         printf("Pessoa com ID %d não encontrada ou está inativa.\n", id);
         return;
     }
@@ -69,7 +70,7 @@ void update_people_ui() {
 
     printf("\n");
     set_search_id(id);
-    if (update(&updated_person, sizeof(People), match_people_by_id)) {
+    if (update(&updated_person, sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
         printf("Pessoa atualizada com sucesso!\n");
     } else {
         printf("Erro ao atualizar pessoa.\n");

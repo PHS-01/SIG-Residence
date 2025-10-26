@@ -5,10 +5,11 @@
 // Variáveis globais do projeto
 #include "config.h"
 #include "people.h"
+#include "finance.h"
 
 // Cria ou adiciona dados ao arquivo
-void create(const void* data, size_t size) {
-    FILE* file = fopen(FILE_NAME, "ab");
+void create(const void* data, size_t size, const char* filename) {
+    FILE* file = fopen(filename, "ab");
     if (!file) {
         perror("Erro ao abrir arquivo");
         return;
@@ -18,8 +19,8 @@ void create(const void* data, size_t size) {
 }
 
 // Lê dados do arquivo e verifica se há correspondência com a função `match`
-int read(void *output, size_t size, int (*match)(const void *)) {
-    FILE *file = fopen(FILE_NAME, "rb");
+int read(void *output, size_t size, int (*match)(const void *), const char* filename) {
+    FILE *file = fopen(filename, "rb");
     if (!file) {
         perror("Erro ao abrir arquivo");
         return 0;
@@ -42,8 +43,8 @@ int read(void *output, size_t size, int (*match)(const void *)) {
 }
 
 // Lista todos os registros
-void list_records(size_t size, void (*print)(const void *), int (*match)(const void *)) {
-    FILE *file = fopen(FILE_NAME, "rb");
+void list_records(size_t size, void (*print)(const void *), int (*match)(const void *), const char* filename) {
+    FILE *file = fopen(filename, "rb");
     if (!file) {
         perror("Erro ao abrir arquivo");
         return;
@@ -62,8 +63,8 @@ void list_records(size_t size, void (*print)(const void *), int (*match)(const v
 }
 
 // Atualiza dados no arquivo
-int update(const void *new_data, size_t size, int (*match)(const void *)) {
-    FILE *file = fopen(FILE_NAME, "r+b");
+int update(const void *new_data, size_t size, int (*match)(const void *), const char* filename) {
+    FILE *file = fopen(filename, "r+b");
     if (!file) {
         perror("Erro ao abrir arquivo");
         return 0;
@@ -86,9 +87,9 @@ int update(const void *new_data, size_t size, int (*match)(const void *)) {
     return found;
 }
 
-// Marca o registro como deletado (mudando o status para falso) - CORRIGIDA
-int delete(size_t size, int (*match)(const void *)) {
-    FILE *file = fopen(FILE_NAME, "r+b");
+// Marca o registro como deletado (mudando o status para falso)
+int delete(size_t size, int (*match)(const void *), const char* filename) {
+    FILE *file = fopen(filename, "r+b");
     if (!file) {
         perror("Erro ao abrir arquivo");
         return 0;
@@ -99,10 +100,14 @@ int delete(size_t size, int (*match)(const void *)) {
     
     while (fread(buffer, size, 1, file)) {
         if (match(buffer)) {
-            // Para a estrutura People, precisamos preservar todos os dados
-            // apenas alterando o status para false
-            People *person = (People *)buffer;
-            person->status = false;
+            // Verifica o tipo de estrutura baseado no tamanho
+            if (size == sizeof(People)) {
+                People *person = (People *)buffer;
+                person->status = false;
+            } else if (size == sizeof(Finance)) {
+                Finance *finance = (Finance *)buffer;
+                finance->status = false;
+            }
             
             fseek(file, -((long)size), SEEK_CUR);
             fwrite(buffer, size, 1, file);
@@ -117,26 +122,16 @@ int delete(size_t size, int (*match)(const void *)) {
 }
 
 // Exclusão física - remove completamente o registro do arquivo
-int physical_delete(size_t size, int (*match)(const void *)) {
-    FILE *file = fopen(FILE_NAME, "rb");
+int physical_delete(size_t size, int (*match)(const void *), const char* filename) {
+    FILE *file = fopen(filename, "rb");
     if (!file) {
         perror("Erro ao abrir arquivo");
         return 0;
     }
     
-    // Criar arquivo temporário com nome único
-    char temp_file[256];  // Aumentado para 256 bytes
-    const char *base_name = FILE_NAME;
-    const char *ext = strrchr(base_name, '.');
-    
-    if (ext != NULL) {
-        // Se o arquivo tem extensão, insere .tmp antes da extensão
-        size_t base_len = ext - base_name;
-        snprintf(temp_file, sizeof(temp_file), "%.*s.tmp%s", (int)base_len, base_name, ext);
-    } else {
-        // Se não tem extensão, apenas adiciona .tmp
-        snprintf(temp_file, sizeof(temp_file), "%s.tmp", FILE_NAME);
-    }
+    // Criar arquivo temporário
+    char temp_file[256];
+    snprintf(temp_file, sizeof(temp_file), "%s.tmp", filename);
     
     FILE *temp = fopen(temp_file, "wb");
     if (!temp) {
@@ -165,13 +160,13 @@ int physical_delete(size_t size, int (*match)(const void *)) {
     
     if (found) {
         // Substituir arquivo original pelo temporário
-        if (remove(FILE_NAME) != 0) {
+        if (remove(filename) != 0) {
             perror("Erro ao remover arquivo original");
             remove(temp_file);
             return 0;
         }
         
-        if (rename(temp_file, FILE_NAME) != 0) {
+        if (rename(temp_file, filename) != 0) {
             perror("Erro ao renomear arquivo temporário");
             return 0;
         }
