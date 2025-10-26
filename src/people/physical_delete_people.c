@@ -4,6 +4,7 @@
 #include "people.h"
 #include "terminal_control.h"
 #include "controllers.h"
+#include "config.h"
 
 void physical_delete_people_ui() {
     int id;
@@ -19,7 +20,7 @@ void physical_delete_people_ui() {
     // Primeiro verifica se a pessoa existe
     set_search_id(id);
     People person;
-    if (!read(&person, sizeof(People), match_people_by_id)) {
+    if (!read(&person, sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
         printf("Pessoa com ID %d não encontrada.\n", id);
         return;
     }
@@ -34,7 +35,7 @@ void physical_delete_people_ui() {
 
     if (strcmp(confirm, "sim") == 0) {
         set_search_id(id);
-        if (physical_delete(sizeof(People), match_people_by_id)) {
+        if (physical_delete(sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
             printf("Pessoa excluída fisicamente com sucesso.\n");
         } else {
             printf("Erro ao excluir pessoa fisicamente.\n");

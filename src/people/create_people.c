@@ -21,6 +21,6 @@ void create_people_ui() {
     new_person.status = true;
 
     printf("\n");
-    create(&new_person, sizeof(People));
+    create(&new_person, sizeof(People), FILE_NAME_PEOPLE);
     printf("Pessoa cadastrada com sucesso! ID: %d\n", new_person.id);
 }
