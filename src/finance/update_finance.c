@@ -1,112 +1,88 @@
 #include <stdio.h>
-#include <ncurses.h>
 #include <string.h>
+#include <stdlib.h>
+#include "finance.h"
+#include "terminal_control.h"
+#include "controllers.h"
+#include "config.h"
 
-#include "screens.h"
+void update_finance_ui() {
+    Finance updated_finance;
+    int id;
 
-void update_finance(int y, int x, char transactions[4][50], char type)
-{
-    // Define título da ação conforme tipo
-    const char *type_title = (type == 'r' || type == 'R') ? "Receita" : "Despesa";
-
-    const char *title[] = {                                                                    
-        "                        ##                        ",
-        "                ##################                ",
-        "                ##################                ",
-        "                  ##############                  ",
-        "                                                  ",
-        "                                                  ",
-        "                  ################                ",
-        "                ####################              ",
-        "              ########################            ",
-        "            ############    ############          ",
-        "          ############        ############        ",
-        "          ##########            ##########        ",
-        "        ############    ####    ############      ",
-        "        ############          ##############      ",
-        "       ################          ############     ", 
-        "       ##############    ####    ############     ", 
-        "      ##############            ##############    ",
-        "      ################        ################    ",
-        "       ##################    ################     ",
-        "        ####################################      ",
-        "          ################################        ",
-        "              ########################            ",                                               
-    };
-
-    const char *options[] = {
-        "[1]   Descrição",   
-        "[2]   Valor",     
-        "[3]   Data", 
-        "[4]   Categoria",
-        "",
-        "[0]   Cancelar"
-    };
+    printf("=== ATUALIZAR TRANSAÇÃO ===\n\n");
     
-    int length_options = sizeof(options) / sizeof(options[0]);
-    int length_title = sizeof(title) / sizeof(title[0]);
+    if (!read_int_input("Digite o ID da transação que deseja atualizar: ", &id)) {
+        printf("ID inválido.\n");
+        return;
+    }
 
-    char resp;
+    // Primeiro verifica se a transação existe
+    set_search_finance_id(id);
+    Finance existing_finance;
+    if (!read(&existing_finance, sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+        printf("Transação com ID %d não encontrada ou está inativa.\n", id);
+        return;
+    }
 
-    do
-    {
-        clear();
+    printf("\nDeixe em branco para manter o valor atual.\n\n");
+    
+    char temp[100];
+    float temp_float;
+    
+    // Descrição
+    printf("Descrição atual: %s\n", existing_finance.description);
+    read_string_input("Nova descrição: ", temp, sizeof(temp));
+    if (strlen(temp) > 0) {
+        strcpy(updated_finance.description, temp);
+    } else {
+        strcpy(updated_finance.description, existing_finance.description);
+    }
+    
+    // Valor
+    printf("Valor atual: %.2f\n", existing_finance.value);
+    if (read_float_input("Novo valor: ", &temp_float)) {
+        updated_finance.value = temp_float;
+    } else {
+        updated_finance.value = existing_finance.value;
+    }
+    
+    // Data
+    printf("Data atual: %s\n", existing_finance.date);
+    read_string_input("Nova data: ", temp, sizeof(temp));
+    if (strlen(temp) > 0) {
+        strcpy(updated_finance.date, temp);
+    } else {
+        strcpy(updated_finance.date, existing_finance.date);
+    }
+    
+    // Categoria
+    printf("Categoria atual: %s\n", existing_finance.category);
+    read_string_input("Nova categoria: ", temp, sizeof(temp));
+    if (strlen(temp) > 0) {
+        strcpy(updated_finance.category, temp);
+    } else {
+        strcpy(updated_finance.category, existing_finance.category);
+    }
+    
+    // Tipo
+    printf("Tipo atual: %c\n", existing_finance.type);
+    char type[2];
+    read_string_input("Novo tipo (R para Receita, D para Despesa): ", type, sizeof(type));
+    if (type[0] == 'R' || type[0] == 'r' || type[0] == 'D' || type[0] == 'd') {
+        updated_finance.type = type[0];
+    } else {
+        updated_finance.type = existing_finance.type;
+    }
 
-        // Função para imprimir a borda da tela
-        draw_border('#', 0, 0);
+    updated_finance.id = id;
+    updated_finance.status = true;
 
-        int h = 2;
-
-        // Desenha o título centralizado
-        for (int i = 0; i < length_title; i++)
-        {
-            mvprintw(h, (x - strlen(title[i])) / 2, "%s", title[i]);
-            h += 1;
-        }
-
-        // Escreve o tipo no centro
-        mvprintw(h + 2, (x - strlen(type_title)) / 2, "%s", type_title);
-
-        h = (y / 2) + 6;
-
-        // Desenha as opções e os valores já preenchidos
-        for (int i = 0; i < length_options; i++)
-        {
-            int col = (x - 40) / 2;
-            if (i < 4) // os 4 campos de dados
-                mvprintw(h, col, "%s: %s", options[i], transactions[i]);
-            else
-                mvprintw(h, (x - strlen(options[i])) / 2, "%s", options[i]); // opção Cancelar
-            h += 2;
-        }
-
-        refresh();
-
-        resp = getch();
-
-        switch (resp)
-        {
-            case '1': // Descrição
-                input_box(40, "Digite a Descrição:", transactions[0], 50);
-                break;
-
-            case '2': // Valor
-                input_box(40, "Digite o Valor:", transactions[1], 50);
-                break;
-
-            case '3': // Data
-                input_box(40, "Digite a Data (dd/mm/aaaa):", transactions[2], 50);
-                break;
-
-            case '4': // Categoria
-                input_box(40, "Digite a Categoria:", transactions[3], 50);
-                break;
-
-            case '0': // Cancelar
-                break;
-
-            default:
-                break;
-        }
-    } while (resp != '0');
+    printf("\n");
+    set_search_finance_id(id);
+    if (update(&updated_finance, sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+        printf("Transação atualizada com sucesso!\n");
+    } else {
+        printf("Erro ao atualizar transação.\n");
+    }
 }
