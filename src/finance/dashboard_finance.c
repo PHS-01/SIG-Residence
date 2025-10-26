@@ -1,121 +1,66 @@
 #include <stdio.h>
-#include <ncurses.h>
+#include <stdlib.h>
 #include <string.h>
+#include "finance.h"
+#include "terminal_control.h"
 
-#include "screens.h"
+void dashboard_finance() {
+    int opcao;
 
-char transaction[4][50] = {
-    "Vazio",        // Descrição
-    "0.00",         // Valor
-    "00/00/0000",   // Data
-    "Sem categoria" // Categoria
-};
-
-void dashboard_finance(int y, int x)
-{
-    const char *title[] = {
-        "  ______ _                        _            ",
-        " |  ____(_)                      (_)           ",
-        " | |__   _ _ __   __ _ _ __   ___ _  __ _ ___  ",
-        " |  __| | | '_ \\ / _` | '_ \\ / __| |/ _` / __| ",
-        " | |    | | | | | (_| | | | | (__| | (_| \\__ \\ ",
-        " |_|    |_|_| |_|\\__,_|_| |_|\\___|_|\\__,_|___/ "
-    };
-
-
-    const char *options[] = {
-        "[1]   Criar Receita/Despesa     ",
-        "[2]   Ler Receita/Despesa       ",
-        "[3]   Atualizar Receita/Despesa ",
-        "[4]   Excluir Receita/Despesa   ",
-        "[0]   Voltar"
-    };
-
-    const char *msg_alert[] = {
-        "[R] Receita    [D] Despesa"
-    };
-
-    int length_options = sizeof(options) / sizeof(options[0]);
-    int length_title = sizeof(title) / sizeof(title[0]);
-    int length_msg = sizeof(msg_alert) / sizeof(msg_alert[0]);
-
-    char resp;
-
-    do
-    {
-        clear(); // limpa a tela
-
-        // Função para imprimir a borda da tela
-        draw_border('#', 0, 0);
-
-        int h = 2;
-
-        // Desenha o título centralizado
-        for (int i = 0; i < length_title; i++)
-        {
-            mvprintw(h, (x - strlen(title[i])) / 2, "%s", title[i]);
-            h += 1;
+    do {
+        printf("\n=== MENU DE FINANÇAS ===\n");
+        printf("1 - Cadastrar nova transação\n");
+        printf("2 - Consultar transação\n");
+        printf("3 - Listar todas as transações\n");
+        printf("4 - Listar transações ativas\n");
+        printf("5 - Atualizar transação\n");
+        printf("6 - Exclusão lógica (inativar)\n");
+        printf("7 - Exclusão física (permanente)\n");
+        printf("0 - Voltar\n");
+        
+        if (!read_int_input("Escolha uma opção: ", &opcao)) {
+            printf("Opção inválida. Digite um número.\n");
+            clear_input_buffer();
+            wait_for_enter();
+            system("clear");
+            continue;
         }
 
-        h = (y / 2) + 2; // espaço depois do título
+        system("clear");
 
-        int width_options = strlen(options[0]);
-
-         // Desenha as opções centralizadas
-        for (int i = 0; i < length_options; i++)
-        {
-            mvprintw(h, ((x - width_options)/2) + i, "%s", options[i]);
-            h += 2;
-        }
-
-        refresh(); // atualiza a tela
-
-        resp = getch();
-
-        switch (resp)
-        {
-            case '1':
-                do 
-                {
-                    resp = draw_alert(msg_alert, length_msg, 50, 0);
-                } 
-                while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
-                create_finance(y, x, resp); // criar nova receita/despesa
+        switch (opcao) {
+            case 1:
+                create_finance_ui();
                 break;
-
-            case '2':
-                do 
-                {
-                    resp = draw_alert(msg_alert, length_msg, 50, 0);
-                } 
-                while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
-                read_finance(y, x, transaction, resp); // listar lançamentos
+            case 2:
+                read_finance_ui();
                 break;
-
-            case '3':
-                do 
-                {
-                    resp = draw_alert(msg_alert, length_msg, 50, 0);
-                } 
-                while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
-                update_finance(y, x, transaction, resp); // atualizar
+            case 3:
+                list_all_finance();
                 break;
-
-            case '4':
-                do 
-                {
-                    resp = draw_alert(msg_alert, length_msg, 50, 0);
-                } 
-                while (resp != 'r' && resp != 'R' && resp != 'd' && resp != 'D');
-                delete_finance(y, x, transaction, resp); // excluir
+            case 4:
+                list_active_finance();
                 break;
-
-            case '0':
+            case 5:
+                update_finance_ui();
                 break;
-
+            case 6:
+                delete_finance_ui();
+                break;
+            case 7:
+                physical_delete_finance_ui();
+                break;
+            case 0:
+                printf("Retornando ao menu principal...\n");
+                break;
             default:
-                break;
+                printf("Opção inválida. Tente novamente.\n");
         }
-    }
-    while (resp != '0');
+
+        if (opcao != 0 && opcao >= 1 && opcao <= 7) {
+            wait_for_enter();
+            system("clear");
+        }
+
+    } while (opcao != 0);
 }
