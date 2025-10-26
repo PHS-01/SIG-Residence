@@ -20,8 +20,7 @@ bool home(void) {
 
     char *options[] = {
         "[1]   Módulo Pessoas",
-        "[2]   Módulo Residência",
-        "[3]   Módulo Financia",
+        "[2]   Módulo Finanças",
         "[4]   Sobre",
         "[5]   Créditos",
         "[0]   Sair"
@@ -54,12 +53,11 @@ bool home(void) {
     // Lógica de navegação no menu
     switch(resp) {
         case '1':
-            // Chama a função do dashboard
             dashboard_people();
             break;
 
         case '2':
-            ansi_print(3, 3, (const char[]){resp, '\0'});
+            dashboard_finance();
             break;
 
         case '3':
