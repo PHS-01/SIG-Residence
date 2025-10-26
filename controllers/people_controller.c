@@ -13,10 +13,10 @@ void set_search_id(int id) {
     search_id = id;
 }
 
-// Verifica se o ID da pessoa é igual ao de pesquisa e se está ativa
+// Verifica se o ID da pessoa é igual ao de pesquisa
 int match_people_by_id(const void *data) {
     People *p = (People *)data;
-    return (p->id == search_id && p->status == 1);
+    return (p->id == search_id);
 }
 
 // Match para listar apenas pessoas ativas
@@ -41,7 +41,7 @@ void print_people(const void *data) {
 
 // Gera um novo ID automaticamente
 int generate_people_id(void) {
-    FILE *file = fopen(FILE_NAME, "rb");
+    FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
     int max_id = 0;
     
     if (file != NULL) {
@@ -60,8 +60,7 @@ int generate_people_id(void) {
 // Lista todas as pessoas
 void list_all_people(void) {
     printf("=== TODAS AS PESSOAS ===\n\n");
-    // list_records(sizeof(People), print_people, match_all_people);
-    FILE *file = fopen(FILE_NAME, "rb");
+    FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
     if (!file) {
         printf("Erro ao abrir arquivo ou nenhum dado cadastrado.\n");
         return;
@@ -77,7 +76,7 @@ void list_all_people(void) {
 // Lista apenas pessoas ativas
 void list_active_people(void) {
     printf("=== PESSOAS ATIVAS ===\n\n");
-    FILE *file = fopen(FILE_NAME, "rb");
+    FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
     if (!file) {
         printf("Erro ao abrir arquivo ou nenhum dado cadastrado.\n");
         return;
