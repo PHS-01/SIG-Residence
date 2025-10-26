@@ -53,6 +53,26 @@ int read_string_input(const char* prompt, char* buffer, size_t size) {
     }
 }
 
+int read_float_input(const char* prompt, float* value) {
+    char input[20];
+    
+    if (prompt != NULL) {
+        printf("%s", prompt);
+        fflush(stdout);
+    }
+    
+    if (fgets(input, sizeof(input), stdin) == NULL) {
+        clear_input_buffer();
+        return 0;
+    }
+    
+    if (strchr(input, '\n') == NULL) {
+        clear_input_buffer();
+    }
+    
+    return sscanf(input, "%f", value) == 1;
+}
+
 void wait_for_enter(void) {
     printf("Pressione Enter para continuar...");
     fflush(stdout);
