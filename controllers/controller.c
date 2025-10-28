@@ -6,6 +6,7 @@
 #include "config.h"
 #include "people.h"
 #include "finance.h"
+#include "residence.h"
 
 // Cria ou adiciona dados ao arquivo
 void create(const void* data, size_t size, const char* file_name) {
