@@ -13,7 +13,7 @@ void read_finance_ui() {
         printf("\n");
         set_search_finance_id(id);
         Finance finance;
-        if (read(&finance, sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+        if (read(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
             print_finance(&finance);
         } else {
             printf("Transação com ID %d não encontrada ou está inativa.\n", id);

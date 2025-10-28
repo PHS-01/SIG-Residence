@@ -13,7 +13,7 @@ void read_people_ui() {
         printf("\n");
         set_search_id(id);
         People person;
-        if (read(&person, sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
+        if (read(&person, sizeof(People), FILE_NAME_PEOPLE,match_people_by_id)) {
             print_people(&person);
         } else {
             printf("Pessoa com ID %d não encontrada ou está inativa.\n", id);
