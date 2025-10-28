@@ -20,7 +20,7 @@ void delete_finance_ui() {
     // Primeiro verifica se a transação existe
     set_search_finance_id(id);
     Finance finance;
-    if (!read(&finance, sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+    if (!read(&finance, sizeof(Finance), FILE_NAME_FINANCE,match_finance_by_id)) {
         printf("Transação com ID %d não encontrada ou já está inativa.\n", id);
         return;
     }
@@ -33,7 +33,7 @@ void delete_finance_ui() {
 
     if (confirm[0] == 's' || confirm[0] == 'S') {
         set_search_finance_id(id);
-        if (delete(sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+        if (delete(sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
             printf("Transação inativada com sucesso.\n");
         } else {
             printf("Erro ao inativar transação.\n");

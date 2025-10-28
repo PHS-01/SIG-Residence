@@ -20,7 +20,7 @@ void update_finance_ui() {
     // Primeiro verifica se a transação existe
     set_search_finance_id(id);
     Finance existing_finance;
-    if (!read(&existing_finance, sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+    if (!read(&existing_finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
         printf("Transação com ID %d não encontrada ou está inativa.\n", id);
         return;
     }
@@ -80,7 +80,7 @@ void update_finance_ui() {
 
     printf("\n");
     set_search_finance_id(id);
-    if (update(&updated_finance, sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
+    if (update(&updated_finance, sizeof(Finance), FILE_NAME_FINANCE,match_finance_by_id)) {
         printf("Transação atualizada com sucesso!\n");
     } else {
         printf("Erro ao atualizar transação.\n");

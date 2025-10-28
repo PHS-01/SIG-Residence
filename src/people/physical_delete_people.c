@@ -20,7 +20,7 @@ void physical_delete_people_ui() {
     // Primeiro verifica se a pessoa existe
     set_search_id(id);
     People person;
-    if (!read(&person, sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
+    if (!read(&person, sizeof(People), FILE_NAME_PEOPLE,match_people_by_id)) {
         printf("Pessoa com ID %d não encontrada.\n", id);
         return;
     }

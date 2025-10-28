@@ -4,13 +4,13 @@
 #include <stdbool.h>
 
 typedef struct {
+    bool status;    // ativo ou inativo
     int id;
     char description[100];
     float value;
     char date[11];  // dd/mm/aaaa
     char category[50];
     char type;      // 'R' para receita, 'D' para despesa
-    bool status;    // ativo ou inativo
 } Finance;
 
 // Funções de match
