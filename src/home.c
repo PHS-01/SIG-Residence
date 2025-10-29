@@ -21,6 +21,7 @@ bool home(void) {
     char *options[] = {
         "[1]   Módulo Pessoas",
         "[2]   Módulo Finanças",
+        "[3]   Módulo Residência",
         "[4]   Sobre",
         "[5]   Créditos",
         "[0]   Sair"
@@ -61,7 +62,7 @@ bool home(void) {
             break;
 
         case '3':
-            ansi_print(3, 3, (const char[]){resp, '\0'});
+            dashboard_residence();
             break;
 
         case '4':

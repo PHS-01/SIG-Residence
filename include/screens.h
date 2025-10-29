@@ -32,6 +32,16 @@ void update_finance_ui(void);
 void delete_finance_ui(void);
 void physical_delete_finance_ui(void);
 
+// Telas do modulo residência
+void dashboard_residence(void);
+
+// Funções de interface do usuário
+void create_residence_ui(void);
+void read_residence_ui(void);
+void update_residence_ui(void);
+void delete_residence_ui(void);
+void physical_delete_residence_ui(void);
+
 
 // // Telas do módulo residência
 // void dashboard_residence(int y, int x);
