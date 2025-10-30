@@ -9,36 +9,34 @@
 void delete_people_ui() {
     int id;
     char confirm[3];
-
-    printf("=== EXCLUIR PESSOA ===\n\n");
     
     if (!read_int_input("Digite o ID da pessoa a ser excluída: ", &id)) {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
         return;
     }
 
     // Primeiro verifica se a pessoa existe
     set_search_id(id);
     People person;
-    if (!read(&person, sizeof(People), FILE_NAME_PEOPLE,match_people_by_id)) {
-        printf("Pessoa com ID %d não encontrada ou já está inativa.\n", id);
+    if (!read(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+        print_error("Pessoa com ID %d não encontrada ou já está inativa.");
         return;
     }
 
-    printf("\nDados da pessoa:\n");
-    print_people(&person);
+    printf("\n");
+    print_people_detail(&person);
     printf("\n");
 
     read_string_input("Tem certeza que deseja inativar esta pessoa? (s/N): ", confirm, sizeof(confirm));
 
     if (confirm[0] == 's' || confirm[0] == 'S') {
         set_search_id(id);
-        if (delete(sizeof(People),FILE_NAME_PEOPLE, match_people_by_id)) {
-            printf("Pessoa inativada com sucesso.\n");
+        if (delete(sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+            print_success("Pessoa inativada com sucesso.");
         } else {
-            printf("Erro ao inativar pessoa.\n");
+            print_error("Erro ao inativar pessoa.");
         }
     } else {
-        printf("Operação cancelada.\n");
+        print_warning("Operação cancelada.");
     }
 }

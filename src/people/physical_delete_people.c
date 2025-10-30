@@ -9,25 +9,24 @@
 void physical_delete_people_ui() {
     int id;
     char confirm[4];
-
-    printf("=== EXCLUSÃO FÍSICA DE PESSOA ===\n\n");
     
     if (!read_int_input("Digite o ID da pessoa a ser excluída fisicamente: ", &id)) {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
         return;
     }
 
     // Primeiro verifica se a pessoa existe
     set_search_id(id);
     People person;
-    if (!read(&person, sizeof(People), FILE_NAME_PEOPLE,match_people_by_id)) {
-        printf("Pessoa com ID %d não encontrada.\n", id);
+    if (!read(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+        print_error("Pessoa com ID %d não encontrada.");
         return;
     }
 
     printf("\nDados da pessoa que será excluída FISICAMENTE:\n");
-    print_people(&person);
-    printf("\nATENÇÃO: Esta operação é IRREVERSÍVEL!\n");
+    print_people_detail(&person);
+    printf("\n");
+    print_warning("ATENÇÃO: Esta operação é IRREVERSÍVEL!");
 
     clear_input_buffer();
 
@@ -36,11 +35,11 @@ void physical_delete_people_ui() {
     if (strcmp(confirm, "sim") == 0) {
         set_search_id(id);
         if (physical_delete(sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
-            printf("Pessoa excluída fisicamente com sucesso.\n");
+            print_success("Pessoa excluída fisicamente com sucesso.");
         } else {
-            printf("Erro ao excluir pessoa fisicamente.\n");
+            print_error("Erro ao excluir pessoa fisicamente.");
         }
     } else {
-        printf("Operação cancelada.\n");
+        print_warning("Operação cancelada.");
     }
 }

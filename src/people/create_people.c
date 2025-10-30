@@ -9,14 +9,11 @@
 
 void create_people_ui() {
     People new_person;
-
-    printf("=== CADASTRO DE PESSOA ===\n\n");
     
     // Gera ID automaticamente
     new_person.id = generate_people_id();
 
     do {
-        system("clear");
         clear_screen();
         read_string_input("Nome: ", new_person.name, sizeof(new_person.name));
         read_string_input("Data de nascimento (dd/mm/aaaa): ", new_person.birth_date, sizeof(new_person.birth_date));
@@ -24,7 +21,7 @@ void create_people_ui() {
         read_string_input("Telefone: ", new_person.phone, sizeof(new_person.phone));
         
         if (!is_valid_people(&new_person)) {
-            printf("❌ Dados inválidos! Por favor, tente novamente.\n");
+            printf("Dados inválidos! Por favor, tente novamente.\n");
         } else {
             printf("Dados Validos! Por favor, precione qualquer tecla.\n");
         }
@@ -37,5 +34,8 @@ void create_people_ui() {
 
     printf("\n");
     create(&new_person, sizeof(People), FILE_NAME_PEOPLE);
-    printf("Pessoa cadastrada com sucesso! ID: %d\n", new_person.id);
+    
+    printf("\n");
+    print_success("Pessoa cadastrada com sucesso!");
+    printf(COLOR_CYAN "ID da pessoa: %d" COLOR_RESET "\n", new_person.id);
 }

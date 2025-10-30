@@ -7,18 +7,16 @@
 void read_people_ui() {
     int id;
     
-    printf("=== CONSULTAR PESSOA ===\n\n");
-    
     if (read_int_input("Digite o ID da pessoa: ", &id)) {
         printf("\n");
         set_search_id(id);
         People person;
-        if (read(&person, sizeof(People), FILE_NAME_PEOPLE,match_people_by_id)) {
-            print_people(&person);
+        if (read(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+            print_people_detail(&person);
         } else {
-            printf("Pessoa com ID %d não encontrada ou está inativa.\n", id);
+            print_error("Pessoa com ID %d não encontrada ou está inativa.");
         }
     } else {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
     }
 }

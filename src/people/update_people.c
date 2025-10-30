@@ -9,21 +9,23 @@
 void update_people_ui() {
     People updated_person;
     int id;
-
-    printf("=== ATUALIZAR PESSOA ===\n\n");
     
     if (!read_int_input("Digite o ID da pessoa que deseja atualizar: ", &id)) {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
         return;
     }
 
     // Primeiro verifica se a pessoa existe
     set_search_id(id);
     People existing_person;
-    if (!read(&existing_person, sizeof(People), FILE_NAME_PEOPLE,match_people_by_id)) {
-        printf("Pessoa com ID %d não encontrada ou está inativa.\n", id);
+    if (!read(&existing_person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+        print_error("Pessoa com ID %d não encontrada ou está inativa.");
         return;
     }
+
+    printf("\n");
+    print_people_detail(&existing_person);
+    printf("\n");
 
     printf("\nDeixe em branco para manter o valor atual.\n\n");
     
@@ -70,9 +72,9 @@ void update_people_ui() {
 
     printf("\n");
     set_search_id(id);
-    if (update(&updated_person, sizeof(People), FILE_NAME_PEOPLE,match_people_by_id)) {
-        printf("Pessoa atualizada com sucesso!\n");
+    if (update(&updated_person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+        print_success("Pessoa atualizada com sucesso!");
     } else {
-        printf("Erro ao atualizar pessoa.\n");
+        print_error("Erro ao atualizar pessoa.");
     }
 }
