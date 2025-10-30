@@ -3,63 +3,76 @@
 #include <string.h>
 #include "finance.h"
 #include "terminal_control.h"
+#include "menu_borders.h"
 
 void dashboard_finance() {
     int opcao;
 
     do {
-        printf("\n=== MENU DE FINANÇAS ===\n");
-        printf("1 - Cadastrar nova transação\n");
-        printf("2 - Consultar transação\n");
-        printf("3 - Listar todas as transações\n");
-        printf("4 - Listar transações ativas\n");
-        printf("5 - Atualizar transação\n");
-        printf("6 - Exclusão lógica (inativar)\n");
-        printf("7 - Exclusão física (permanente)\n");
-        printf("0 - Voltar\n");
+        clear_screen();
         
-        if (!read_int_input("Escolha uma opção: ", &opcao)) {
-            printf("Opção inválida. Digite um número.\n");
-            clear_input_buffer();
+        // Desenha o menu com bordas
+        draw_menu_header("GESTAO DE FINANCAS", MENU_WIDTH);
+        draw_menu_option(1, "Cadastrar nova transacao", MENU_WIDTH);
+        draw_menu_option(2, "Consultar transacao", MENU_WIDTH);
+        draw_menu_option(3, "Listar todas as transacoes", MENU_WIDTH);
+        draw_menu_option(4, "Listar transacoes ativas", MENU_WIDTH);
+        draw_menu_option(5, "Atualizar transacao", MENU_WIDTH);
+        draw_menu_option(6, "Exclusao logica (inativar)", MENU_WIDTH);
+        draw_menu_option(7, "Exclusao fisica (permanente)", MENU_WIDTH);
+        draw_menu_option(0, "Voltar ao Menu anterior", MENU_WIDTH);
+        draw_menu_footer(MENU_WIDTH);
+        
+        printf("\n");
+        
+        if (!read_int_input("Digite sua opção: ", &opcao)) {
+            print_error("Opção inválida! Digite um número.");
             wait_for_enter();
-            system("clear");
             continue;
         }
 
-        system("clear");
+        clear_screen();
 
         switch (opcao) {
             case 1:
+                draw_simple_header("CADASTRO DE TRANSACAO", MENU_WIDTH);
                 create_finance_ui();
                 break;
             case 2:
+                draw_simple_header("CONSULTAR TRANSACAO", MENU_WIDTH);
                 read_finance_ui();
                 break;
             case 3:
+                draw_simple_header("LISTA DE TODAS AS TRANSAÇÕES", MENU_WIDTH);
                 list_all_finance();
                 break;
             case 4:
+                draw_simple_header("LISTA DE TRANSACOES ATIVAS", MENU_WIDTH);
                 list_active_finance();
                 break;
             case 5:
+                draw_simple_header("ATUALIZAR TRANSACAO", MENU_WIDTH);
                 update_finance_ui();
                 break;
             case 6:
+                draw_simple_header("EXCLUSAO LOGICA DE TRANSACAO", MENU_WIDTH);
                 delete_finance_ui();
                 break;
             case 7:
+                draw_simple_header("EXCLUSAO FISICA DE TRANSACAO", MENU_WIDTH);
                 physical_delete_finance_ui();
                 break;
             case 0:
-                printf("Retornando ao menu principal...\n");
+                print_success("Retornando ao menu principal...");
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                print_error("Opção inválida! Tente novamente.");
         }
 
         if (opcao != 0 && opcao >= 1 && opcao <= 7) {
+            printf("\n");
+            print_info("Pressione Enter para continuar...");
             wait_for_enter();
-            system("clear");
         }
 
     } while (opcao != 0);
