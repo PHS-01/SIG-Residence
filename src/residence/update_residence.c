@@ -9,11 +9,9 @@
 void update_residence_ui() {
     Residence updated_residence;
     int id;
-
-    printf("=== ATUALIZAR RESIDÊNCIA ===\n\n");
     
     if (!read_int_input("Digite o ID da residência que deseja atualizar: ", &id)) {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
         return;
     }
 
@@ -21,10 +19,14 @@ void update_residence_ui() {
     set_search_residence_id(id);
     Residence existing_residence;
     if (!read(&existing_residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
-        printf("Residência com ID %d não encontrada ou está inativa.\n", id);
+        print_error("Residência com ID %d não encontrada ou está inativa.");
         return;
     }
 
+    printf("\n");
+    print_residence_detail(&existing_residence);
+    printf("\n");
+    
     printf("\nDeixe em branco para manter o valor atual.\n\n");
     
     char temp[100];
@@ -98,8 +100,8 @@ void update_residence_ui() {
     printf("\n");
     set_search_residence_id(id);
     if (update(&updated_residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
-        printf("Residência atualizada com sucesso!\n");
+        print_success("Residência atualizada com sucesso!");
     } else {
-        printf("Erro ao atualizar residência.\n");
+        print_error("Erro ao atualizar residência.");
     }
 }

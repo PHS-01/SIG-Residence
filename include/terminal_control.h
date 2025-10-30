@@ -1,6 +1,8 @@
 #ifndef TERMINAL_CONTROL_H
 #define TERMINAL_CONTROL_H
 
+#include <stddef.h> // Para size_t
+
 // Cores básicas ANSI
 enum Color {
     MY_COLOR_BLACK = 30,
@@ -21,6 +23,21 @@ enum Color {
     MY_COLOR_WHITE = 97
 };
 
+// Cores ANSI
+#define COLOR_RESET   "\033[0m"
+#define COLOR_RED     "\033[31m"
+#define COLOR_GREEN   "\033[32m"
+#define COLOR_YELLOW  "\033[33m"
+#define COLOR_BLUE    "\033[34m"
+#define COLOR_MAGENTA "\033[35m"
+#define COLOR_CYAN    "\033[36m"
+#define COLOR_WHITE   "\033[37m"
+
+// Funções de output
+void print_success(const char* message);
+void print_error(const char* message);
+void print_warning(const char* message);
+void print_info(const char* message);
 
 // ANSI Utils
 void move_cursor(int, int);

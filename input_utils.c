@@ -74,7 +74,6 @@ int read_float_input(const char* prompt, float* value) {
 }
 
 void wait_for_enter(void) {
-    printf("Pressione Enter para continuar...");
     fflush(stdout);
     
     // Limpa qualquer caractere residual no buffer

@@ -9,24 +9,22 @@
 void delete_finance_ui() {
     int id;
     char confirm[3];
-
-    printf("=== EXCLUIR TRANSAÇÃO (LÓGICA) ===\n\n");
     
     if (!read_int_input("Digite o ID da transação a ser excluída: ", &id)) {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
         return;
     }
 
     // Primeiro verifica se a transação existe
     set_search_finance_id(id);
     Finance finance;
-    if (!read(&finance, sizeof(Finance), FILE_NAME_FINANCE,match_finance_by_id)) {
-        printf("Transação com ID %d não encontrada ou já está inativa.\n", id);
+    if (!read(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
+        print_error("Transação com ID %d não encontrada ou já está inativa.");
         return;
     }
 
-    printf("\nDados da transação:\n");
-    print_finance(&finance);
+    printf("\n");
+    print_finance_detail(&finance);
     printf("\n");
 
     read_string_input("Tem certeza que deseja inativar esta transação? (s/N): ", confirm, sizeof(confirm));
@@ -34,11 +32,11 @@ void delete_finance_ui() {
     if (confirm[0] == 's' || confirm[0] == 'S') {
         set_search_finance_id(id);
         if (delete(sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
-            printf("Transação inativada com sucesso.\n");
+            print_success("Transação inativada com sucesso.");
         } else {
-            printf("Erro ao inativar transação.\n");
+            print_error("Erro ao inativar transação.");
         }
     } else {
-        printf("Operação cancelada.\n");
+        print_warning("Operação cancelada.");
     }
 }

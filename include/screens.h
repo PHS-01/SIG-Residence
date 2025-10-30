@@ -5,6 +5,7 @@
 Declaração das funções
 */
 #include <stdbool.h>
+#include "menu_borders.h"
 
 // Telas
 bool home(void);

@@ -5,6 +5,8 @@
 // Include de dados e funções da entidade People
 #include "people.h"
 #include "config.h"
+#include "menu_borders.h"
+#include "terminal_control.h"
 
 static int search_id = -1;  // Variável global para armazenar o ID de pesquisa
 
@@ -31,14 +33,6 @@ int match_all_people(const void *data) {
     return 1; // Sempre retorna verdadeiro
 }
 
-// Imprime os dados da pessoa
-void print_people(const void *data) {
-    People *p = (People *)data;
-    printf("ID: %d, Nome: %s, Data: %s, Email: %s, Telefone: %s, Status: %s\n",
-        p->id, p->name, p->birth_date, p->email, p->phone, 
-        p->status ? "Ativo" : "Inativo");
-}
-
 // Gera um novo ID automaticamente
 int generate_people_id(void) {
     FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
@@ -57,28 +51,70 @@ int generate_people_id(void) {
     return max_id + 1;
 }
 
-// Lista todas as pessoas
+// Imprime os dados completos de uma pessoa (para consulta individual)
+void print_people_detail(const void *data) {
+    People *p = (People *)data;
+    
+    const char *status_text = p->status ? "Ativo" : "Inativo";
+    
+    printf("╔══════════════════════════════════════════════════════════════╗\n");
+    printf("║                     DETALHES DA PESSOA                       ║\n");
+    printf("╠══════════════════════════════════════════════════════════════╣\n");
+    printf("║ ID: %-56d ║\n", p->id);
+    printf("║ Nome: %-54s ║\n", p->name);
+    printf("║ Data de Nascimento: %-40s ║\n", p->birth_date);
+    printf("║ Email: %-53s ║\n", p->email);
+    printf("║ Telefone: %-50s ║\n", p->phone);
+    printf("║ Status: %-52s ║\n", status_text);
+    printf("╚══════════════════════════════════════════════════════════════╝\n");
+}
+
+// Imprime os dados da pessoa em formato de tabela
+void print_people_table(const void *data) {
+    People *p = (People *)data;
+    
+    const char *status_text = p->status ? "Ativo" : "Inativo";
+    
+    // Colunas ajustadas com larguras maiores para melhor alinhamento
+    printf("║ %-4d ║ %-27s ║ %-12s ║ %-28s ║ %-16s ║ %-9s ║\n",
+           p->id, p->name, p->birth_date, p->email, p->phone, status_text);
+}
+
 void list_all_people(void) {
-    printf("=== TODAS AS PESSOAS ===\n\n");
+    printf("╔══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╗\n");
+    printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
+    printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
+
     FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
     if (!file) {
-        printf("Erro ao abrir arquivo ou nenhum dado cadastrado.\n");
+        printf("║                                   Nenhum dado cadastrado ou erro ao abrir arquivo                                   ║\n");
+        printf("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
         return;
     }
     
     People person;
+    int count = 0;
     while (fread(&person, sizeof(People), 1, file)) {
-        print_people(&person);
+        print_people_table(&person);
+        count++;
     }
+    
+    printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+    printf("Total de registros: %d\n", count);
+    
     fclose(file);
 }
 
 // Lista apenas pessoas ativas
 void list_active_people(void) {
-    printf("=== PESSOAS ATIVAS ===\n\n");
+    printf("╔══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╗\n");
+    printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
+    printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
+    
     FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
     if (!file) {
-        printf("Erro ao abrir arquivo ou nenhum dado cadastrado.\n");
+        printf("║                                   Nenhum dado cadastrado ou erro ao abrir arquivo                                   ║\n");
+        printf("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
         return;
     }
     
@@ -86,13 +122,13 @@ void list_active_people(void) {
     int count = 0;
     while (fread(&person, sizeof(People), 1, file)) {
         if (person.status) {
-            print_people(&person);
+            print_people_table(&person);
             count++;
         }
     }
     
-    if (count == 0) {
-        printf("Nenhuma pessoa ativa encontrada.\n");
-    }
+    printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+    printf("Total de registros ativos: %d\n", count);
+    
     fclose(file);
 }

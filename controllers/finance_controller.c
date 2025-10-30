@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "finance.h"
 #include "config.h"
+#include "menu_borders.h"
+#include "terminal_control.h"
 
 static int search_id = -1;  // Variável global para armazenar o ID de pesquisa
 
@@ -29,15 +31,6 @@ int match_all_finance(const void *data) {
     return 1;
 }
 
-// Imprime os dados da transação
-void print_finance(const void *data) {
-    Finance *f = (Finance *)data;
-    printf("ID: %d, Descrição: %s, Valor: %.2f, Data: %s, Categoria: %s, Tipo: %s, Status: %s\n",
-        f->id, f->description, f->value, f->date, f->category,
-        (f->type == 'R' || f->type == 'r') ? "Receita" : "Despesa",
-        f->status ? "Ativo" : "Inativo");
-}
-
 // Gera um novo ID automaticamente
 int generate_finance_id(void) {
     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
@@ -56,28 +49,73 @@ int generate_finance_id(void) {
     return max_id + 1;
 }
 
-// Lista todas as transações
+// Imprime os dados completos de uma transação (para consulta individual)
+void print_finance_detail(const void *data) {
+    Finance *f = (Finance *)data;
+    
+    const char *type_text = (f->type == 'R' || f->type == 'r') ? "Receita" : "Despesa";
+    const char *status_text = f->status ? "Ativo" : "Inativo";
+    
+    printf("╔══════════════════════════════════════════════════════════════╗\n");
+    printf("║                    DETALHES DA TRANSAÇÃO                     ║\n");
+    printf("╠══════════════════════════════════════════════════════════════╣\n");
+    printf("║ ID: %-56d ║\n", f->id);
+    printf("║ Descrição: %-49s ║\n", f->description);
+    printf("║ Valor: R$ %-50.2f ║\n", f->value);
+    printf("║ Data: %-54s ║\n", f->date);
+    printf("║ Categoria: %-49s ║\n", f->category);
+    printf("║ Tipo: %-54s ║\n", type_text);
+    printf("║ Status: %-52s ║\n", status_text);
+    printf("╚══════════════════════════════════════════════════════════════╝\n");
+}
+
+// Imprime os dados da transação em formato de tabela
+void print_finance_table(const void *data) {
+    Finance *f = (Finance *)data;
+    
+    const char *type_text = (f->type == 'R' || f->type == 'r') ? "Receita" : "Despesa";
+    const char *status_text = f->status ? "Ativo" : "Inativo";
+    
+    // Colunas ajustadas para tabela formatada
+    printf("║ %-4d ║ %-27s ║ %-10.2f ║ %-12s ║ %-20s ║ %-9s ║ %-9s ║\n",
+           f->id, f->description, f->value, f->date, f->category, type_text, status_text);
+}
+
 void list_all_finance(void) {
-    printf("=== TODAS AS TRANSAÇÕES ===\n\n");
+    printf("╔══════╦═════════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╗\n");
+    printf("║  ID  ║ Descrição                   ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
+    printf("╠══════╬═════════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
+
     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
     if (!file) {
-        printf("Erro ao abrir arquivo ou nenhum dado cadastrado.\n");
+        printf("║                                   Nenhum dado cadastrado ou erro ao abrir arquivo                                   ║\n");
+        printf("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
         return;
     }
     
     Finance finance;
+    int count = 0;
     while (fread(&finance, sizeof(Finance), 1, file)) {
-        print_finance(&finance);
+        print_finance_table(&finance);
+        count++;
     }
+    
+    printf("╚══════╩═════════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+    printf("Total de registros: %d\n", count);
+    
     fclose(file);
 }
 
 // Lista apenas transações ativas
 void list_active_finance(void) {
-    printf("=== TRANSAÇÕES ATIVAS ===\n\n");
+    printf("╔══════╦═════════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╗\n");
+    printf("║  ID  ║ Descrição                   ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
+    printf("╠══════╬═════════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
+    
     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
     if (!file) {
-        printf("Erro ao abrir arquivo ou nenhum dado cadastrado.\n");
+        printf("║                                   Nenhum dado cadastrado ou erro ao abrir arquivo                                   ║\n");
+        printf("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\n");
         return;
     }
     
@@ -85,13 +123,13 @@ void list_active_finance(void) {
     int count = 0;
     while (fread(&finance, sizeof(Finance), 1, file)) {
         if (finance.status) {
-            print_finance(&finance);
+            print_finance_table(&finance);
             count++;
         }
     }
     
-    if (count == 0) {
-        printf("Nenhuma transação ativa encontrada.\n");
-    }
+    printf("╚══════╩═════════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+    printf("Total de registros ativos: %d\n", count);
+    
     fclose(file);
 }

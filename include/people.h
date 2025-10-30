@@ -17,16 +17,30 @@ typedef struct {
     // int expense_type;     // Tipo de despesa (Pessoal ou Compartilhada)
 } People;
 
-// Funções auxiliares
-void set_search_id(int id);     
+// Função para definir ID de pesquisa
+void set_search_id(int id);
+
+// Funções de match
 int match_people_by_id(const void *data);
 int match_active_people(const void *data);
 int match_all_people(const void *data);
-void print_people(const void *data);
 
-// Novas funções
+// Função de impressão
+void print_people_detail(const void *data);
+void print_people_table(const void *data);
+
+// Geração de ID
 int generate_people_id(void);
+
+// Listagens
 void list_all_people(void);
 void list_active_people(void);
+
+// Interfaces de usuário (UI)
+void create_people_ui();
+void read_people_ui();
+void update_people_ui();
+void delete_people_ui();
+void physical_delete_people_ui();
 
 #endif

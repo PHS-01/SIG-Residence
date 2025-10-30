@@ -4,64 +4,76 @@
 #include "screens.h"
 #include "people.h"
 #include "terminal_control.h"
+#include "menu_borders.h"
 
 void dashboard_people() {
     int opcao;
 
     do {
-        printf("\n=== MENU DE PESSOAS ===\n");
-        printf("1 - Cadastrar nova pessoa\n");
-        printf("2 - Consultar pessoa\n");
-        printf("3 - Listar todas as pessoas\n");
-        printf("4 - Listar pessoas ativas\n");
-        printf("5 - Atualizar pessoa\n");
-        printf("6 - Exclusão lógica (inativar)\n");
-        printf("7 - Exclusão física (permanente)\n");
-        printf("0 - Voltar\n");
+        clear_screen();
         
-        if (!read_int_input("Escolha uma opção: ", &opcao)) {
-            printf("Opção inválida. Digite um número.\n");
-            clear_input_buffer(); // Limpa buffer em caso de erro
+        // Desenha o menu com bordas
+        draw_menu_header("GESTAO DE PESSOAS", MENU_WIDTH);
+        draw_menu_option(1, "Cadastrar nova pessoa", MENU_WIDTH);
+        draw_menu_option(2, "Consultar pessoa", MENU_WIDTH);
+        draw_menu_option(3, "Listar todas as pessoas", MENU_WIDTH);
+        draw_menu_option(4, "Listar pessoas ativas", MENU_WIDTH);
+        draw_menu_option(5, "Atualizar pessoa", MENU_WIDTH);
+        draw_menu_option(6, "Exclusao logica (inativar)", MENU_WIDTH);
+        draw_menu_option(7, "Exclusao fisica (permanente)", MENU_WIDTH);
+        draw_menu_option(0, "Voltar ao Menu anterior", MENU_WIDTH);
+        draw_menu_footer(MENU_WIDTH);
+        
+        printf("\n");
+        
+        if (!read_int_input("Digite sua opção: ", &opcao)) {
+            print_error("Opção inválida! Digite um número.");
             wait_for_enter();
-            system("clear");
             continue;
         }
 
-        system("clear");
+        clear_screen();
 
         switch (opcao) {
             case 1:
+                draw_simple_header("CADASTRO DE PESSOA", MENU_WIDTH);
                 create_people_ui();
                 break;
             case 2:
+                draw_simple_header("CONSULTAR PESSOA", MENU_WIDTH);
                 read_people_ui();
                 break;
             case 3:
+                draw_simple_header("LISTA DE TODAS AS PESSOAS", MENU_WIDTH);
                 list_all_people();
                 break;
             case 4:
+                draw_simple_header("LISTA DE PESSOAS ATIVAS", MENU_WIDTH);
                 list_active_people();
                 break;
             case 5:
+                draw_simple_header("ATUALIZAR PESSOA", MENU_WIDTH);
                 update_people_ui();
                 break;
             case 6:
+                draw_simple_header("EXCLUSAO LOGICA DE PESSOA", MENU_WIDTH);
                 delete_people_ui();
                 break;
             case 7:
+                draw_simple_header("EXCLUSAO FISICA DE PESSOA", MENU_WIDTH);
                 physical_delete_people_ui();
                 break;
             case 0:
-                printf("Retornando ao menu principal...\n");
+                print_success("Retornando ao menu principal...");
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                print_error("Opção inválida! Tente novamente.");
         }
 
-        // Para opções que não são voltar, pausa apenas se não houve erro de input
         if (opcao != 0 && opcao >= 1 && opcao <= 7) {
+            printf("\n");
+            print_info("Pressione Enter para continuar...");
             wait_for_enter();
-            system("clear");
         }
 
     } while (opcao != 0);

@@ -21,7 +21,8 @@ int match_active_residence(const void *data);
 int match_all_residence(const void *data);
 
 // Função de impressão
-void print_residence(const void *data);
+void print_residence_detail(const void *data);
+void print_residence_table(const void *data);
 
 // Geração de ID
 int generate_residence_id(void);
