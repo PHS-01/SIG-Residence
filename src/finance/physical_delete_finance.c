@@ -9,25 +9,24 @@
 void physical_delete_finance_ui() {
     int id;
     char confirm[4];
-
-    printf("=== EXCLUSÃO FÍSICA DE TRANSAÇÃO ===\n\n");
     
     if (!read_int_input("Digite o ID da transação a ser excluída fisicamente: ", &id)) {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
         return;
     }
 
     // Primeiro verifica se a transação existe
     set_search_finance_id(id);
     Finance finance;
-    if (!read(&finance, sizeof(Finance),FILE_NAME_FINANCE, match_finance_by_id)) {
-        printf("Transação com ID %d não encontrada.\n", id);
+    if (!read(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
+        print_error("Transação com ID %d não encontrada.");
         return;
     }
 
     printf("\nDados da transação que será excluída FISICAMENTE:\n");
-    print_finance(&finance);
-    printf("\nATENÇÃO: Esta operação é IRREVERSÍVEL!\n");
+    print_finance_detail(&finance);
+    printf("\n");
+    print_warning("ATENÇÃO: Esta operação é IRREVERSÍVEL!");
 
     clear_input_buffer();
 
@@ -36,11 +35,11 @@ void physical_delete_finance_ui() {
     if (strcmp(confirm, "sim") == 0) {
         set_search_finance_id(id);
         if (physical_delete(sizeof(Finance), match_finance_by_id, FILE_NAME_FINANCE)) {
-            printf("Transação excluída fisicamente com sucesso.\n");
+            print_success("Transação excluída fisicamente com sucesso.");
         } else {
-            printf("Erro ao excluir transação fisicamente.\n");
+            print_error("Erro ao excluir transação fisicamente.");
         }
     } else {
-        printf("Operação cancelada.\n");
+        print_warning("Operação cancelada.");
     }
 }

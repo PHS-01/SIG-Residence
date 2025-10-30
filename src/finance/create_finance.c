@@ -9,14 +9,11 @@
 
 void create_finance_ui() {
     Finance new_finance;
-
-    printf("=== CADASTRO DE TRANSAÇÃO ===\n\n");
     
     // Gera ID automaticamente
     new_finance.id = generate_finance_id();
 
     do {
-        system("clear");
         clear_screen();
         read_string_input("Descrição: ", new_finance.description, sizeof(new_finance.description));
     
@@ -41,7 +38,7 @@ void create_finance_ui() {
         new_finance.type = type;
         
         if (!is_valid_finance(&new_finance)) {
-            printf("❌ Dados inválidos! Por favor, tente novamente.\n");
+            printf("Dados inválidos! Por favor, tente novamente.\n");
         } else {
             printf("Dados Validos! Por favor, precione qualquer tecla.\n");
         }
@@ -54,5 +51,8 @@ void create_finance_ui() {
 
     printf("\n");
     create(&new_finance, sizeof(Finance), FILE_NAME_FINANCE);
-    printf("Transação cadastrada com sucesso! ID: %d\n", new_finance.id);
+    
+    printf("\n");
+    print_success("Transação cadastrada com sucesso!");
+    printf(COLOR_CYAN "ID da transação: %d" COLOR_RESET "\n", new_finance.id);
 }

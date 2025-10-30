@@ -7,18 +7,16 @@
 void read_finance_ui() {
     int id;
     
-    printf("=== CONSULTAR TRANSAÇÃO ===\n\n");
-    
     if (read_int_input("Digite o ID da transação: ", &id)) {
         printf("\n");
         set_search_finance_id(id);
         Finance finance;
         if (read(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
-            print_finance(&finance);
+            print_finance_detail(&finance);
         } else {
-            printf("Transação com ID %d não encontrada ou está inativa.\n", id);
+            print_error("Transação com ID %d não encontrada ou está inativa.");
         }
     } else {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
     }
 }

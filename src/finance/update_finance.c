@@ -9,11 +9,9 @@
 void update_finance_ui() {
     Finance updated_finance;
     int id;
-
-    printf("=== ATUALIZAR TRANSAÇÃO ===\n\n");
     
     if (!read_int_input("Digite o ID da transação que deseja atualizar: ", &id)) {
-        printf("ID inválido.\n");
+        print_error("ID inválido.");
         return;
     }
 
@@ -21,9 +19,14 @@ void update_finance_ui() {
     set_search_finance_id(id);
     Finance existing_finance;
     if (!read(&existing_finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
-        printf("Transação com ID %d não encontrada ou está inativa.\n", id);
+        print_error("Transação com ID %d não encontrada ou está inativa.");
         return;
     }
+
+    printf("\n");
+    print_finance_detail(&existing_finance);
+    printf("\n");
+
 
     printf("\nDeixe em branco para manter o valor atual.\n\n");
     
@@ -80,9 +83,9 @@ void update_finance_ui() {
 
     printf("\n");
     set_search_finance_id(id);
-    if (update(&updated_finance, sizeof(Finance), FILE_NAME_FINANCE,match_finance_by_id)) {
-        printf("Transação atualizada com sucesso!\n");
+    if (update(&updated_finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
+        print_success("Transação atualizada com sucesso!");
     } else {
-        printf("Erro ao atualizar transação.\n");
+        print_error("Erro ao atualizar transação.");
     }
 }
