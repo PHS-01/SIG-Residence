@@ -19,7 +19,8 @@ int match_active_finance(const void *data);
 int match_all_finance(const void *data);
 
 // Função de impressão
-void print_finance(const void *data);
+void print_finance_detail(const void *data);
+void print_finance_table(const void *data);
 
 // Geração de ID
 int generate_finance_id(void);
