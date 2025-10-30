@@ -86,7 +86,7 @@ bool is_valid_email(const char *email) {
 }
 
 // Valida que a string não está vazia e não ultrapassa o limite máximo de caracteres
-bool is_valid_string(const char *str, int max_len) {
+bool is_valid_string(const char *str, size_t max_len) {
     return str != NULL && strlen(str) > 0 && strlen(str) < max_len;
 }
 
