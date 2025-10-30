@@ -43,6 +43,9 @@ void update_residence_ui(void);
 void delete_residence_ui(void);
 void physical_delete_residence_ui(void);
 
+// Tela de relatórios
+void dashboard_reports(void);
+
 
 // // Telas do módulo residência
 // void dashboard_residence(int y, int x);

@@ -30,7 +30,6 @@ int main(void) {
     bool loop = true;
     int rows = 0, cols = 0;
 
-    system("clear");
     clear_screen();
 
     setlocale(LC_ALL, "");
@@ -46,7 +45,6 @@ int main(void) {
         // Atualiza o tamanho do terminal
         update_terminal_size(&rows, &cols);
 
-        system("clear");
         clear_screen();
 
         // Funções para desenhar a tela

@@ -14,5 +14,5 @@ void print_warning(const char* message) {
 }
 
 void print_info(const char* message) {
-    printf(COLOR_CYAN "ℹ %s" COLOR_RESET "\n", message);
+    printf(COLOR_CYAN "%s" COLOR_RESET "\n", message);
 }

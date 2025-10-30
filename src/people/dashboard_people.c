@@ -16,11 +16,9 @@ void dashboard_people() {
         draw_menu_header("GESTAO DE PESSOAS", MENU_WIDTH);
         draw_menu_option(1, "Cadastrar nova pessoa", MENU_WIDTH);
         draw_menu_option(2, "Consultar pessoa", MENU_WIDTH);
-        draw_menu_option(3, "Listar todas as pessoas", MENU_WIDTH);
-        draw_menu_option(4, "Listar pessoas ativas", MENU_WIDTH);
-        draw_menu_option(5, "Atualizar pessoa", MENU_WIDTH);
-        draw_menu_option(6, "Exclusao logica (inativar)", MENU_WIDTH);
-        draw_menu_option(7, "Exclusao fisica (permanente)", MENU_WIDTH);
+        draw_menu_option(3, "Atualizar pessoa", MENU_WIDTH);
+        draw_menu_option(4, "Exclusao logica (inativar)", MENU_WIDTH);
+        draw_menu_option(5, "Exclusao fisica (permanente)", MENU_WIDTH);
         draw_menu_option(0, "Voltar ao Menu anterior", MENU_WIDTH);
         draw_menu_footer(MENU_WIDTH);
         
@@ -44,22 +42,14 @@ void dashboard_people() {
                 read_people_ui();
                 break;
             case 3:
-                draw_simple_header("LISTA DE TODAS AS PESSOAS", MENU_WIDTH);
-                list_all_people();
-                break;
-            case 4:
-                draw_simple_header("LISTA DE PESSOAS ATIVAS", MENU_WIDTH);
-                list_active_people();
-                break;
-            case 5:
                 draw_simple_header("ATUALIZAR PESSOA", MENU_WIDTH);
                 update_people_ui();
                 break;
-            case 6:
+            case 4:
                 draw_simple_header("EXCLUSAO LOGICA DE PESSOA", MENU_WIDTH);
                 delete_people_ui();
                 break;
-            case 7:
+            case 5:
                 draw_simple_header("EXCLUSAO FISICA DE PESSOA", MENU_WIDTH);
                 physical_delete_people_ui();
                 break;
@@ -72,7 +62,7 @@ void dashboard_people() {
 
         if (opcao != 0 && opcao >= 1 && opcao <= 7) {
             printf("\n");
-            print_info("Pressione Enter para continuar...");
+            print_info("[ Pressione ENTER para continuar ]");
             wait_for_enter();
         }
 

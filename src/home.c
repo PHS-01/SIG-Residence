@@ -22,8 +22,9 @@ bool home(void) {
         "[1]   Módulo Pessoas",
         "[2]   Módulo Finanças",
         "[3]   Módulo Residência",
-        "[4]   Sobre",
-        "[5]   Créditos",
+        "[4]   Relatórios",
+        "[5]   Sobre",
+        "[6]   Créditos",
         "[0]   Sair"
     };
 
@@ -66,10 +67,14 @@ bool home(void) {
             break;
 
         case '4':
-            about();
+            dashboard_reports();
             break;
 
         case '5':
+            about();
+            break;
+
+        case '6':
             credits();
             break;
 
