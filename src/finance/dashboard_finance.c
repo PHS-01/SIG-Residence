@@ -15,11 +15,9 @@ void dashboard_finance() {
         draw_menu_header("GESTAO DE FINANCAS", MENU_WIDTH);
         draw_menu_option(1, "Cadastrar nova transacao", MENU_WIDTH);
         draw_menu_option(2, "Consultar transacao", MENU_WIDTH);
-        draw_menu_option(3, "Listar todas as transacoes", MENU_WIDTH);
-        draw_menu_option(4, "Listar transacoes ativas", MENU_WIDTH);
-        draw_menu_option(5, "Atualizar transacao", MENU_WIDTH);
-        draw_menu_option(6, "Exclusao logica (inativar)", MENU_WIDTH);
-        draw_menu_option(7, "Exclusao fisica (permanente)", MENU_WIDTH);
+        draw_menu_option(3, "Atualizar transacao", MENU_WIDTH);
+        draw_menu_option(4, "Exclusao logica (inativar)", MENU_WIDTH);
+        draw_menu_option(5, "Exclusao fisica (permanente)", MENU_WIDTH);
         draw_menu_option(0, "Voltar ao Menu anterior", MENU_WIDTH);
         draw_menu_footer(MENU_WIDTH);
         
@@ -43,22 +41,14 @@ void dashboard_finance() {
                 read_finance_ui();
                 break;
             case 3:
-                draw_simple_header("LISTA DE TODAS AS TRANSAÇÕES", MENU_WIDTH);
-                list_all_finance();
-                break;
-            case 4:
-                draw_simple_header("LISTA DE TRANSACOES ATIVAS", MENU_WIDTH);
-                list_active_finance();
-                break;
-            case 5:
                 draw_simple_header("ATUALIZAR TRANSACAO", MENU_WIDTH);
                 update_finance_ui();
                 break;
-            case 6:
+            case 4:
                 draw_simple_header("EXCLUSAO LOGICA DE TRANSACAO", MENU_WIDTH);
                 delete_finance_ui();
                 break;
-            case 7:
+            case 5:
                 draw_simple_header("EXCLUSAO FISICA DE TRANSACAO", MENU_WIDTH);
                 physical_delete_finance_ui();
                 break;
@@ -71,7 +61,7 @@ void dashboard_finance() {
 
         if (opcao != 0 && opcao >= 1 && opcao <= 7) {
             printf("\n");
-            print_info("Pressione Enter para continuar...");
+            print_info("[ Pressione ENTER para continuar ]");
             wait_for_enter();
         }
 
