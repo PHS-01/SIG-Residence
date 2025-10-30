@@ -7,12 +7,13 @@
 
 void create_residence_ui() {
     Residence new_residence;
-
-    printf("=== CADASTRO DE RESIDÊNCIA ===\n\n");
     
     // Gera ID automaticamente
     new_residence.id = generate_residence_id();
     
+    printf("\n");
+    
+    // Campos de entrada
     read_string_input("Endereço (logradouro): ", new_residence.address, sizeof(new_residence.address));
     read_int_input("Número: ", &new_residence.number);
     read_string_input("Complemento: ", new_residence.complement, sizeof(new_residence.complement));
@@ -25,5 +26,8 @@ void create_residence_ui() {
 
     printf("\n");
     create(&new_residence, sizeof(Residence), FILE_NAME_RESIDENCE);
-    printf("Residência cadastrada com sucesso! ID: %d\n", new_residence.id);
+    
+    printf("\n");
+    print_success("Residência cadastrada com sucesso!");
+    printf(COLOR_CYAN "ID da residência: %d" COLOR_RESET "\n", new_residence.id);
 }
