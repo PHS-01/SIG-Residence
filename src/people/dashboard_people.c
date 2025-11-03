@@ -56,11 +56,9 @@ void dashboard_people() {
             case 0:
                 print_success("Retornando ao menu principal...");
                 break;
-            default:
-                print_error("Opção inválida! Tente novamente.");
         }
 
-        if (opcao != 0 && opcao >= 1 && opcao <= 7) {
+        if (opcao != 0 && opcao >= 1 && opcao <= 5) {
             printf("\n");
             print_info("[ Pressione ENTER para continuar ]");
             wait_for_enter();
