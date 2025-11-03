@@ -28,7 +28,7 @@ void dashboard_reports() {
         printf("\n");
         
         if (!read_int_input("Digite sua opção: ", &opcao)) {
-            printf("Opção inválida! Digite um número.\n");
+            print_error("Opção inválida! Digite um número.\n");
             wait_for_enter();
             continue;
         }
@@ -61,10 +61,8 @@ void dashboard_reports() {
                 show_system_statistics();
                 break;
             case 0:
-                printf("Retornando ao menu principal...\n");
+                print_success("Retornando ao menu principal...");
                 break;
-            default:
-                printf("Opção inválida! Tente novamente.\n");
         }
 
         if (opcao != 0 && opcao >= 1 && opcao <= 8) {

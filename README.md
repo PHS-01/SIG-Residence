@@ -11,7 +11,7 @@ O projeto prevê evolução futura para **C++**, com novos recursos e melhorias.
 
 1. Certifique-se de ter um compilador **C** instalado (ex.: `gcc`).
 
-2. Clone o repositório:
+2. Clone o repositório no terminal:
 ```bash
 git clone https://github.com/PHS-01/SIG-Residence.git
 ```
@@ -28,4 +28,5 @@ cd SIG-Residence
 make run
 ```
 
----
+## Screenshot
+![Screenshot](https://i.ibb.co/h1Vvgx0Q/home.png)

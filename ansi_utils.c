@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "terminal_control.h"  // ✅ Inclui a declaração de enum Color e os protótipos
+#include "terminal_control.h"  // Inclui a declaração de enum Color e os protótipos
 
 // Função para mudar a cor do texto
 void set_text_color(enum Color color) {

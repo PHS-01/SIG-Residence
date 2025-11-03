@@ -16,9 +16,9 @@ void dashboard_residence() {
         draw_menu_header("GESTAO DE RESIDENCIAS", MENU_WIDTH);
         draw_menu_option(1, "Cadastrar nova residencia", MENU_WIDTH);
         draw_menu_option(2, "Consultar residencia", MENU_WIDTH);
-        draw_menu_option(5, "Atualizar residencia", MENU_WIDTH);
-        draw_menu_option(6, "Exclusao logica (inativar)", MENU_WIDTH);
-        draw_menu_option(7, "Exclusao fisica (permanente)", MENU_WIDTH);
+        draw_menu_option(3, "Atualizar residencia", MENU_WIDTH);
+        draw_menu_option(4, "Exclusao logica (inativar)", MENU_WIDTH);
+        draw_menu_option(5, "Exclusao fisica (permanente)", MENU_WIDTH);
         draw_menu_option(0, "Voltar ao Menu anterior", MENU_WIDTH);
         draw_menu_footer(MENU_WIDTH);
         
@@ -56,11 +56,9 @@ void dashboard_residence() {
             case 0:
                 print_success("Retornando ao menu principal...");
                 break;
-            default:
-                print_error("Opção inválida! Tente novamente.");
         }
 
-        if (opcao != 0 && opcao >= 1 && opcao <= 7) {
+        if (opcao != 0 && opcao >= 1 && opcao <= 5) {
             printf("\n");
             print_info("[ Pressione ENTER para continuar ]");
             wait_for_enter();
