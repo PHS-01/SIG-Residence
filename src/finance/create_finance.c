@@ -12,6 +12,13 @@ void create_finance_ui() {
     
     // Gera ID automaticamente
     new_finance.id = generate_finance_id();
+
+    // ID_people - com validação individual
+    do {
+        if (!read_int_input("ID de Pessoa: ", &new_finance.people_id)) {
+            print_error("ID de Pessoa inválido.");
+        }
+    } while (!is_valid_people_id(new_finance.people_id));
     
     // Descrição - com validação individual
     do {

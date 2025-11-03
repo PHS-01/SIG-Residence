@@ -6,11 +6,12 @@
 typedef struct {
     bool status;    // ativo ou inativo
     int id;
+    int people_id;           // Identificador único de pessoa (1:N)
     char description[100];
     float value;
-    char date[11];  // dd/mm/aaaa
-    char category[50];
-    char type;      // 'R' para receita, 'D' para despesa
+    char date[11];           // dd/mm/aaaa
+    char category[50];        
+    char type;               // 'R' para receita, 'D' para despesa
 } Finance;
 
 // Funções de match

@@ -8,6 +8,21 @@
 #include "finance.h"
 #include "residence.h"
 #include "terminal_control.h"
+#include "config.h"
+#include "controllers.h"
+
+bool is_valid_people_id(const int people_id) {
+    People people;
+
+    set_search_id(people_id);
+
+    if (read(&people, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+        return true;
+    } else {
+        return false;
+    }
+    
+}
 
 // Função para verificar se um ano é bissexto
 bool is_leap_year(int year) {

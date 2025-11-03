@@ -60,6 +60,7 @@ void print_finance_detail(const void *data) {
     printf("║                    DETALHES DA TRANSAÇÃO                     ║\n");
     printf("╠══════════════════════════════════════════════════════════════╣\n");
     printf("║ ID: %-56d ║\n", f->id);
+    printf("║ ID de Pessoa: %-46d ║\n", f->people_id);
     printf("║ Descrição: %-49s ║\n", f->description);
     printf("║ Valor: R$ %-50.2f ║\n", f->value);
     printf("║ Data: %-54s ║\n", f->date);
