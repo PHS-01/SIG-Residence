@@ -12,41 +12,58 @@ void create_finance_ui() {
     
     // Gera ID automaticamente
     new_finance.id = generate_finance_id();
-
+    
+    // Descrição - com validação individual
     do {
-        clear_screen();
         read_string_input("Descrição: ", new_finance.description, sizeof(new_finance.description));
-    
-        // Para valor, usamos read_float_input
-        float value;
-        if (read_float_input("Valor: ", &value)) {
-            new_finance.value = value;
-        } else {
-            printf("Valor inválido. Definindo como 0.0.\n");
-            new_finance.value = 0.0;
+        if (!is_valid_string(new_finance.description, sizeof(new_finance.description))) {
+            print_error("Descrição não pode estar vazia e deve ter até 99 caracteres.");
         }
-        
+    } while (!is_valid_string(new_finance.description, sizeof(new_finance.description)));
+    
+    // Valor - com validação individual
+    do {
+        if (!read_float_input("Valor: R$ ", &new_finance.value)) {
+            print_error("Valor inválido. Digite um número válido.");
+            new_finance.value = -1; // Forçar repetição
+        } else if (!is_valid_value(new_finance.value)) {
+            print_error("Valor não pode ser negativo.");
+        }
+    } while (!is_valid_value(new_finance.value));
+    
+    // Data - com validação individual
+    do {
         read_string_input("Data (dd/mm/aaaa): ", new_finance.date, sizeof(new_finance.date));
-        read_string_input("Categoria: ", new_finance.category, sizeof(new_finance.category));
-        
-        // Tipo: receita ou despesa
-        char type;
-        do {
-            read_string_input("Tipo (R para Receita, D para Despesa): ", &type, 2);
-        } while (type != 'R' && type != 'r' && type != 'D' && type != 'd');
-        
-        new_finance.type = type;
-        
-        if (!is_valid_finance(&new_finance)) {
-            printf("Dados inválidos! Por favor, tente novamente.\n");
-        } else {
-            printf("Dados Validos! Por favor, precione qualquer tecla.\n");
+        if (!validation_date(new_finance.date)) {
+            print_error("Data inválida! Use o formato dd/mm/aaaa e insira uma data real.");
         }
-
-        getchar();
-
-    } while (!is_valid_finance(&new_finance));
+    } while (!validation_date(new_finance.date));
     
+    // Categoria - com validação individual
+    do {
+        read_string_input("Categoria: ", new_finance.category, sizeof(new_finance.category));
+        if (!is_valid_string(new_finance.category, sizeof(new_finance.category))) {
+            print_error("Categoria não pode estar vazia e deve ter até 49 caracteres.");
+        }
+    } while (!is_valid_string(new_finance.category, sizeof(new_finance.category)));
+    
+    // Tipo: receita ou despesa - com validação individual
+    char type_input[2];
+    do {
+        read_string_input("Tipo (R para Receita, D para Despesa): ", type_input, sizeof(type_input));
+        new_finance.type = type_input[0];
+        
+        if (new_finance.type != 'R' && new_finance.type != 'r' && 
+            new_finance.type != 'D' && new_finance.type != 'd') {
+            print_error("Tipo inválido! Use 'R' para Receita ou 'D' para Despesa.");
+        }
+    } while (new_finance.type != 'R' && new_finance.type != 'r' && 
+             new_finance.type != 'D' && new_finance.type != 'd');
+
+    // Converter para maiúscula
+    if (new_finance.type == 'r') new_finance.type = 'R';
+    if (new_finance.type == 'd') new_finance.type = 'D';
+
     new_finance.status = true;
 
     printf("\n");
