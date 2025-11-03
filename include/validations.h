@@ -39,4 +39,7 @@ bool is_valid_people(const People *person);
 // Valida uma struct Residence
 bool is_valid_residence(const Residence *residence);
 
+// Valida o ID de Pessoa
+bool is_valid_people_id(const int);
+
 #endif
