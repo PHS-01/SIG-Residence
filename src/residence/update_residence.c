@@ -20,7 +20,7 @@ void update_residence_ui() {
     set_search_residence_id(id);
     Residence existing_residence;
     if (!read(&existing_residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
-        print_error("Residência com ID %d não encontrada ou está inativa.");
+        print_error("Residência com ID %d não encontrada ou está inativa.", id);
         return;
     }
 

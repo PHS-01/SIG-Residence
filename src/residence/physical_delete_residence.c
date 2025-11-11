@@ -19,7 +19,7 @@ void physical_delete_residence_ui() {
     set_search_residence_id(id);
     Residence residence;
     if (!read(&residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
-        print_error("Residência com ID %d não encontrada.");
+        print_error("Residência com ID %d não encontrada.", id);
         return;
     }
 

@@ -14,7 +14,7 @@ void read_residence_ui() {
         if (read(&residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
             print_residence_detail(&residence);
         } else {
-            print_error("Residência com ID %d não encontrada ou está inativa.");
+            print_error("Residência com ID %d não encontrada ou está inativa.", id);
         }
     } else {
         print_error("ID inválido.");

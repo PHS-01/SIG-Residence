@@ -19,7 +19,7 @@ void delete_finance_ui() {
     set_search_finance_id(id);
     Finance finance;
     if (!read(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
-        print_error("Transação com ID %d não encontrada ou já está inativa.");
+        print_error("Transação com ID %d não encontrada ou já está inativa.", id);
         return;
     }
 

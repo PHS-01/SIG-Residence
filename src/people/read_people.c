@@ -14,7 +14,7 @@ void read_people_ui() {
         if (read(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
             print_people_detail(&person);
         } else {
-            print_error("Pessoa com ID %d não encontrada ou está inativa.");
+            print_error("Pessoa com ID %d não encontrada ou está inativa.", id);
         }
     } else {
         print_error("ID inválido.");
