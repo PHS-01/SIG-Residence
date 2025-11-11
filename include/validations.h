@@ -6,6 +6,9 @@
 #include "finance.h"
 #include "residence.h"
 
+// Valida se o nome é válido
+bool is_valid_name(const char *name);
+
 // Valida se uma string é uma data válida no formato "dd/mm/yyyy"
 bool validation_date(const char *date);
 

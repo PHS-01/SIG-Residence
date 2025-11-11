@@ -11,6 +11,69 @@
 #include "config.h"
 #include "controllers.h"
 
+// Valida se o nome é válido
+bool is_valid_name(const char *name) {
+    if (name == NULL || strlen(name) == 0) {
+        return false;
+    }
+    
+    int len = strlen(name);
+    if (len < 2 || len > 100) {
+        return false;
+    }
+    
+    // Verificar se tem pelo menos um espaço (nome e sobrenome)
+    bool has_space = false;
+    for (int i = 0; i < len; i++) {
+        if (name[i] == ' ') {
+            has_space = true;
+            break;
+        }
+    }
+    
+    if (!has_space) {
+        return false;
+    }
+    
+    // Verificar caracteres básicos
+    int letter_count = 0;
+    for (int i = 0; i < len; i++) {
+        unsigned char c = name[i];
+        
+        // Contar letras
+        if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+            letter_count++;
+        }
+        
+        // Caracteres permitidos: letras, espaços, hífens, apóstrofos e caracteres acentuados
+        if (!((c >= 'A' && c <= 'Z') || 
+              (c >= 'a' && c <= 'z') ||
+              c == ' ' || c == '-' || c == '\'' ||
+              (c >= 128))) { // Permitir caracteres acentuados
+            return false;
+        }
+    }
+    
+    // Deve ter pelo menos 2 letras
+    if (letter_count < 2) {
+        return false;
+    }
+    
+    // Verificar espaços consecutivos
+    for (int i = 0; i < len - 1; i++) {
+        if (name[i] == ' ' && name[i + 1] == ' ') {
+            return false;
+        }
+    }
+    
+    // Verificar se não começa ou termina com espaço
+    if (name[0] == ' ' || name[len - 1] == ' ') {
+        return false;
+    }
+    
+    return true;
+}
+
 bool is_valid_people_id(const int people_id) {
     People people;
 
