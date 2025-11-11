@@ -29,9 +29,17 @@ int generate_finance_id(void);
 // Listagens
 void list_all_finance(void);
 void list_active_finance(void);
+void list_finance_by_people_id(int people_id);
 
 // Função para definir ID de pesquisa
 void set_search_finance_id(int id);
+
+// Contagem de finanças por people_id
+int count_finance_by_people_id(int people_id);
+
+// Exclusão de finanças por people_id
+int delete_finance_by_people_id(int people_id);
+
 
 // Interfaces de usuário (UI)
 void create_finance_ui();
