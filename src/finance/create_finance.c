@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h> // Adicionado para toupper()
 #include "screens.h"
 #include "finance.h"
 #include "config.h"
@@ -13,63 +14,72 @@ void create_finance_ui() {
     // Gera ID automaticamente
     new_finance.id = generate_finance_id();
 
-    // ID_people - com validação individual
-    do {
+    // ID_people - Padrão while(true) com break
+    while (true) {
         if (!read_int_input("ID de Pessoa: ", &new_finance.people_id)) {
-            print_error("ID de Pessoa inválido.");
+            print_error("ID de Pessoa inválido (formato incorreto).");
+        } else if (!is_valid_people_id(new_finance.people_id)) {
+            print_error("ID de Pessoa não encontrado ou logicamente inválido.");
+        } else {
+            break; // Sucesso
         }
-    } while (!is_valid_people_id(new_finance.people_id));
+    }
     
-    // Descrição - com validação individual
-    do {
+    // Descrição - Padrão while(true) com break
+    while (true) {
         read_string_input("Descrição: ", new_finance.description, sizeof(new_finance.description));
         if (!is_valid_string(new_finance.description, sizeof(new_finance.description))) {
             print_error("Descrição não pode estar vazia e deve ter até 99 caracteres.");
+        } else {
+            break; // Sucesso
         }
-    } while (!is_valid_string(new_finance.description, sizeof(new_finance.description)));
+    }
     
-    // Valor - com validação individual
-    do {
+    // Valor - Padrão while(true) com break
+    while (true) {
         if (!read_float_input("Valor: R$ ", &new_finance.value)) {
-            print_error("Valor inválido. Digite um número válido.");
-            new_finance.value = -1; // Forçar repetição
+            print_error("Valor inválido. Digite um número válido (ex: 123.45).");
         } else if (!is_valid_value(new_finance.value)) {
             print_error("Valor não pode ser negativo.");
+        } else {
+            break; // Sucesso
         }
-    } while (!is_valid_value(new_finance.value));
+    }
     
-    // Data - com validação individual
-    do {
+    // Data - Padrão while(true) com break
+    while (true) {
         read_string_input("Data (dd/mm/aaaa): ", new_finance.date, sizeof(new_finance.date));
         if (!validation_date(new_finance.date)) {
             print_error("Data inválida! Use o formato dd/mm/aaaa e insira uma data real.");
+        } else {
+            break; // Sucesso
         }
-    } while (!validation_date(new_finance.date));
+    }
     
-    // Categoria - com validação individual
-    do {
+    // Categoria - Padrão while(true) com break
+    while (true) {
         read_string_input("Categoria: ", new_finance.category, sizeof(new_finance.category));
         if (!is_valid_string(new_finance.category, sizeof(new_finance.category))) {
             print_error("Categoria não pode estar vazia e deve ter até 49 caracteres.");
+        } else {
+            break; // Sucesso
         }
-    } while (!is_valid_string(new_finance.category, sizeof(new_finance.category)));
+    }
     
-    // Tipo: receita ou despesa - com validação individual
+    // Tipo: receita ou despesa - Padrão while(true) com break
     char type_input[2];
-    do {
+    while (true) {
         read_string_input("Tipo (R para Receita, D para Despesa): ", type_input, sizeof(type_input));
-        new_finance.type = type_input[0];
         
-        if (new_finance.type != 'R' && new_finance.type != 'r' && 
-            new_finance.type != 'D' && new_finance.type != 'd') {
+        // Normaliza o input *antes* de validar
+        new_finance.type = toupper(type_input[0]);
+        
+        if (new_finance.type == 'R' || new_finance.type == 'D') {
+            break; // Sucesso
+        } else {
             print_error("Tipo inválido! Use 'R' para Receita ou 'D' para Despesa.");
         }
-    } while (new_finance.type != 'R' && new_finance.type != 'r' && 
-             new_finance.type != 'D' && new_finance.type != 'd');
-
-    // Converter para maiúscula
-    if (new_finance.type == 'r') new_finance.type = 'R';
-    if (new_finance.type == 'd') new_finance.type = 'D';
+    }
 
     new_finance.status = true;
 
