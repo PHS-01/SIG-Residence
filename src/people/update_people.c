@@ -20,7 +20,7 @@ void update_people_ui() {
     set_search_id(id);
     People existing_person;
     if (!read(&existing_person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
-        print_error("Pessoa com ID %d não encontrada ou está inativa.");
+        print_error("Pessoa com ID %d não encontrada ou está inativa.", id);
         return;
     }
 
@@ -37,8 +37,13 @@ void update_people_ui() {
     read_string_input("Novo nome: ", temp, sizeof(temp));
     if (strlen(temp) > 0) {
         do {
-            if (!is_valid_string(temp, sizeof(updated_person.name))) {
-                print_error("Nome não pode estar vazio e deve ter até 99 caracteres.");
+            if (!is_valid_name(temp)) {
+                print_error("Nome inválido! Deve conter:");
+                print_error("  - Pelo menos nome e sobrenome");
+                print_error("  - Apenas letras, espaços, hífens e apóstrofos");
+                print_error("  - Entre 2 e 100 caracteres");
+                print_error("  - Não pode ter espaços consecutivos");
+                print_error("  - Não pode começar ou terminar com espaço");
                 read_string_input("Novo nome: ", temp, sizeof(temp));
             } else {
                 break;

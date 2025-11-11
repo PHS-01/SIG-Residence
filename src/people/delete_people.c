@@ -19,7 +19,7 @@ void delete_people_ui() {
     set_search_id(id);
     People person;
     if (!read(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
-        print_error("Pessoa com ID %d não encontrada ou já está inativa.");
+        print_error("Pessoa com ID %d não encontrada ou já está inativa.", id);
         return;
     }
 

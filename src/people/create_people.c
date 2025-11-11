@@ -15,11 +15,17 @@ void create_people_ui() {
     
     // Nome - com validação individual
     do {
-        read_string_input("Nome: ", new_person.name, sizeof(new_person.name));
-        if (!is_valid_string(new_person.name, sizeof(new_person.name))) {
-            print_error("Nome não pode estar vazio e deve ter até 99 caracteres.");
+        read_string_input("Nome completo: ", new_person.name, sizeof(new_person.name));
+        if (!is_valid_name(new_person.name)) {
+            print_error("Nome inválido! Deve conter:");
+            print_error("  - Pelo menos nome e sobrenome");
+            print_error("  - Apenas letras, espaços, hífens e apóstrofos");
+            print_error("  - Entre 2 e 100 caracteres");
+            print_error("  - Não pode ter espaços consecutivos");
+            print_error("  - Não pode começar ou terminar com espaço");
+            print_error("Exemplo: João Silva ou Maria dos Santos");
         }
-    } while (!is_valid_string(new_person.name, sizeof(new_person.name)));
+    } while (!is_valid_name(new_person.name));
     
     // Data de nascimento - com validação individual
     do {
