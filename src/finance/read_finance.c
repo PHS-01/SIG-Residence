@@ -15,16 +15,23 @@ void read_finance_ui() {
         if (read(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
             print_finance_detail(&finance);
 
-            People people;
-            set_search_id(finance.people_id);
-            
-            if (read(&people, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
-                print_people_detail(&people);
+            // Buscar e exibir dados da pessoa associada
+            if (finance.people_id > 0) {
+                printf("\n");
+                print_info("================= DADOS DA PESSOA ASSOCIADA ===================");
+                People person;
+                set_search_id(finance.people_id);
+                
+                if (read(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+                    print_people_detail(&person);
+                } else {
+                    print_error("Pessoa com ID %d não encontrada ou está inativa.", finance.people_id);
+                }
             } else {
-                print_error("Pessoa com ID %d não encontrada ou está inativa.");
+                print_info("Esta transação não está associada a nenhuma pessoa.");
             }
         } else {
-            print_error("Transação com ID %d não encontrada ou está inativa.");
+            print_error("Transação com ID %d não encontrada ou está inativa.", id);
         }
     } else {
         print_error("ID inválido.");
