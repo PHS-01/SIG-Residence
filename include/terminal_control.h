@@ -2,6 +2,7 @@
 #define TERMINAL_CONTROL_H
 
 #include <stddef.h> // Para size_t
+#include <stdarg.h> // Para va_list
 
 // Cores básicas ANSI
 enum Color {
@@ -33,11 +34,11 @@ enum Color {
 #define COLOR_CYAN    "\033[36m"
 #define COLOR_WHITE   "\033[37m"
 
-// Funções de output
-void print_success(const char* message);
-void print_error(const char* message);
-void print_warning(const char* message);
-void print_info(const char* message);
+// Funções de output (agora variádicas)
+void print_success(const char* message, ...);
+void print_error(const char* message, ...);
+void print_warning(const char* message, ...);
+void print_info(const char* message, ...);
 
 // ANSI Utils
 void move_cursor(int, int);
