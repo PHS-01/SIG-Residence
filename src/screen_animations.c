@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>     // ✅ Para wchar_t, wcslen, etc.
+#include <wchar.h>  // Para wchar_t, wcslen, etc.
 
 // Funções que desenha as telas
 #include "screens.h"
