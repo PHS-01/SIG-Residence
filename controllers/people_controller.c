@@ -60,12 +60,14 @@ void print_people_detail(const void *data) {
     printf("╔══════════════════════════════════════════════════════════════╗\n");
     printf("║                     DETALHES DA PESSOA                       ║\n");
     printf("╠══════════════════════════════════════════════════════════════╣\n");
-    printf("║ ID: %-56d ║\n", p->id);
-    printf("║ Nome: %-54s ║\n", p->name);
-    printf("║ Data de Nascimento: %-40s ║\n", p->birth_date);
-    printf("║ Email: %-53s ║\n", p->email);
-    printf("║ Telefone: %-50s ║\n", p->phone);
-    printf("║ Status: %-52s ║\n", status_text);
+    
+    print_detail_line_int("ID:", p->id, 3, 56);
+    print_detail_line("Nome:", p->name, 6, 53);
+    print_detail_line("Data de Nascimento:", p->birth_date, 19, 40);
+    print_detail_line("Email:", p->email, 7, 52);
+    print_detail_line("Telefone:", p->phone, 10, 49);
+    print_detail_line("Status:", status_text, 8, 51);
+    
     printf("╚══════════════════════════════════════════════════════════════╝\n");
 }
 
@@ -75,9 +77,18 @@ void print_people_table(const void *data) {
     
     const char *status_text = p->status ? "Ativo" : "Inativo";
     
-    // Colunas ajustadas com larguras maiores para melhor alinhamento
-    printf("║ %-4d ║ %-27s ║ %-12s ║ %-28s ║ %-16s ║ %-9s ║\n",
-           p->id, p->name, p->birth_date, p->email, p->phone, status_text);
+    printf("║ ");
+    printf("%-4d ║ ", p->id);
+    print_padded_string(p->name, 27);
+    printf(" ║ ");
+    print_padded_string(p->birth_date, 12);
+    printf(" ║ ");
+    print_padded_string(p->email, 28);
+    printf(" ║ ");
+    print_padded_string(p->phone, 16);
+    printf(" ║ ");
+    print_padded_string(status_text, 9);
+    printf(" ║\n");
 }
 
 void list_all_people(void) {

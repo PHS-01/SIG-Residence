@@ -190,17 +190,23 @@ void print_finance_detail(const void *data) {
     const char *type_text = (f->type == 'R' || f->type == 'r') ? "Receita" : "Despesa";
     const char *status_text = f->status ? "Ativo" : "Inativo";
     
+    // Para o valor, formatando com R$
+    char value_str[30];
+    snprintf(value_str, sizeof(value_str), "R$ %.2f", f->value);
+    
     printf("╔══════════════════════════════════════════════════════════════╗\n");
     printf("║                    DETALHES DA TRANSAÇÃO                     ║\n");
     printf("╠══════════════════════════════════════════════════════════════╣\n");
-    printf("║ ID: %-56d ║\n", f->id);
-    printf("║ ID de Pessoa: %-46d ║\n", f->people_id);
-    printf("║ Descrição: %-49s ║\n", f->description);
-    printf("║ Valor: R$ %-50.2f ║\n", f->value);
-    printf("║ Data: %-54s ║\n", f->date);
-    printf("║ Categoria: %-49s ║\n", f->category);
-    printf("║ Tipo: %-54s ║\n", type_text);
-    printf("║ Status: %-52s ║\n", status_text);
+    
+    print_detail_line_int("ID:", f->id, 3, 56);
+    print_detail_line_int("ID de Pessoa:", f->people_id, 13, 46);
+    print_detail_line("Descrição:", f->description, 11, 48);
+    print_detail_line("Valor:", value_str, 7, 52);
+    print_detail_line("Data:", f->date, 6, 53);
+    print_detail_line("Categoria:", f->category, 11, 48);
+    print_detail_line("Tipo:", type_text, 6, 53);
+    print_detail_line("Status:", status_text, 8, 51);
+    
     printf("╚══════════════════════════════════════════════════════════════╝\n");
 }
 
@@ -211,9 +217,20 @@ void print_finance_table(const void *data) {
     const char *type_text = (f->type == 'R' || f->type == 'r') ? "Receita" : "Despesa";
     const char *status_text = f->status ? "Ativo" : "Inativo";
     
-    // Colunas ajustadas para tabela formatada
-    printf("║ %-4d ║ %-9d ║ %-23s ║ %-10.2f ║ %-12s ║ %-20s ║ %-9s ║ %-9s ║\n",
-           f->id, f->people_id, f->description, f->value, f->date, f->category, type_text, status_text);
+    printf("║ ");
+    printf("%-4d ║ ", f->id);
+    printf("%-9d ║ ", f->people_id);
+    print_padded_string(f->description, 23);
+    printf(" ║ ");
+    printf("%-10.2f ║ ", f->value);
+    print_padded_string(f->date, 12);
+    printf(" ║ ");
+    print_padded_string(f->category, 20);
+    printf(" ║ ");
+    print_padded_string(type_text, 9);
+    printf(" ║ ");
+    print_padded_string(status_text, 9);
+    printf(" ║\n");
 }
 
 void list_all_finance(void) {
