@@ -18,7 +18,7 @@ void physical_delete_finance_ui() {
     // Primeiro verifica se a transação existe
     set_search_finance_id(id);
     Finance finance;
-    if (!read(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
+    if (!read_data(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
         print_error("Transação com ID %d não encontrada.");
         return;
     }
