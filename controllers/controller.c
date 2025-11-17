@@ -9,52 +9,39 @@
 #include "residence.h"
 
 // Cria ou adiciona dados ao arquivo
-void create(const void* data, size_t size, const char* file_name) {
+int create(const void* data, size_t size, const char* file_name) {
     FILE* file = fopen(file_name, "ab");  // Abre o arquivo para escrita binária (append)
     if (!file) {
         perror("Erro ao abrir arquivo");  // Se falhar, exibe erro
-        return;
+        return 0;  // Retorna 0 em caso de falha
     } else {
         fwrite(data, size, 1, file);  // Escreve os dados no arquivo
     }
     fclose(file);  // Fecha o arquivo
+    return 1;  // Retorna 1 em caso de sucesso
 }
 
 // Lê dados do arquivo e verifica se há correspondência com a função `match`
-int read(void *output, size_t size, const char* file_name, int (*match)(const void *)) {
-    FILE *file = fopen(file_name, "rb");  // Abre o arquivo para leitura binária
+int read_data(void *output, size_t size, const char* file_name, int (*match)(const void *)) {
+    FILE *file = fopen(file_name, "rb");
     if (!file) {
-        perror("Erro ao abrir arquivo");  // Se falhar, exibe erro
+        perror("Erro ao abrir arquivo");
+        return 0;
     } else {
-        void *buffer = malloc(size);  // Aloca buffer para armazenar os dados lidos
-        while (fread(buffer, size, 1, file)) {  // Lê os dados do arquivo
-            if (match(buffer)) {  // Se encontrar uma correspondência
-                memcpy(output, buffer, size);  // Copia os dados para o `output`
-                free(buffer);  // Libera o buffer
-                fclose(file);  // Fecha o arquivo
-                return 1;  // Retorna 1 se encontrar a correspondência
+        void *buffer = malloc(size);
+        while (fread(buffer, size, 1, file)) {
+            if (match(buffer)) {
+                memcpy(output, buffer, size);
+                free(buffer);
+                fclose(file);
+                return 1;
             }
         }
-        free(buffer);  // Libera o buffer se não encontrar correspondência
+        free(buffer);
     }
-    fclose(file);  // Fecha o arquivo
-    return 0;  // Retorna 0 se não encontrar a correspondência
+    fclose(file);
+    return 0;
 }
-
-// Função comentada para listar registros
-// void list_records(size_t size, const char *filename, void (*print)(const void *)) {
-//     FILE *file = fopen(filename, "rb");
-//     if (!file) {
-//         perror("Erro ao abrir arquivo");
-//         return;
-//     }
-//     void *buffer = malloc(size);
-//     while (fread(buffer, size, 1, file)) {
-//         print(buffer);
-//     }
-//     free(buffer);
-//     fclose(file);
-// }
 
 // Lista todos os registros
 void list_records(size_t size, void (*print)(const void *), int (*match)(const void *), const char* filename) {
