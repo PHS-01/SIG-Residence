@@ -21,7 +21,9 @@ void dashboard_reports() {
         draw_menu_option(5, "Relatorio Completo de Residencias", MENU_WIDTH);
         draw_menu_option(6, "Relatorio de Residencias Ativas", MENU_WIDTH);
         draw_menu_option(7, "Relatorio Consolidado Geral", MENU_WIDTH);
-        draw_menu_option(8, "Estatisticas do Sistema", MENU_WIDTH);
+        draw_menu_option(8, "Relatorio por Mes de Nascimento", MENU_WIDTH);
+        draw_menu_option(9, "Relatorio por Ano de Nascimento", MENU_WIDTH);
+        draw_menu_option(10, "Estatisticas do Sistema", MENU_WIDTH);
         draw_menu_option(0, "Voltar ao Menu anterior", MENU_WIDTH);
         draw_menu_footer(MENU_WIDTH);
         
@@ -58,6 +60,12 @@ void dashboard_reports() {
                 generate_consolidated_report();
                 break;
             case 8:
+                generate_birth_report(true);
+                break;
+            case 9:
+                generate_birth_report(false);
+                break;
+            case 10:
                 show_system_statistics();
                 break;
             case 0:
@@ -65,7 +73,7 @@ void dashboard_reports() {
                 break;
         }
 
-        if (opcao != 0 && opcao >= 1 && opcao <= 8) {
+        if (opcao != 0 && opcao >= 1 && opcao <= 10) {
             printf("\n");
             print_info("[ Pressione ENTER para continuar ]");
             wait_for_enter();

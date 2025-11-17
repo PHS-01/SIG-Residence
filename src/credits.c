@@ -19,6 +19,7 @@ void credits(void) {
         "Pedro Henrique da Silva",
         "Gleydson Henrique Dantas da Silva",
         "Paulo André Alves de Moura",
+        "Nikcael Gidalte Lopes da Silva",
         "",
         "O R I E N T A D O R",
         "Flavius da Luz e Gorgônio",

@@ -149,40 +149,56 @@ bool validation_date(const char *date) {
 // Valida o telefone (com ou sem código de país, apenas números e o formato correto)
 bool is_valid_phone(const char *phone) {
     int len = strlen(phone);
-    
+
     if (len < 9 || len > 20) {
         return false;
     }
-    
-    // Verificar caracteres válidos
+
+    // Verificar caracteres permitidos
     for (int i = 0; i < len; i++) {
-        if (!isdigit(phone[i]) && phone[i] != '+' && phone[i] != '-' && phone[i] != ' ' && phone[i] != '(' && phone[i] != ')') {
+        if (!isdigit(phone[i]) &&
+            phone[i] != '+' &&
+            phone[i] != '-' &&
+            phone[i] != ' ' &&
+            phone[i] != '(' &&
+            phone[i] != ')') 
+        {
             return false;
         }
     }
-    
-    // Verificar se começa com + e tem código de país
+
+    // "+" só pode ser o primeiro caractere
+    for (int i = 1; i < len; i++) {
+        if (phone[i] == '+') {
+            return false;
+        }
+    }
+
+    // Contar apenas os dígitos
+    int digit_count = 0;
+    for (int i = 0; i < len; i++) {
+        if (isdigit(phone[i])) digit_count++;
+    }
+
+    // Validação geral de quantidade de dígitos (Brasil)
+    // 10 dígitos → fixo (ex: 1134567890)
+    // 11 dígitos → celular (ex: 11987654321)
+    if (digit_count == 10) {
+        return true;
+    }
+    if (digit_count == 11) {
+        return true;
+    }
+
+    // Caso use formato internacional +55...
     if (phone[0] == '+') {
-        // Deve ter pelo menos 3 dígitos após o + (código país + número)
-        int digit_count = 0;
-        for (int i = 1; i < len; i++) {
-            if (isdigit(phone[i])) digit_count++;
-        }
-        if (digit_count < 9) {
-            return false;
-        }
-    } else {
-        // Telefone nacional - contar dígitos
-        int digit_count = 0;
-        for (int i = 0; i < len; i++) {
-            if (isdigit(phone[i])) digit_count++;
-        }
-        if (digit_count < 9) {
-            return false;
+        // Aceitar de 12 a 13 dígitos (+55 + DDD + número)
+        if (digit_count >= 12 && digit_count <= 13) {
+            return true;
         }
     }
-    
-    return true;
+
+    return false;
 }
 
 // Valida o email (forma mais robusta)

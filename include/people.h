@@ -35,6 +35,8 @@ int generate_people_id(void);
 // Listagens
 void list_all_people(void);
 void list_active_people(void);
+void list_birthdays_by_month(void);
+void list_birthdays_by_year(void);
 
 // Interfaces de usuário (UI)
 void create_people_ui();

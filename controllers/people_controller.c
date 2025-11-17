@@ -138,3 +138,98 @@ void list_active_people(void) {
     
     fclose(file);
 }
+
+void list_birthdays_by_month(void) {
+    int month;
+
+    printf("Digite o mês (1-12): ");
+    scanf("%d", &month);
+    clear_input_buffer(); // se você tiver essa função, ajuda com o \n pendente
+
+    if (month < 1 || month > 12) {
+        print_error("Mês inválido. Digite um número entre 1 e 12.");
+        return;
+    }
+    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║                                   R E L A T Ó R I O   P O R   M Ê S   D E                                       ║\n");
+    printf("║                                            N A S C I M E N T O                                                  ║\n");
+    printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+    printf("║ Mês selecionado: %02d                                                                                             ║\n", month);
+    printf("╠══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╣\n");
+    printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
+    printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
+
+    FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
+    if (!file) {
+        printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+        return;
+    }
+
+    People person;
+    int count = 0;
+
+    while (fread(&person, sizeof(People), 1, file)) {
+        if (!person.status) continue;
+
+        int d, m, y;
+        sscanf(person.birth_date, "%d/%d/%d", &d, &m, &y);
+
+        if (m == month) {
+            print_people_table(&person);
+            count++;
+        }
+    }
+
+    printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+    printf("Total de aniversariantes no mês %02d: %d\n", month, count);
+
+    fclose(file);
+}
+void list_birthdays_by_year() {
+    int year;
+
+    printf("Digite o ano de nascimento: ");
+    scanf("%d", &year);
+    clear_input_buffer(); // se existir no seu sistema
+
+    if (year < 1900 || year > 2100) {
+        print_error("Ano inválido! Digite um ano razoável (1900–2100).");
+        return;
+    }
+    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║                                   R E L A T Ó R I O   P O R   A N O   D E                                       ║\n");
+    printf("║                                            N A S C I M E N T O                                                  ║\n");
+    printf("╠═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\n");
+    printf("║ Ano selecionado: %-4d                                                                                           ║\n", year);
+    printf("╠══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╣\n");
+    printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
+    printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
+
+    FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
+    if (!file) {
+        printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+        return;
+    }
+
+    People person;
+    int count = 0;
+
+    while (fread(&person, sizeof(People), 1, file)) {
+        if (!person.status) continue;  // Ignora registros inativos
+
+        int d, m, y;
+        sscanf(person.birth_date, "%d/%d/%d", &d, &m, &y);
+
+        if (y == year) {
+           print_people_table(&person);
+            count++;
+        }
+    }
+
+    printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+    printf("Total de pessoas nascidas em %d: %d\n", year, count);
+
+    fclose(file);
+}
