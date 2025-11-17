@@ -17,6 +17,15 @@
 // Largura padrão dos menus
 #define MENU_WIDTH 70
 
+// Função para calcular o comprimento real da string no terminal (considerando caracteres acentuados)
+int string_display_length(const char* str);
+void print_padded_string(const char* str, int width);
+
+// Funções para imprimir linhas detalhadas
+void print_detail_line(const char* label, const char* value, int label_width, int value_width);
+void print_detail_line_int(const char* label, int value, int label_width, int value_width);
+void print_detail_line_float(const char* label, float value, int label_width, int value_width);
+
 // Funções para desenhar bordas
 void draw_top_border(int width);
 void draw_bottom_border(int width);

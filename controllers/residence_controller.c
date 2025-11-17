@@ -58,15 +58,17 @@ void print_residence_detail(const void *data) {
     printf("╔══════════════════════════════════════════════════════════════╗\n");
     printf("║                    DETALHES DA RESIDENCIA                    ║\n");
     printf("╠══════════════════════════════════════════════════════════════╣\n");
-    printf("║ ID: %-56d ║\n", r->id);
-    printf("║ Endereço: %-50s ║\n", r->address);
-    printf("║ Número: %-52d ║\n", r->number);
-    printf("║ Complemento: %-47s ║\n", r->complement);
-    printf("║ Bairro: %-52s ║\n", r->neighborhood);
-    printf("║ Cidade: %-52s ║\n", r->city);
-    printf("║ Estado: %-52s ║\n", r->state);
-    printf("║ CEP: %-55s ║\n", r->cep);
-    printf("║ Status: %-52s ║\n", status_text);
+    
+    print_detail_line_int("ID:", r->id, 3, 56);
+    print_detail_line("Endereço:", r->address, 10, 49);
+    print_detail_line_int("Número:", r->number, 8, 51);
+    print_detail_line("Complemento:", r->complement, 13, 46);
+    print_detail_line("Bairro:", r->neighborhood, 8, 51);
+    print_detail_line("Cidade:", r->city, 8, 51);
+    print_detail_line("Estado:", r->state, 8, 51);
+    print_detail_line("CEP:", r->cep, 5, 54);
+    print_detail_line("Status:", status_text, 8, 51);
+    
     printf("╚══════════════════════════════════════════════════════════════╝\n");
 }
 
@@ -76,9 +78,23 @@ void print_residence_table(const void *data) {
     
     const char *status_text = r->status ? "Ativo" : "Inativo";
     
-    printf("║ %-4d ║ %-20s ║ %-6d ║ %-12s ║ %-12s ║ %-12s ║ %-6s ║ %-10s ║ %-8s ║\n",
-           r->id, r->address, r->number, r->complement, r->neighborhood, 
-           r->city, r->state, r->cep, status_text);
+    printf("║ ");
+    printf("%-4d ║ ", r->id);
+    print_padded_string(r->address, 20);
+    printf(" ║ ");
+    printf("%-6d ║ ", r->number);
+    print_padded_string(r->complement, 12);
+    printf(" ║ ");
+    print_padded_string(r->neighborhood, 12);
+    printf(" ║ ");
+    print_padded_string(r->city, 12);
+    printf(" ║ ");
+    print_padded_string(r->state, 6);
+    printf(" ║ ");
+    print_padded_string(r->cep, 10);
+    printf(" ║ ");
+    print_padded_string(status_text, 8);
+    printf(" ║\n");
 }
 
 void list_all_residence(void) {

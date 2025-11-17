@@ -4,8 +4,8 @@
 #include <stddef.h>
 
 // Funções de manipulação de dados no banco/arquivo (CRUD)
-void create(const void*, size_t, const char*);
-int read(void*, size_t, const char*, int (*match)(const void *));
+int create(const void*, size_t, const char*);
+int read_data(void*, size_t, const char*, int (*match)(const void *));
 void list_records(size_t size, void (*print)(const void *), int (*match)(const void *), const char*);
 int update(const void*, size_t, const char*, int (*match)(const void *));
 int delete(size_t, const char*, int (*match)(const void *));

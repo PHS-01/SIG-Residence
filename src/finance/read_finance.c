@@ -12,7 +12,7 @@ void read_finance_ui() {
         printf("\n");
         set_search_finance_id(id);
         Finance finance;
-        if (read(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
+        if (read_data(&finance, sizeof(Finance), FILE_NAME_FINANCE, match_finance_by_id)) {
             print_finance_detail(&finance);
 
             // Buscar e exibir dados da pessoa associada
@@ -22,7 +22,7 @@ void read_finance_ui() {
                 People person;
                 set_search_id(finance.people_id);
                 
-                if (read(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+                if (read_data(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
                     print_people_detail(&person);
                 } else {
                     print_error("Pessoa com ID %d não encontrada ou está inativa.", finance.people_id);

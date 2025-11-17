@@ -19,7 +19,7 @@ void update_people_ui() {
     // Primeiro verifica se a pessoa existe
     set_search_id(id);
     People existing_person;
-    if (!read(&existing_person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+    if (!read_data(&existing_person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
         print_error("Pessoa com ID %d não encontrada ou está inativa.", id);
         return;
     }
