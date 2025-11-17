@@ -24,11 +24,11 @@ void create_file_name_residence(void) {
     snprintf(FILE_NAME_RESIDENCE, sizeof(FILE_NAME_RESIDENCE), "%s_residence.%s", DATABASE_NAME, FILE_TYPE);
 }
 
-// E modifique create_database para criar também o arquivo de finanças:
 void create_database(void) {
     create_file_name_people();
     create_file_name_finance();
-
+    create_file_name_residence();
+    
     // Cria o arquivo de pessoas
     FILE *arquivo = fopen(FILE_NAME_PEOPLE, "ab");
     if (arquivo == NULL) {
