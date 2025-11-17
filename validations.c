@@ -79,7 +79,7 @@ bool is_valid_people_id(const int people_id) {
 
     set_search_id(people_id);
 
-    if (read(&people, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+    if (read_data(&people, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
         return true;
     } else {
         return false;
