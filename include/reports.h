@@ -8,6 +8,7 @@ void generate_people_report(bool active_only);
 void generate_finance_report(bool active_only);
 void generate_residence_report(bool active_only);
 void generate_consolidated_report(void);
+void generate_birth_month_report(bool active_only);
 
 // Estatísticas
 void show_system_statistics(void);

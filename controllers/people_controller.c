@@ -138,3 +138,51 @@ void list_active_people(void) {
     
     fclose(file);
 }
+
+void list_birthdays_by_month(void) {
+    int month;
+
+    printf("Digite o mês (1-12): ");
+    scanf("%d", &month);
+    clear_input_buffer(); // se você tiver essa função, ajuda com o \n pendente
+
+    if (month < 1 || month > 12) {
+        print_error("Mês inválido. Digite um número entre 1 e 12.");
+        return;
+    }
+    printf("╔════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║                   R E L A T Ó R I O   D E   A N I V E R S Á R I O S            ║\n");
+    printf("╠════════════════════════════════════════════════════════════════════════════════╣\n");
+    printf("║ Mês selecionado: %02d                                                            ║\n", month);
+    printf("╠══════╦═════════════════════════════╦══════════════╦════════════════════════════╣\n");
+    printf("║  ID  ║ Nome                        ║ Nascimento   ║ Telefone                   ║\n");
+    printf("╠══════╬═════════════════════════════╬══════════════╬════════════════════════════╣\n");
+
+    FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
+    if (!file) {
+        printf("╚══════╩═════════════════════════════╩══════════════╩════════════════════════════╝\n");
+        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+        return;
+    }
+
+    People person;
+    int count = 0;
+
+    while (fread(&person, sizeof(People), 1, file)) {
+        if (!person.status) continue;
+
+        int d, m, y;
+        sscanf(person.birth_date, "%d/%d/%d", &d, &m, &y);
+
+        if (m == month) {
+            printf("║ %-4d ║ %-27s ║ %-12s ║ %-26s ║\n",
+                   person.id, person.name, person.birth_date, person.phone);
+            count++;
+        }
+    }
+
+    printf("╚══════╩═════════════════════════════╩══════════════╩════════════════════════════╝\n");
+    printf("Total de aniversariantes no mês %02d: %d\n", month, count);
+
+    fclose(file);
+}

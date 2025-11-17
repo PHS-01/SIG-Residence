@@ -32,7 +32,14 @@ void generate_residence_report(bool active_only) {
         list_all_residence();
     }
 }
+void generate_birth_month_report(bool active_only) {
+    if (active_only) {
+        list_birthdays_by_month();
+    } else {
+        list_all_people();
+    }
 
+}
 void generate_consolidated_report(void) {
     generate_people_report(false);
     printf("\n");
