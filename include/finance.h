@@ -10,7 +10,7 @@ typedef struct {
     char description[100];
     float value;
     char date[11];           // dd/mm/aaaa
-    char category[50];        
+    char category[50];      // todo: Fazer enum e relatorio para categorias     
     char type;               // 'R' para receita, 'D' para despesa
 } Finance;
 

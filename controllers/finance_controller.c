@@ -291,3 +291,44 @@ void list_active_finance(void) {
     
     fclose(file);
 }
+
+void list_finance_by_category(void) {
+    char categoria[50];
+    
+    printf("Digite a categoria para filtrar: ");
+    read_string_input("", categoria, sizeof(categoria));
+
+    printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║                                  RELATORIO FINANCEIRO POR CATEGORIA                                                  ║\n");
+    printf("║                                                                                                                       ║\n");
+    printf("╠══════╦═══════════╦═════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╣\n");
+    printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
+    printf("╠══════╬═══════════╬═════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
+
+    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
+    if (!file) {
+        printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+        return;
+    }
+
+    Finance finance;
+    int count = 0;
+    float total = 0;
+
+    while (fread(&finance, sizeof(Finance), 1, file)) {
+        if (!finance.status) continue;
+
+        if (strcasecmp(finance.category, categoria) == 0) {
+            print_finance_table(&finance);
+            count++;
+            total += finance.value;
+        }
+    }
+
+    printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+    printf("Total de transações na categoria '%s': %d\n", categoria, count);
+    printf("Valor total: R$ %.2f\n", total);
+
+    fclose(file);
+}
