@@ -32,6 +32,7 @@ void generate_residence_report(bool active_only) {
         list_all_residence();
     }
 }
+
 void generate_birth_report(bool active_only) {
     if (active_only) {
         list_birthdays_by_month();
@@ -40,6 +41,15 @@ void generate_birth_report(bool active_only) {
     }
 
 }
+
+void generate_residence_by_state(void) {
+    list_residence_by_state();
+}
+
+void generate_finance_by_category(void) {
+    list_finance_by_category();
+}
+
 void generate_consolidated_report(void) {
     generate_people_report(false);
     printf("\n");
