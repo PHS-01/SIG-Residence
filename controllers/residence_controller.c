@@ -155,3 +155,53 @@ void list_active_residence(void) {
     
     fclose(file);
 }
+
+// Função para listar residências por estado
+void list_residence_by_state(void) {
+    char estado[30];
+    
+    printf("Digite a sigla do estado (ex: SP, RJ, MG): ");
+    read_string_input("", estado, sizeof(estado));
+    
+    // Converter para maiúsculas
+    for (int i = 0; estado[i]; i++) {
+        estado[i] = toupper(estado[i]);
+    }
+
+    printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║                                  RELATORIO DE RESIDENCIAS POR ESTADO: %-2s                                          ║\n", estado);
+    printf("║                                                                                                                    ║\n");
+    printf("╠══════╦══════════════════════╦════════╦══════════════╦══════════════╦══════════════╦════════╦════════════╦══════════╣\n");
+    printf("║  ID  ║ Endereço             ║ Número ║ Complemento  ║ Bairro       ║ Cidade       ║ Estado ║ CEP        ║ Status   ║\n");
+    printf("╠══════╬══════════════════════╬════════╬══════════════╬══════════════╬══════════════╬════════╬════════════╬══════════╣\n");
+
+    FILE *file = fopen(FILE_NAME_RESIDENCE, "rb");
+    if (!file) {
+        printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
+        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+        return;
+    }
+
+    Residence residence;
+    int count = 0;
+
+    while (fread(&residence, sizeof(Residence), 1, file)) {
+        if (!residence.status) continue;
+
+        char estado_residencia[30];
+        strcpy(estado_residencia, residence.state);
+        for (int i = 0; estado_residencia[i]; i++) {
+            estado_residencia[i] = toupper(estado_residencia[i]);
+        }
+
+        if (strcmp(estado_residencia, estado) == 0) {
+            print_residence_table(&residence);
+            count++;
+        }
+    }
+
+    printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
+    printf("Total de residências no estado '%s': %d\n", estado, count);
+
+    fclose(file);
+}
