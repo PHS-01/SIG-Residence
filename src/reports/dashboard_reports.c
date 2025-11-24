@@ -25,7 +25,8 @@ void dashboard_reports() {
         draw_menu_option(9, "Relatorio por Ano de Nascimento", MENU_WIDTH);
         draw_menu_option(10, "Relatorio de Residencia por Estado", MENU_WIDTH);
         draw_menu_option(11, "Relatorio de Financas por Categoria", MENU_WIDTH);
-        draw_menu_option(12, "Estatisticas do Sistema", MENU_WIDTH);
+        draw_menu_option(12, "Relatorio de Financas por pessoa", MENU_WIDTH);
+        draw_menu_option(13, "Estatisticas do Sistema", MENU_WIDTH);
         draw_menu_option(0, "Voltar ao Menu anterior", MENU_WIDTH);
         draw_menu_footer(MENU_WIDTH);
         
@@ -74,6 +75,9 @@ void dashboard_reports() {
                 generate_finance_by_category();
                 break;
             case 12:
+                generate_finance_by_person();
+                break;
+            case 13:
                 show_system_statistics();
                 break;
             case 0:
@@ -81,7 +85,7 @@ void dashboard_reports() {
                 break;
         }
 
-        if (opcao != 0 && opcao >= 1 && opcao <= 12) {
+        if (opcao != 0 && opcao >= 1 && opcao <= 13) {
             printf("\n");
             print_info("[ Pressione ENTER para continuar ]");
             wait_for_enter();
