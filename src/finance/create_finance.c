@@ -69,17 +69,22 @@ void create_finance_ui() {
     // Tipo: receita ou despesa - Padrão while(true) com break
     char type_input[2];
     while (true) {
-        read_string_input("Tipo (R para Receita, D para Despesa): ", type_input, sizeof(type_input));
-        
-        // Normaliza o input *antes* de validar
-        new_finance.type = toupper(type_input[0]);
-        
-        if (new_finance.type == 'R' || new_finance.type == 'D') {
-            break; // Sucesso
-        } else {
-            print_error("Tipo inválido! Use 'R' para Receita ou 'D' para Despesa.");
-        }
+    read_string_input("Tipo (R para Receita, D para Despesa): ", type_input, sizeof(type_input));
+
+    char c = toupper(type_input[0]);
+
+    if (c == 'R') {
+        new_finance.type = FINANCE_RECEITA;
+        break;
     }
+    else if (c == 'D') {
+        new_finance.type = FINANCE_DESPESA;
+        break;
+    }
+    else {
+        print_error("Tipo inválido! Use R ou D.");
+    }
+}
 
     new_finance.status = true;
 
