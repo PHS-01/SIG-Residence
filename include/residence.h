@@ -30,6 +30,7 @@ int generate_residence_id(void);
 // Listagens
 void list_all_residence(void);
 void list_active_residence(void);
+void list_residence_by_state(void);
 
 // Função para definir ID de pesquisa
 void set_search_residence_id(int id);

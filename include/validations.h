@@ -10,6 +10,8 @@
 bool is_valid_name(const char *name);
 
 // Valida se uma string é uma data válida no formato "dd/mm/yyyy"
+bool validation_bith_date(const char *date);
+// Valida se uma string é uma data válida no formato "dd/mm/yyyy"
 bool validation_date(const char *date);
 
 // Valida se um telefone é válido (com ou sem código de país)

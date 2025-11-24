@@ -30,10 +30,10 @@ void create_people_ui() {
     // Data de nascimento - com validação individual
     do {
         read_string_input("Data de nascimento (dd/mm/aaaa): ", new_person.birth_date, sizeof(new_person.birth_date));
-        if (!validation_date(new_person.birth_date)) {
+        if (!validation_bith_date(new_person.birth_date)) {
             print_error("Data inválida! Use o formato dd/mm/aaaa e insira uma data real.");
         }
-    } while (!validation_date(new_person.birth_date));
+    } while (!validation_bith_date(new_person.birth_date));
     
     // Email - com validação individual
     do {
