@@ -93,7 +93,7 @@ bool is_leap_year(int year) {
 }
 
 // Função para verificar se uma string é um número válido no formato dd/mm/yyyy
-bool validation_date(const char *date) {
+bool validation_bith_date(const char *date) {
     // Verificar formato básico
     if (strlen(date) != 10) {
         return false;
@@ -125,6 +125,58 @@ bool validation_date(const char *date) {
     if (age <= 0 || age >= 120) { 
         return false;
     }
+
+    // Validar dia baseado no mês
+    int days_in_month;
+    switch (month) {
+        case 2:
+            days_in_month = is_leap_year(year) ? 29 : 28;
+            break;
+        case 4: case 6: case 9: case 11:
+            days_in_month = 30;
+            break;
+        default:
+            days_in_month = 31;
+            break;
+    }
+
+    if (day < 1 || day > days_in_month) {
+        return false;
+    }
+
+    return true;
+}
+bool validation_date(const char *date) {
+    // Verificar formato básico
+    if (strlen(date) != 10) {
+        return false;
+    }
+    
+    for (int i = 0; i < 10; i++) {
+        if (i == 2 || i == 5) {
+            if (date[i] != '/') {
+                return false;
+            }
+        } else if (!isdigit(date[i])) {
+            return false;
+        }
+    }
+    
+    // Extrair dia, mês e ano
+    int day, month, year;
+    if (sscanf(date, "%d/%d/%d", &day, &month, &year) != 3) {
+        return false;
+    }
+
+    // Validar mês
+    if (month < 1 || month > 12) {
+        return false;
+    }
+    // Validar ano (1900-2100) 
+    if (year < 1900 || year > 2100) { 
+        return false; 
+    }
+
 
     // Validar dia baseado no mês
     int days_in_month;
