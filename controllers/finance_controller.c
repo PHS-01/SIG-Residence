@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "people.h"
 #include "finance.h"
 #include "config.h"
 #include "menu_borders.h"
@@ -299,7 +300,7 @@ void list_finance_by_category(void) {
     read_string_input("", categoria, sizeof(categoria));
 
     printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                                  RELATORIO FINANCEIRO POR CATEGORIA                                                  ║\n");
+    printf("║                                  RELATORIO FINANCEIRO POR CATEGORIA                                                   ║\n");
     printf("║                                                                                                                       ║\n");
     printf("╠══════╦═══════════╦═════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╣\n");
     printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
@@ -331,4 +332,46 @@ void list_finance_by_category(void) {
     printf("Valor total: R$ %.2f\n", total);
 
     fclose(file);
+}
+void list_finance_by_person(void) {
+    FILE *fp_people = fopen(FILE_NAME_PEOPLE, "rb");
+    FILE *fp_fin = fopen(FILE_NAME_FINANCE, "rb");
+
+    if (!fp_people || !fp_fin) {
+        print_error("Erro ao abrir arquivos de dados.");
+        if (fp_people) fclose(fp_people);
+        if (fp_fin) fclose(fp_fin);
+        return;
+    }
+
+    People p;
+    Finance f;
+
+ 
+    printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+    printf("║                                  RELATÓRIO DE FINANÇAS POR PESSOA                                                     ║\n");
+    printf("║                                                                                                                       ║\n");
+    printf("╠══════╦══════════════════════════════╦═════════════════════╦══════════════════════════╦════════════════════════════════╣\n");
+    printf("║  ID  ║   Nome                       ║ Receitas            ║ Despesas                 ║ Saldo                          ║\n");
+    printf("╠══════╬══════════════════════════════╬═════════════════════╬══════════════════════════╬════════════════════════════════╣\n");
+
+    while (fread(&p, sizeof(People), 1, fp_people)) {
+        if (!p.status) continue;
+
+        float total_r = 0, total_d = 0;
+
+        rewind(fp_fin);
+        while (fread(&f, sizeof(Finance), 1, fp_fin)) {
+            if (f.status && f.people_id == p.id) {
+                if (f.type == FINANCE_RECEITA) total_r += f.value;
+                else total_d += f.value;
+            }
+        }
+
+        printf("║ %-4d ║ %-28s ║ %-19.2f ║ %-24.2f ║ %-30.2f ║\n",
+               p.id, p.name, total_r, total_d, total_r - total_d);
+    }
+    printf("╚══════╩══════════════════════════════╩═════════════════════╩══════════════════════════╩════════════════════════════════╝\n");
+    fclose(fp_people);
+    fclose(fp_fin);
 }
