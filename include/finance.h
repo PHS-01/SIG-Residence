@@ -3,6 +3,11 @@
 
 #include <stdbool.h>
 
+typedef enum {
+    FINANCE_RECEITA = 1,
+    FINANCE_DESPESA = 2
+} FinanceType;
+
 typedef struct {
     bool status;    // ativo ou inativo
     int id;
@@ -11,7 +16,7 @@ typedef struct {
     float value;
     char date[11];           // dd/mm/aaaa
     char category[50];      // todo: Fazer enum e relatorio para categorias     
-    char type;               // 'R' para receita, 'D' para despesa
+    FinanceType type;               // 'R' para receita, 'D' para despesa
 } Finance;
 
 // Funções de match
@@ -31,6 +36,7 @@ void list_all_finance(void);
 void list_active_finance(void);
 void list_finance_by_people_id(int people_id);
 void list_finance_by_category(void);
+void list_finance_by_person(void);
 
 // Função para definir ID de pesquisa
 void set_search_finance_id(int id);
