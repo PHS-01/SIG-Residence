@@ -120,8 +120,9 @@ bool validation_date(const char *date) {
         return false;
     }
 
-    // Validar ano (1900-2100)
-    if (year < 1900 || year > 2100) {
+    int current_year = 2025;
+    int age = current_year - year;
+    if (age <= 0 || age >= 120) { 
         return false;
     }
 

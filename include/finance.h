@@ -30,6 +30,7 @@ int generate_finance_id(void);
 void list_all_finance(void);
 void list_active_finance(void);
 void list_finance_by_people_id(int people_id);
+void list_finance_by_category(void);
 
 // Função para definir ID de pesquisa
 void set_search_finance_id(int id);

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "residence.h"
 #include "config.h"
 #include "menu_borders.h"
