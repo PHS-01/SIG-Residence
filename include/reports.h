@@ -12,7 +12,7 @@ void generate_birth_report(bool active_only);
 
 void generate_residence_by_state(void);
 void generate_finance_by_category(void);
-
+void generate_finance_by_person(void);
 // Estatísticas
 void show_system_statistics(void);
 int count_active_people(void);

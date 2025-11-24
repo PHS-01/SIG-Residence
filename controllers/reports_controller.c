@@ -49,7 +49,9 @@ void generate_residence_by_state(void) {
 void generate_finance_by_category(void) {
     list_finance_by_category();
 }
-
+void generate_finance_by_person(void) {
+    list_finance_by_person();
+}
 void generate_consolidated_report(void) {
     generate_people_report(false);
     printf("\n");
