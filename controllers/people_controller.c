@@ -91,64 +91,146 @@ void print_people_table(const void *data) {
     printf(" ║\n");
 }
 
-void list_all_people(void) {
-    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                                  R E L A T Ó R I O    D E    P E S S O A S                                      ║\n");
-    printf("║                                                                                                                 ║\n");
-    printf("╠══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╣\n");
-    printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
-    printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
-
+void list_people_paginated(bool active_only) {
     FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
     if (!file) {
-        printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+        wait_for_enter();
         return;
     }
-    
-    People person;
-    int count = 0;
-    while (fread(&person, sizeof(People), 1, file)) {
-        print_people_table(&person);
-        count++;
-    }
-    
-    printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
-    printf("Total de registros: %d\n", count);
-    
-    fclose(file);
-}
 
-// Lista apenas pessoas ativas
-void list_active_people(void) {
-    printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                             R E L A T Ó R I O   D E   P E S S O A S   A T I V A S                               ║\n");
-    printf("║                                                                                                                 ║\n");
-    printf("╠══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╣\n");
-    printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
-    printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
-    
-    FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
-    if (!file) {
-        printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
-        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
-        return;
-    }
-    
-    People person;
-    int count = 0;
-    while (fread(&person, sizeof(People), 1, file)) {
-        if (person.status) {
-            print_people_table(&person);
-            count++;
+    // 1. Contar total de registros válidos para o filtro
+    int total_records = 0;
+    People p;
+    while (fread(&p, sizeof(People), 1, file)) {
+        if (!active_only || p.status) {
+            total_records++;
         }
     }
-    
-    printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
-    printf("Total de registros ativos: %d\n", count);
-    
+
+    if (total_records == 0) {
+        fclose(file);
+        print_warning("Nenhum registro encontrado.");
+        wait_for_enter();
+        return;
+    }
+
+    // Configurações da paginação
+    const int ITEMS_PER_PAGE = 10;
+    int total_pages = (total_records + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE;
+    int current_page = 1;
+    char option;
+
+    do {
+        clear_screen();
+        
+        // Cabeçalho
+        const char* title = active_only ? "RELATORIO DE PESSOAS (ATIVAS)" : "RELATORIO DE PESSOAS (TODAS)";
+        printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+        printf("║ %-111s ║\n", title);
+        printf("║ Página %d de %d - Total de registros: %-75d ║\n", current_page, total_pages, total_records);
+        printf("╠══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╣\n");
+        printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
+        printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
+
+        // 2. Posicionar e ler registros da página atual
+        rewind(file); // Volta ao inicio do arquivo
+        int skipped = 0;
+        int printed = 0;
+        int start_index = (current_page - 1) * ITEMS_PER_PAGE;
+
+        while (fread(&p, sizeof(People), 1, file) && printed < ITEMS_PER_PAGE) {
+            // Aplica o filtro (ativo ou todos)
+            if (!active_only || p.status) {
+                // Pula os registros das páginas anteriores
+                if (skipped < start_index) {
+                    skipped++;
+                    continue;
+                }
+                
+                // Imprime o registro atual
+                print_people_table(&p);
+                printed++;
+            }
+        }
+
+        printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+        
+        // Rodapé de Navegação
+        printf("\n[A] Anterior  [P] Próxima  [0] Sair\n");
+        
+        option = get_keypress(); // Usa sua função de capturar tecla sem enter
+
+        // Lógica de navegação
+        if ((option == 'p' || option == 'P') && current_page < total_pages) {
+            current_page++;
+        } else if ((option == 'a' || option == 'A') && current_page > 1) {
+            current_page--;
+        }
+
+    } while (option != '0');
+
     fclose(file);
 }
+
+// void list_all_people(void) {
+//     printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+//     printf("║                                  R E L A T Ó R I O    D E    P E S S O A S                                      ║\n");
+//     printf("║                                                                                                                 ║\n");
+//     printf("╠══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╣\n");
+//     printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
+//     printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
+
+//     FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
+//     if (!file) {
+//         printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+//         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+//         return;
+//     }
+    
+//     People person;
+//     int count = 0;
+//     while (fread(&person, sizeof(People), 1, file)) {
+//         print_people_table(&person);
+//         count++;
+//     }
+    
+//     printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+//     printf("Total de registros: %d\n", count);
+    
+//     fclose(file);
+// }
+
+// // Lista apenas pessoas ativas
+// void list_active_people(void) {
+//     printf("╔═════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+//     printf("║                             R E L A T Ó R I O   D E   P E S S O A S   A T I V A S                               ║\n");
+//     printf("║                                                                                                                 ║\n");
+//     printf("╠══════╦═════════════════════════════╦══════════════╦══════════════════════════════╦══════════════════╦═══════════╣\n");
+//     printf("║  ID  ║ Nome                        ║  Nascimento  ║ Email                        ║ Telefone         ║ Status    ║\n");
+//     printf("╠══════╬═════════════════════════════╬══════════════╬══════════════════════════════╬══════════════════╬═══════════╣\n");
+    
+//     FILE *file = fopen(FILE_NAME_PEOPLE, "rb");
+//     if (!file) {
+//         printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+//         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+//         return;
+//     }
+    
+//     People person;
+//     int count = 0;
+//     while (fread(&person, sizeof(People), 1, file)) {
+//         if (person.status) {
+//             print_people_table(&person);
+//             count++;
+//         }
+//     }
+    
+//     printf("╚══════╩═════════════════════════════╩══════════════╩══════════════════════════════╩══════════════════╩═══════════╝\n");
+//     printf("Total de registros ativos: %d\n", count);
+    
+//     fclose(file);
+// }
 
 void list_birthdays_by_month(void) {
     int month;
