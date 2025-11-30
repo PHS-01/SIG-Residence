@@ -40,13 +40,14 @@ void generate_finance_by_category(void) {
 void generate_finance_by_person(void) {
     list_finance_by_person();
 }
-void generate_consolidated_report(void) {
-    generate_people_report(false);
-    printf("\n");
-    generate_finance_report(false);
-    printf("\n");
-    generate_residence_report(false);
-}
+
+// void generate_consolidated_report(void) {
+//     // generate_people_report(false);
+//     // printf("\n");
+//     // generate_finance_report(false);
+//     // printf("\n");
+//     // generate_residence_report(false);
+// }
 
 // Funções de estatística
 int count_active_people(void) {
