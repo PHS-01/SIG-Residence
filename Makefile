@@ -17,10 +17,10 @@ all: $(OUT)
 populate: $(POPULATE_OUT)
 	./$(POPULATE_OUT) all
 
-$(OUT):
+$(OUT): $(SRC)
 	$(CC) $(SRC) -o $(OUT) $(CFLAGS)
 
-$(POPULATE_OUT):
+$(POPULATE_OUT): $(POPULATE_SRC) $(SRC)
 	$(CC) $(POPULATE_SRC) $(filter-out main.c, $(SRC)) -o $(POPULATE_OUT) $(CFLAGS)
 
 # Atalho para compilar e rodar
@@ -28,19 +28,9 @@ run: all
 	./$(OUT)
 
 # Atalho para compilar e usar o populador
-run-populate: populate
-	./$(POPULATE_OUT) help
+# run-populate: populate
+# 	./$(POPULATE_OUT) help
 
 # Limpa os executáveis
 clean:
 	rm -f $(OUT) $(POPULATE_OUT)
-
-# Ajuda
-help:
-	@echo "Targets disponíveis:"
-	@echo "  all          - Compila o projeto principal (padrão)"
-	@echo "  populate     - Compila o populador de banco de dados"
-	@echo "  run          - Compila e executa o projeto principal"
-	@echo "  run-populate - Compila e executa o populador (mostra ajuda)"
-	@echo "  clean        - Remove os executáveis"
-	@echo "  help         - Mostra esta mensagem"
