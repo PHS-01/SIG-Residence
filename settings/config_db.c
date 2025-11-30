@@ -5,7 +5,7 @@
 
 // Variáveis constantes para o banco de dados
 const char* DATABASE_NAME = "database";
-const char* FILE_TYPE = "csv";
+const char* FILE_TYPE = "dat";
 
 char FILE_NAME_PEOPLE[100];
 char FILE_NAME_FINANCE[100];
