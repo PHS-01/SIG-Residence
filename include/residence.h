@@ -28,8 +28,9 @@ void print_residence_table(const void *data);
 int generate_residence_id(void);
 
 // Listagens
-void list_all_residence(void);
-void list_active_residence(void);
+void list_residence_paginated(bool active_only);
+// void list_all_residence(void);
+// void list_active_residence(void);
 void list_residence_by_state(void);
 
 // Função para definir ID de pesquisa

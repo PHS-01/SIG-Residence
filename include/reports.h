@@ -7,7 +7,7 @@
 void generate_people_report(bool active_only);
 void generate_finance_report(bool active_only);
 void generate_residence_report(bool active_only);
-void generate_consolidated_report(void);
+// void generate_consolidated_report(void);
 void generate_birth_report(bool active_only);
 
 void generate_residence_by_state(void);

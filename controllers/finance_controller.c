@@ -234,64 +234,147 @@ void print_finance_table(const void *data) {
     printf(" ║\n");
 }
 
-void list_all_finance(void) {
-    printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                                        R E L A T Ó R I O    F I N A N C E I R O                                       ║\n");
-    printf("║                                                                                                                       ║\n");
-    printf("╠══════╦═══════════╦═════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╣\n");
-    printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
-    printf("╠══════╬═══════════╬═════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
-
+void list_finance_paginated(bool active_only) {
     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
     if (!file) {
-        printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+        wait_for_enter();
         return;
     }
-    
-    Finance finance;
-    int count = 0;
-    while (fread(&finance, sizeof(Finance), 1, file)) {
-        print_finance_table(&finance);
-        count++;
-    }
-    
-    printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
-    printf("Total de registros: %d\n", count);
-    
-    fclose(file);
-}
 
-// Lista apenas transações ativas
-void list_active_finance(void) {
-    printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                                        R E L A T Ó R I O    F I N A N C E I R O                                       ║\n");
-    printf("║                                                                                                                       ║\n");
-    printf("╠══════╦═══════════╦═════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╣\n");
-    printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
-    printf("╠══════╬═══════════╬═════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
-    
-    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
-    if (!file) {
-        printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
-        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
-        return;
-    }
-    
-    Finance finance;
-    int count = 0;
-    while (fread(&finance, sizeof(Finance), 1, file)) {
-        if (finance.status) {
-            print_finance_table(&finance);
-            count++;
+    // Conta o total de registros válidos para o filtro
+    int total_records = 0;
+    Finance f;
+    while (fread(&f, sizeof(Finance), 1, file)) {
+        if (!active_only || f.status) {
+            total_records++;
         }
     }
-    
-    printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
-    printf("Total de registros ativos: %d\n", count);
-    
+
+    if (total_records == 0) {
+        fclose(file);
+        print_warning("Nenhum registro encontrado.");
+        wait_for_enter();
+        return;
+    }
+
+    // Configurações da paginação
+    const int ITEMS_PER_PAGE = 10;
+    int total_pages = (total_records + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE;
+    int current_page = 1;
+    char option;
+
+    do {
+        clear_screen();
+        
+        // Cabeçalho
+        const char* title = active_only ? "RELATORIO DE FINANÇAS (ATIVAS)" : "RELATORIO DE FINANÇAS (TODAS)";
+        printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+        printf("║ %-118s ║\n", title);
+        printf("║ Página %d de %d - Total de registros: %-81d ║\n", current_page, total_pages, total_records);
+        printf("╠══════╦═══════════╦═════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╣\n");
+        printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
+        printf("╠══════╬═══════════╬═════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
+
+
+        // Posiciona e lê registros da página atual
+        rewind(file); // Volta ao inicio do arquivo
+        int skipped = 0;
+        int printed = 0;
+        int start_index = (current_page - 1) * ITEMS_PER_PAGE;
+
+        while (fread(&f, sizeof(Finance), 1, file) && printed < ITEMS_PER_PAGE) {
+            // Aplica o filtro (ativo ou todos)
+            if (!active_only || f.status) {
+                // Pula os registros das páginas anteriores
+                if (skipped < start_index) {
+                    skipped++;
+                    continue;
+                }
+                
+                // Imprime o registro atual
+                print_finance_table(&f);
+                printed++;
+            }
+        }
+
+        printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+        
+        // Rodapé de Navegação
+        printf("\n[A] Anterior  [P] Próxima  [0] Sair\n");
+        
+        option = get_keypress(); // Usa função de capturar tecla sem enter
+
+        // Lógica de navegação
+        if ((option == 'p' || option == 'P') && current_page < total_pages) {
+            current_page++;
+        } else if ((option == 'a' || option == 'A') && current_page > 1) {
+            current_page--;
+        }
+
+    } while (option != '0');
+
     fclose(file);
 }
+
+// void list_all_finance(void) {
+//     printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+//     printf("║                                        R E L A T Ó R I O    F I N A N C E I R O                                       ║\n");
+//     printf("║                                                                                                                       ║\n");
+//     printf("╠══════╦═══════════╦═════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╣\n");
+//     printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
+//     printf("╠══════╬═══════════╬═════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
+
+//     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
+//     if (!file) {
+//         printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+//         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+//         return;
+//     }
+    
+//     Finance finance;
+//     int count = 0;
+//     while (fread(&finance, sizeof(Finance), 1, file)) {
+//         print_finance_table(&finance);
+//         count++;
+//     }
+    
+//     printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+//     printf("Total de registros: %d\n", count);
+    
+//     fclose(file);
+// }
+
+// // Lista apenas transações ativas
+// void list_active_finance(void) {
+//     printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+//     printf("║                                        R E L A T Ó R I O    F I N A N C E I R O                                       ║\n");
+//     printf("║                                                                                                                       ║\n");
+//     printf("╠══════╦═══════════╦═════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╣\n");
+//     printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
+//     printf("╠══════╬═══════════╬═════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
+    
+//     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
+//     if (!file) {
+//         printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+//         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+//         return;
+//     }
+    
+//     Finance finance;
+//     int count = 0;
+//     while (fread(&finance, sizeof(Finance), 1, file)) {
+//         if (finance.status) {
+//             print_finance_table(&finance);
+//             count++;
+//         }
+//     }
+    
+//     printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
+//     printf("Total de registros ativos: %d\n", count);
+    
+//     fclose(file);
+// }
 
 void list_finance_by_category(void) {
     char categoria[50];

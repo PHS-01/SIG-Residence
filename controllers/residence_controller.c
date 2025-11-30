@@ -98,64 +98,147 @@ void print_residence_table(const void *data) {
     printf(" ║\n");
 }
 
-void list_all_residence(void) {
-    printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                             R E L A T Ó R I O     D E     R E S I D E N C I A S                                    ║\n");
-    printf("║                                                                                                                    ║\n");
-    printf("╠══════╦══════════════════════╦════════╦══════════════╦══════════════╦══════════════╦════════╦════════════╦══════════╣\n");
-    printf("║  ID  ║ Endereço             ║ Número ║ Complemento  ║ Bairro       ║ Cidade       ║ Estado ║ CEP        ║ Status   ║\n");
-    printf("╠══════╬══════════════════════╬════════╬══════════════╬══════════════╬══════════════╬════════╬════════════╬══════════╣\n");
-
+void list_residence_paginated(bool active_only) {
     FILE *file = fopen(FILE_NAME_RESIDENCE, "rb");
     if (!file) {
-        printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+        wait_for_enter();
         return;
     }
-    
-    Residence residence;
-    int count = 0;
-    while (fread(&residence, sizeof(Residence), 1, file)) {
-        print_residence_table(&residence);
-        count++;
-    }
-    
-    printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
-    printf("Total de registros: %d\n", count);
-    
-    fclose(file);
-}
 
-// Lista apenas residências ativas
-void list_active_residence(void) {
-    printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                           R E L A T Ó R I O    D E    R E S I D E N C I A S    A T I V A S                         ║\n");
-    printf("║                                                                                                                    ║\n");
-    printf("╠══════╦══════════════════════╦════════╦══════════════╦══════════════╦══════════════╦════════╦════════════╦══════════╣\n");
-    printf("║  ID  ║ Endereço             ║ Número ║ Complemento  ║ Bairro       ║ Cidade       ║ Estado ║ CEP        ║ Status   ║\n");
-    printf("╠══════╬══════════════════════╬════════╬══════════════╬══════════════╬══════════════╬════════╬════════════╬══════════╣\n");
-    
-    FILE *file = fopen(FILE_NAME_RESIDENCE, "rb");
-    if (!file) {
-        printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
-        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
-        return;
-    }
-    
-    Residence residence;
-    int count = 0;
-    while (fread(&residence, sizeof(Residence), 1, file)) {
-        if (residence.status) {
-            print_residence_table(&residence);
-            count++;
+    // Conta o total de registros válidos para o filtro
+    int total_records = 0;
+    Residence r;
+    while (fread(&r, sizeof(Residence), 1, file)) {
+        if (!active_only || r.status) {
+            total_records++;
         }
     }
-    
-    printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
-    printf("Total de registros ativos: %d\n", count);
-    
+
+    if (total_records == 0) {
+        fclose(file);
+        print_warning("Nenhum registro encontrado.");
+        wait_for_enter();
+        return;
+    }
+
+    // Configurações da paginação
+    const int ITEMS_PER_PAGE = 10;
+    int total_pages = (total_records + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE;
+    int current_page = 1;
+    char option;
+
+    do {
+        clear_screen();
+        
+        // Cabeçalho
+        const char* title = active_only ? "RELATORIO DE RESIDENCIAS (ATIVAS)" : "RELATORIO DE RESIDENCIAS (TODAS)";
+        printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+        printf("║ %-114s ║\n", title);
+        printf("║ Página %d de %d - Total de registros: %-78d ║\n", current_page, total_pages, total_records);
+        printf("╠══════╦══════════════════════╦════════╦══════════════╦══════════════╦══════════════╦════════╦════════════╦══════════╣\n");
+        printf("║  ID  ║ Endereço             ║ Número ║ Complemento  ║ Bairro       ║ Cidade       ║ Estado ║ CEP        ║ Status   ║\n");
+        printf("╠══════╬══════════════════════╬════════╬══════════════╬══════════════╬══════════════╬════════╬════════════╬══════════╣\n");
+
+
+        // Posiciona e lê registros da página atual
+        rewind(file); // Volta ao inicio do arquivo
+        int skipped = 0;
+        int printed = 0;
+        int start_index = (current_page - 1) * ITEMS_PER_PAGE;
+
+        while (fread(&r, sizeof(Residence), 1, file) && printed < ITEMS_PER_PAGE) {
+            // Aplica o filtro (ativo ou todos)
+            if (!active_only || r.status) {
+                // Pula os registros das páginas anteriores
+                if (skipped < start_index) {
+                    skipped++;
+                    continue;
+                }
+                
+                // Imprime o registro atual
+                print_residence_table(&r);
+                printed++;
+            }
+        }
+
+        printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
+        
+        // Rodapé de Navegação
+        printf("\n[A] Anterior  [P] Próxima  [0] Sair\n");
+        
+        option = get_keypress(); // Usa função de capturar tecla sem enter
+
+        // Lógica de navegação
+        if ((option == 'p' || option == 'P') && current_page < total_pages) {
+            current_page++;
+        } else if ((option == 'a' || option == 'A') && current_page > 1) {
+            current_page--;
+        }
+
+    } while (option != '0');
+
     fclose(file);
 }
+
+// void list_all_residence(void) {
+//     printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+//     printf("║                             R E L A T Ó R I O     D E     R E S I D E N C I A S                                    ║\n");
+//     printf("║                                                                                                                    ║\n");
+//     printf("╠══════╦══════════════════════╦════════╦══════════════╦══════════════╦══════════════╦════════╦════════════╦══════════╣\n");
+//     printf("║  ID  ║ Endereço             ║ Número ║ Complemento  ║ Bairro       ║ Cidade       ║ Estado ║ CEP        ║ Status   ║\n");
+//     printf("╠══════╬══════════════════════╬════════╬══════════════╬══════════════╬══════════════╬════════╬════════════╬══════════╣\n");
+
+//     FILE *file = fopen(FILE_NAME_RESIDENCE, "rb");
+//     if (!file) {
+//         printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
+//         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+//         return;
+//     }
+    
+//     Residence residence;
+//     int count = 0;
+//     while (fread(&residence, sizeof(Residence), 1, file)) {
+//         print_residence_table(&residence);
+//         count++;
+//     }
+    
+//     printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
+//     printf("Total de registros: %d\n", count);
+    
+//     fclose(file);
+// }
+
+// // Lista apenas residências ativas
+// void list_active_residence(void) {
+//     printf("╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
+//     printf("║                           R E L A T Ó R I O    D E    R E S I D E N C I A S    A T I V A S                         ║\n");
+//     printf("║                                                                                                                    ║\n");
+//     printf("╠══════╦══════════════════════╦════════╦══════════════╦══════════════╦══════════════╦════════╦════════════╦══════════╣\n");
+//     printf("║  ID  ║ Endereço             ║ Número ║ Complemento  ║ Bairro       ║ Cidade       ║ Estado ║ CEP        ║ Status   ║\n");
+//     printf("╠══════╬══════════════════════╬════════╬══════════════╬══════════════╬══════════════╬════════╬════════════╬══════════╣\n");
+    
+//     FILE *file = fopen(FILE_NAME_RESIDENCE, "rb");
+//     if (!file) {
+//         printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
+//         print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+//         return;
+//     }
+    
+//     Residence residence;
+//     int count = 0;
+//     while (fread(&residence, sizeof(Residence), 1, file)) {
+//         if (residence.status) {
+//             print_residence_table(&residence);
+//             count++;
+//         }
+//     }
+    
+//     printf("╚══════╩══════════════════════╩════════╩══════════════╩══════════════╩══════════════╩════════╩════════════╩══════════╝\n");
+//     printf("Total de registros ativos: %d\n", count);
+    
+//     fclose(file);
+// }
 
 // Função para listar residências por estado
 void list_residence_by_state(void) {

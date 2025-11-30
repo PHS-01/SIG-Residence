@@ -32,8 +32,9 @@ void print_finance_table(const void *data);
 int generate_finance_id(void);
 
 // Listagens
-void list_all_finance(void);
-void list_active_finance(void);
+void list_finance_paginated(bool active_only);
+// void list_all_finance(void);
+// void list_active_finance(void);
 void list_finance_by_people_id(int people_id);
 void list_finance_by_category(void);
 void list_finance_by_person(void);

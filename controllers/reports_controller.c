@@ -10,27 +10,15 @@
 #include "terminal_control.h"
 
 void generate_people_report(bool active_only) {
-    if (active_only) {
-        list_active_people();
-    } else {
-        list_all_people();
-    }
+    list_people_paginated(active_only);
 }
 
 void generate_finance_report(bool active_only) {
-    if (active_only) {
-        list_active_finance();
-    } else {
-        list_all_finance();
-    }
+    list_finance_paginated(active_only);
 }
 
 void generate_residence_report(bool active_only) {
-    if (active_only) {
-        list_active_residence();
-    } else {
-        list_all_residence();
-    }
+   list_residence_paginated(active_only);
 }
 
 void generate_birth_report(bool active_only) {
@@ -52,13 +40,14 @@ void generate_finance_by_category(void) {
 void generate_finance_by_person(void) {
     list_finance_by_person();
 }
-void generate_consolidated_report(void) {
-    generate_people_report(false);
-    printf("\n");
-    generate_finance_report(false);
-    printf("\n");
-    generate_residence_report(false);
-}
+
+// void generate_consolidated_report(void) {
+//     // generate_people_report(false);
+//     // printf("\n");
+//     // generate_finance_report(false);
+//     // printf("\n");
+//     // generate_residence_report(false);
+// }
 
 // Funções de estatística
 int count_active_people(void) {

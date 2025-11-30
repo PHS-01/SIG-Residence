@@ -5,22 +5,6 @@
 #include "populate_db.h"
 #include "config.h"
 
-void show_help(void) {
-    printf("\n=== POPULADOR DE BANCO DE DADOS - AJUDA ===\n");
-    printf("Uso: populate [comando]\n\n");
-    printf("Comandos disponíveis:\n");
-    printf("  all           - Popula todos os dados (pessoas, residências, finanças)\n");
-    printf("  people        - Popula apenas dados de pessoas\n");
-    printf("  residence     - Popula apenas dados de residências\n");
-    printf("  finance       - Popula apenas dados financeiros\n");
-    printf("  stats         - Mostra estatísticas atuais do banco\n");
-    printf("  help          - Mostra esta mensagem de ajuda\n");
-    printf("\nExemplos:\n");
-    printf("  ./populate all\n");
-    printf("  ./populate people\n");
-    printf("  ./populate stats\n");
-}
-
 int main(int argc, char *argv[]) {
     printf("=== POPULADOR DE BANCO DE DADOS ===\n");
     
@@ -29,11 +13,6 @@ int main(int argc, char *argv[]) {
 
     // Cria banco de dados se não existir
     create_database();
-    
-    if (argc != 2) {
-        show_help();
-        return 1;
-    }
     
     if (strcmp(argv[1], "all") == 0) {
         populate_all_data();
