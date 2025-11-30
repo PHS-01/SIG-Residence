@@ -33,8 +33,9 @@ void print_people_table(const void *data);
 int generate_people_id(void);
 
 // Listagens
-void list_all_people(void);
-void list_active_people(void);
+// void list_all_people(void);
+// void list_active_people(void);
+void list_people_paginated(bool active_only);
 void list_birthdays_by_month(void);
 void list_birthdays_by_year(void);
 
