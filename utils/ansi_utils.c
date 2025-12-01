@@ -58,3 +58,11 @@ void disable_bold(void) {
     printf("\033[22m");  // Ou "\033[0m" para resetar todos os estilos
     fflush(stdout);
 }
+void erase_screen()
+{
+#ifdef _WIN32
+    system("cls"); // Para Windows
+#else
+    system("clear"); // Para Linux e macOS
+#endif
+}
