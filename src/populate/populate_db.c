@@ -54,7 +54,7 @@ void generate_random_phone(char *buffer, size_t size) {
 void populate_people_data(void) {
 
     People people[] = {
-        {true, 0, "João Silva Santos", "15/03/1985", "joao.silva@email.com", ""},
+        {true, 0, "Joao Silva Santos", "15/03/1985", "joao.silva@email.com", ""},
         {true, 0, "Maria Oliveira Souza", "22/07/1990", "maria.oliveira@email.com", ""},
         {true, 0, "Pedro Costa Lima", "08/11/1978", "pedro.costa@email.com", ""},
         {true, 0, "Ana Pereira Rodrigues", "30/01/1995", "ana.pereira@email.com", ""},
@@ -184,7 +184,7 @@ void populate_finance_data(void) {
         strcpy(finance.category, categories[rand() % (sizeof(categories) / sizeof(categories[0]))]);
         
         // Tipo aleatório (70% despesas, 30% receitas)
-        finance.type = (rand() % 100 < 70) ? 'D' : 'R';
+        finance.type = (rand() % 100 < 70) ? FINANCE_RECEITA : FINANCE_DESPESA;
         
         finance.status = true;
         

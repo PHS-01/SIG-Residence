@@ -432,7 +432,7 @@ void list_finance_by_person(void) {
 
  
     printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
-    printf("║                                  RELATÓRIO DE FINANÇAS POR PESSOA                                                     ║\n");
+    printf("║                                  RELATÓRIO DE FINANÇAS GERAIS POR PESSOA                                              ║\n");
     printf("║                                                                                                                       ║\n");
     printf("╠══════╦══════════════════════════════╦═════════════════════╦══════════════════════════╦════════════════════════════════╣\n");
     printf("║  ID  ║   Nome                       ║ Receitas            ║ Despesas                 ║ Saldo                          ║\n");
