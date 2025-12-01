@@ -50,7 +50,7 @@ void enable_bold(void);
 void disable_bold(void);
 void set_text_color(enum Color);
 void reset_text_color(void);
-void erase_screen(void);
+
 
 // Termios Utils
 char get_keypress(void);
