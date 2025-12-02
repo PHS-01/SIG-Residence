@@ -8,7 +8,6 @@
 #include "validations.h"
 
 void update_people_ui() {
-    People updated_person;
     int id;
     
     if (!read_int_input("Digite o ID da pessoa que deseja atualizar: ", &id)) {
@@ -16,16 +15,16 @@ void update_people_ui() {
         return;
     }
 
-    // Primeiro verifica se a pessoa existe
-    set_search_id(id);
-    People existing_person;
-    if (!read_data(&existing_person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+    // Busca o ponteiro
+    People *existing_person = find_person_by_id(id);
+
+    if (existing_person == NULL || existing_person->status == false) {
         print_error("Pessoa com ID %d não encontrada ou está inativa.", id);
         return;
     }
 
     printf("\n");
-    print_people_detail(&existing_person);
+    print_people_detail(existing_person);
     printf("\n");
 
     print_info("Deixe em branco para manter o valor atual.\n");
@@ -33,7 +32,7 @@ void update_people_ui() {
     char temp[100];
     
     // Nome - com validação
-    printf("Nome atual: %s\n", existing_person.name);
+    printf("Nome atual: %s\n", existing_person->name);
     read_string_input("Novo nome: ", temp, sizeof(temp));
     if (strlen(temp) > 0) {
         do {
@@ -49,13 +48,11 @@ void update_people_ui() {
                 break;
             }
         } while (1);
-        strcpy(updated_person.name, temp);
-    } else {
-        strcpy(updated_person.name, existing_person.name);
-    }
+        strcpy(existing_person->name, temp); // Atualiza direto na RAM
+    } // Senão mantém o atual
     
     // Data de nascimento - com validação
-    printf("Data de nascimento atual: %s\n", existing_person.birth_date);
+    printf("Data de nascimento atual: %s\n", existing_person->birth_date);
     read_string_input("Nova data de nascimento: ", temp, sizeof(temp));
     if (strlen(temp) > 0) {
         do {
@@ -66,13 +63,11 @@ void update_people_ui() {
                 break;
             }
         } while (1);
-        strcpy(updated_person.birth_date, temp);
-    } else {
-        strcpy(updated_person.birth_date, existing_person.birth_date);
-    }
-    
+        strcpy(existing_person->birth_date, temp);
+    } 
+
     // Email - com validação
-    printf("Email atual: %s\n", existing_person.email);
+    printf("Email atual: %s\n", existing_person->email);
     read_string_input("Novo email: ", temp, sizeof(temp));
     if (strlen(temp) > 0) {
         do {
@@ -83,13 +78,11 @@ void update_people_ui() {
                 break;
             }
         } while (1);
-        strcpy(updated_person.email, temp);
-    } else {
-        strcpy(updated_person.email, existing_person.email);
+        strcpy(existing_person->email, temp);
     }
     
     // Telefone - com validação
-    printf("Telefone atual: %s\n", existing_person.phone);
+    printf("Telefone atual: %s\n", existing_person->phone);
     read_string_input("Novo telefone: ", temp, sizeof(temp));
     if (strlen(temp) > 0) {
         do {
@@ -100,19 +93,10 @@ void update_people_ui() {
                 break;
             }
         } while (1);
-        strcpy(updated_person.phone, temp);
-    } else {
-        strcpy(updated_person.phone, existing_person.phone);
+        strcpy(existing_person->phone, temp);
     }
-
-    updated_person.id = id;
-    updated_person.status = true;
 
     printf("\n");
-    set_search_id(id);
-    if (update(&updated_person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
-        print_success("Pessoa atualizada com sucesso!");
-    } else {
-        print_error("Erro ao atualizar pessoa.");
-    }
+    save_people_list(); 
+    print_success("Pessoa atualizada com sucesso!");
 }

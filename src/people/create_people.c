@@ -4,7 +4,6 @@
 #include "people.h"
 #include "config.h"
 #include "terminal_control.h"
-#include "controllers.h"
 #include "validations.h"
 
 void create_people_ui() {
@@ -54,9 +53,11 @@ void create_people_ui() {
     new_person.status = true;
 
     printf("\n");
-    create(&new_person, sizeof(People), FILE_NAME_PEOPLE);
-    
-    printf("\n");
-    print_success("Pessoa cadastrada com sucesso!");
-    printf(COLOR_CYAN "ID da pessoa: %d" COLOR_RESET "\n", new_person.id);
+    if (create_person(new_person)) {
+        printf("\n");
+        print_success("Pessoa cadastrada com sucesso!");
+        printf(COLOR_CYAN "ID da pessoa: %d" COLOR_RESET "\n", new_person.id);
+    } else {
+        print_error("Erro ao cadastrar pessoa.");
+    }
 }
