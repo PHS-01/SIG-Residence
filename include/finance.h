@@ -19,6 +19,20 @@ typedef struct {
     FinanceType type;               // 'R' para receita, 'D' para despesa
 } Finance;
 
+typedef struct FinanceNode {
+    Finance data;
+    struct FinanceNode *next;   // aponta para o próximo nó
+} FinanceNode;
+// Variável Global Externa
+extern FinanceNode *head_finance;
+
+// FUNÇÕES DE GERENCIAMENTO DE LISTAGEM DINÂMICA DIRETA (CRUD EM MEMÓRIA)
+void finance_list_insert(Finance f);             // Insere na lista em RAM
+void finance_load_file();                        // Carrega do arquivo para RAM
+void finance_save_file();                       // Salva da RAM para arquivo
+FinanceNode *finance_list_find(int (*match)(const void *));  // Busca nó na RAM pelo critério
+void finance_list_print(int (*match)(const void *)); // Imprime lista conforme critério
+
 // Funções de match
 int match_finance_by_id(const void *data);
 int match_active_finance(const void *data);

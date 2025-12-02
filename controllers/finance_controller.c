@@ -7,6 +7,73 @@
 #include "menu_borders.h"
 #include "terminal_control.h"
 
+FinanceNode *finance_list = NULL;
+
+void finance_list_insert(Finance f) {
+    FinanceNode *node = malloc(sizeof(FinanceNode));
+    node->data = f;
+    node->next = NULL;
+
+    if (finance_list == NULL) {
+        finance_list = node;
+        return;
+    }
+
+    FinanceNode *aux = finance_list;
+    while (aux->next != NULL)
+        aux = aux->next;
+
+    aux->next = node;
+}
+
+void finance_load_file() {
+    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
+    if (!file) return;
+
+    Finance f;
+    while (fread(&f, sizeof(Finance), 1, file))
+        finance_list_insert(f);
+
+    fclose(file);
+}
+
+void finance_save_file() {
+    FILE *file = fopen(FILE_NAME_FINANCE, "wb");
+    if (!file) return;
+
+    FinanceNode *aux = finance_list;
+    while (aux) {
+        fwrite(&aux->data, sizeof(Finance), 1, file);
+        aux = aux->next;
+    }
+
+    fclose(file);
+}
+
+FinanceNode *finance_list_find(int (*match)(const void *)) {
+    FinanceNode *node = finance_list;
+
+    while (node) {
+        if (match(&node->data))
+            return node;
+        node = node->next;
+    }
+
+    return NULL;
+}
+
+
+void finance_list_print(int (*match)(const void *)) {
+    FinanceNode *node = finance_list;
+
+    while (node) {
+        if (match(&node->data)) {
+            Finance f = node->data;
+            printf("%d - %s - %.2f\n", f.id, f.description, f.value);
+        }
+        node = node->next;
+    }
+}
 static int search_id = -1;  // Variável global para armazenar o ID de pesquisa
 
 // Define o ID de pesquisa
