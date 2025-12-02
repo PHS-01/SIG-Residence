@@ -2,19 +2,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <locale.h>
-
-// Funções que desenha as telas
 #include "screens.h"
-// Variáveis globais do projeto
 #include "config.h"
-// Funções para controle do terminal, e manipulação do texto
 #include "terminal_control.h"
-
 #include "controllers.h"
 #include "people.h"
 
 // Função de saída do programa
 void exit_program(void) {
+    free_people_list(); // Limpa a memória RAM antes de matar o processo
     clear_screen();
     disable_raw_mode();
     show_cursor();
@@ -27,24 +23,21 @@ int main(void) {
         create_database();
     }
 
+    load_people_list();
+
     bool loop = true;
     int rows = 0, cols = 0;
 
     clear_screen();
-
     setlocale(LC_ALL, "");
-
     hide_cursor();  // Esconde o cursor enquanto o menu está sendo exibido
 
     fade_animation("in");
-
     draw_rainbow_logo(rows, cols);
 
     do {
-
         // Atualiza o tamanho do terminal
         update_terminal_size(&rows, &cols);
-
         clear_screen();
 
         // Funções para desenhar a tela
@@ -53,7 +46,6 @@ int main(void) {
     } while(loop);
 
     fade_animation("out");
-
     exit_program(); // Função para limpar e restaurar o terminal
 
     return 0;

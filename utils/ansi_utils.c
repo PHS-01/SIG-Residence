@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include<stdlib.h>
 
 #include "terminal_control.h"  // Inclui a declaração de enum Color e os protótipos
 
@@ -35,9 +36,16 @@ void show_cursor(void) {
 
 // Limpa a tela e move o cursor para o canto superior esquerdo (1,1)
 void clear_screen(void) {
-    printf("\033[2J");  // Limpa a tela
-    printf("\033[H");   // Move o cursor para (1,1)
+    #ifdef _WIN32
+    system("cls"); // Para Windows
     fflush(stdout);
+#else
+    system("clear"); // Para Linux e macOS
+#endif
+    fflush(stdout);
+ /*   printf("\033[2J");  // Limpa a tela
+    printf("\033[H");   // Move o cursor para (1,1)
+    fflush(stdout);*/
 }
 
 // Imprime texto em uma posição específica
@@ -58,3 +66,4 @@ void disable_bold(void) {
     printf("\033[22m");  // Ou "\033[0m" para resetar todos os estilos
     fflush(stdout);
 }
+// Note: The erase_screen function has been removed as per the recent edits.

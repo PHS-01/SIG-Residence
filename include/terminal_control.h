@@ -51,6 +51,7 @@ void disable_bold(void);
 void set_text_color(enum Color);
 void reset_text_color(void);
 
+
 // Termios Utils
 char get_keypress(void);
 void disable_raw_mode(void);

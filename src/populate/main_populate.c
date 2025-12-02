@@ -5,7 +5,7 @@
 #include "populate_db.h"
 #include "config.h"
 
-int main(int argc, char *argv[]) {
+int main(int, char *argv[]) {
     printf("=== POPULADOR DE BANCO DE DADOS ===\n");
     
     // Inicializar random seed
@@ -36,11 +36,11 @@ int main(int argc, char *argv[]) {
         show_statistics();
     }
     else if (strcmp(argv[1], "help") == 0) {
-        show_help();
+        //show_help();
     }
     else {
         printf("Comando desconhecido: %s\n", argv[1]);
-        show_help();
+        //show_help();
         return 1;
     }
     

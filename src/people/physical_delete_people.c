@@ -16,16 +16,16 @@ void physical_delete_people_ui() {
         return;
     }
 
-    // Primeiro verifica se a pessoa existe
-    set_search_id(id);
-    People person;
-    if (!read_data(&person, sizeof(People), FILE_NAME_PEOPLE, match_people_by_id)) {
+    // Busca na Lista Dinâmica
+    People *person = find_person_by_id(id);
+
+    if (person == NULL) {
         print_error("Pessoa com ID %d não encontrada.", id);
         return;
     }
 
     printf("\nDados da pessoa que será excluída FISICAMENTE:\n");
-    print_people_detail(&person);
+    print_people_detail(person);
     
     // Verificar e listar finanças associadas
     int finance_count = count_finance_by_people_id(id);
@@ -47,7 +47,7 @@ void physical_delete_people_ui() {
     read_string_input("Confirma a exclusão física? (digite 'sim' para confirmar): ", confirm, sizeof(confirm));
 
     if (strcmp(confirm, "sim") == 0) {
-        // Primeiro excluir todas as finanças associadas
+        // Exclui as finanças associadas primeiro
         int deleted_finances = 0;
         if (finance_count > 0) {
             deleted_finances = delete_finance_by_people_id(id);
@@ -55,7 +55,7 @@ void physical_delete_people_ui() {
                 print_success("%d transação(ões) financeira(s) excluída(s) com sucesso.", deleted_finances);
             } else {
                 print_error("Erro ao excluir transações financeiras associadas.");
-                // Perguntar se deseja continuar mesmo assim
+                // Pergunta de segurança
                 read_string_input("Deseja continuar excluindo apenas a pessoa? (digite 'sim' para continuar): ", confirm, sizeof(confirm));
                 if (strcmp(confirm, "sim") != 0) {
                     print_warning("Operação cancelada.");
@@ -64,17 +64,17 @@ void physical_delete_people_ui() {
             }
         }
         
-        // Agora excluir a pessoa
-        set_search_id(id);
-        if (physical_delete(sizeof(People), match_people_by_id, FILE_NAME_PEOPLE)) {
+        // Exclusão Física na Lista
+        if (remove_person_from_list(id)) {
             if (deleted_finances > 0) {
-                print_success("Pessoa e %d transação(ões) financeira(s) excluída(s) fisicamente com sucesso.", deleted_finances);
+                print_success("Pessoa e %d transação(ões) financeira(s) excluída(s) fisicamente.", deleted_finances);
             } else {
                 print_success("Pessoa excluída fisicamente com sucesso.");
             }
         } else {
-            print_error("Erro ao excluir pessoa fisicamente.");
+            print_error("Erro ao excluir pessoa fisicamente (não encontrada na lista).");
         }
+
     } else {
         print_warning("Operação cancelada.");
     }
