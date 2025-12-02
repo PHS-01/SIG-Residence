@@ -9,14 +9,14 @@
 
 FinanceNode *finance_list = NULL;
 
-void finance_list_insert(Finance f) {
-    FinanceNode *node = malloc(sizeof(FinanceNode));
-    node->data = f;
+int finance_list_insert(Finance new_finance) {
+    FinanceNode *node = (FinanceNode*) malloc(sizeof(FinanceNode));
+    node->data = new_finance;
     node->next = NULL;
 
     if (finance_list == NULL) {
         finance_list = node;
-        return;
+        return 0;
     }
 
     FinanceNode *aux = finance_list;
@@ -24,9 +24,13 @@ void finance_list_insert(Finance f) {
         aux = aux->next;
 
     aux->next = node;
+    finance_save_file();
+    return 1; // Sucesso
 }
 
-void finance_load_file() {
+void finance_load_file() { 
+    if (finance_list != NULL) return;
+
     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
     if (!file) return;
 
@@ -50,16 +54,17 @@ void finance_save_file() {
     fclose(file);
 }
 
-FinanceNode *finance_list_find(int (*match)(const void *)) {
-    FinanceNode *node = finance_list;
-
-    while (node) {
-        if (match(&node->data))
-            return node;
-        node = node->next;
+Finance *finance_list_find(int id) {
+    FinanceNode *atual = finance_list;
+    
+    while (atual != NULL) {
+        if (atual->data.id == id) {
+            return &atual->data;  // Retorna endereço do Finance dentro do nó
+        }
+        atual = atual->next;
     }
 
-    return NULL;
+    return NULL; // Não encontrado
 }
 
 
@@ -101,19 +106,29 @@ int match_all_finance(const void *data) {
 
 // Gera um novo ID automaticamente
 int generate_finance_id(void) {
-    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
+     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
     int max_id = 0;
-    
+    FinanceNode *atual = finance_list;
+
+    // Verifica IDs dentro do arquivo salvo
     if (file != NULL) {
-        Finance finance;
-        while (fread(&finance, sizeof(Finance), 1, file)) {
-            if (finance.id > max_id) {
-                max_id = finance.id;
+        Finance fin;
+        while (fread(&fin, sizeof(Finance), 1, file)) {
+            if (fin.id > max_id) {
+                max_id = fin.id;
             }
         }
         fclose(file);
     }
-    
+
+    // Verifica IDs já presentes na lista em memória
+    while (atual != NULL) {
+        if (atual->data.id > max_id) {
+            max_id = atual->data.id;
+        }
+        atual = atual->next;
+    }
+
     return max_id + 1;
 }
 
@@ -141,7 +156,45 @@ int count_finance_by_people_id(int people_id) {
     return count;
 }
 
-// Função para excluir fisicamente todas as finanças de uma pessoa (versão melhorada)
+int finance_list_remove(int id) {
+    FinanceNode *atual = finance_list;
+    FinanceNode *anterior = NULL;
+
+    while (atual != NULL) {
+        if (atual->data.id == id) {
+
+            // Caso 1: removendo o primeiro nó
+            if (anterior == NULL) {
+                finance_list = atual->next;
+            }
+            // Caso 2: removendo nó do meio/fim
+            else {
+                anterior->next = atual->next;
+            }
+
+            free(atual);               // libera o nó da lista dinâmica
+            finance_save_file();       // reescreve o arquivo atualizado
+            return 1;                  // sucesso
+        }
+
+        // avança ponteiros
+        anterior = atual;
+        atual = atual->next;
+    }
+
+    return 0; // não encontrou
+}
+void free_finance_list(void) {
+    FinanceNode *atual = finance_list;
+
+    while (atual != NULL) {
+        FinanceNode *temp = atual;
+        atual = atual->next;
+        free(temp); // libera o nó atual da lista
+    }
+
+    finance_list = NULL; // zera o ponteiro global
+}
 int delete_finance_by_people_id(int people_id) {
     if (people_id <= 0) {
         return 0;

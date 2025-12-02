@@ -27,10 +27,12 @@ typedef struct FinanceNode {
 extern FinanceNode *head_finance;
 
 // FUNÇÕES DE GERENCIAMENTO DE LISTAGEM DINÂMICA DIRETA (CRUD EM MEMÓRIA)
-void finance_list_insert(Finance f);             // Insere na lista em RAM
-void finance_load_file();                        // Carrega do arquivo para RAM
-void finance_save_file();                       // Salva da RAM para arquivo
-FinanceNode *finance_list_find(int (*match)(const void *));  // Busca nó na RAM pelo critério
+int finance_list_insert(Finance f);             // Insere na lista em RAM
+int finance_list_remove(int id);              // Remove da lista em RAM 
+void finance_load_file(void);                        // Carrega do arquivo para RAM
+void free_finance_list(void);                     // Libera a memória da lista
+void finance_save_file(void);                       // Salva da RAM para arquivo
+Finance *finance_list_find(int id);  // Busca nó na RAM pelo critério
 void finance_list_print(int (*match)(const void *)); // Imprime lista conforme critério
 
 // Funções de match

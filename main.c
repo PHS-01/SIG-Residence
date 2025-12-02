@@ -7,10 +7,12 @@
 #include "terminal_control.h"
 #include "controllers.h"
 #include "people.h"
+#include "finance.h"
 
 // Função de saída do programa
 void exit_program(void) {
     free_people_list(); // Limpa a memória RAM antes de matar o processo
+    free_finance_list();
     clear_screen();
     disable_raw_mode();
     show_cursor();
@@ -22,9 +24,11 @@ int main(void) {
     if (!database_exists()) {
         create_database();
     }
-
+    // Carrega listas dinâmicas na RAM
     load_people_list();
+    finance_load_file();
 
+    
     bool loop = true;
     int rows = 0, cols = 0;
 

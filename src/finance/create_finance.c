@@ -89,9 +89,11 @@ void create_finance_ui() {
     new_finance.status = true;
 
     printf("\n");
-    create(&new_finance, sizeof(Finance), FILE_NAME_FINANCE);
-    
-    printf("\n");
-    print_success("Transação cadastrada com sucesso!");
-    printf(COLOR_CYAN "ID da transação: %d" COLOR_RESET "\n", new_finance.id);
+      if (finance_list_insert(new_finance)) {
+        printf("\n");
+        print_success("Transação cadastrada com sucesso!");
+        printf(COLOR_CYAN "ID da transação: %d" COLOR_RESET "\n", new_finance.id);
+    } else {
+        print_error("Erro ao cadastrar Transação.");
+    }
 }
