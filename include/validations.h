@@ -47,4 +47,6 @@ bool is_valid_residence(const Residence *residence);
 // Valida o ID de Pessoa
 bool is_valid_people_id(const int);
 
+int is_valid_finance_type(int type);
+
 #endif

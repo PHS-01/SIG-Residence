@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h> // Adicionado para toupper()
+#include <ctype.h>
 #include "screens.h"
 #include "finance.h"
 #include "config.h"
@@ -66,32 +66,29 @@ void create_finance_ui() {
         }
     }
     
-    // Tipo: receita ou despesa - Padrão while(true) com break
-    char type_input[2];
+    // Tipo: receita ou despesa - Agora usando inteiro diretamente
     while (true) {
-    read_string_input("Tipo (R para Receita, D para Despesa): ", type_input, sizeof(type_input));
-
-    char c = toupper(type_input[0]);
-
-    if (c == 'R') {
-        new_finance.type = FINANCE_RECEITA;
-        break;
+        int tipo_input;
+        if (read_int_input("Tipo (1 para Receita, 2 para Despesa): ", &tipo_input)) {
+            if (tipo_input == FINANCE_RECEITA || tipo_input == FINANCE_DESPESA) {
+                new_finance.type = (FinanceType)tipo_input;
+                break;
+            } else {
+                print_error("Tipo inválido! Use 1 para Receita ou 2 para Despesa.");
+            }
+        } else {
+            print_error("Entrada inválida. Digite 1 para Receita ou 2 para Despesa.");
+        }
     }
-    else if (c == 'D') {
-        new_finance.type = FINANCE_DESPESA;
-        break;
-    }
-    else {
-        print_error("Tipo inválido! Use R ou D.");
-    }
-}
 
     new_finance.status = true;
 
     printf("\n");
-    create(&new_finance, sizeof(Finance), FILE_NAME_FINANCE);
-    
-    printf("\n");
-    print_success("Transação cadastrada com sucesso!");
-    printf(COLOR_CYAN "ID da transação: %d" COLOR_RESET "\n", new_finance.id);
+    if (finance_list_insert(new_finance)) {
+        printf("\n");
+        print_success("Transação cadastrada com sucesso!");
+        printf(COLOR_CYAN "ID da transação: %d" COLOR_RESET "\n", new_finance.id);
+    } else {
+        print_error("Erro ao cadastrar Transação.");
+    }
 }

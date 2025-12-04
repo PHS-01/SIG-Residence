@@ -7,6 +7,148 @@
 #include "menu_borders.h"
 #include "terminal_control.h"
 
+FinanceNode *head_finance = NULL;
+
+// FUNÇÕES DE GERENCIAMENTO DA LISTA
+
+// Carrega do arquivo para a RAM
+void finance_load_file(void) { 
+    if (head_finance != NULL) return;
+
+    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
+    if (!file) return;
+
+    Finance temp_data;
+    FinanceNode *ultimo = NULL;
+
+    while (fread(&temp_data, sizeof(Finance), 1, file)) {
+        FinanceNode *novo = (FinanceNode*) malloc(sizeof(FinanceNode));
+        if (!novo) {
+            fclose(file);
+            return;
+        }
+        novo->data = temp_data;
+        novo->next = NULL;
+
+        if (head_finance == NULL) {
+            head_finance = novo; // Primeiro da lista
+        } else {
+            ultimo->next = novo; // Liga o anterior ao novo
+        }
+        ultimo = novo;
+    }
+
+    fclose(file);
+}
+
+// Salva da RAM para o Arquivo
+void finance_save_file(void) {
+    FILE *file = fopen(FILE_NAME_FINANCE, "wb");
+    if (!file) return;
+
+    FinanceNode *atual = head_finance;
+    while (atual != NULL) {
+        fwrite(&atual->data, sizeof(Finance), 1, file);
+        atual = atual->next;
+    }
+    fclose(file);
+}
+
+// Adiciona uma transação na lista (inserção no final) e salva
+int finance_list_insert(Finance new_finance) {
+    // Cria o nó na memória
+    FinanceNode *novo = (FinanceNode*) malloc(sizeof(FinanceNode));
+    if (!novo) {
+        return 0; // Falha na alocação
+    }
+    
+    novo->data = new_finance;
+    novo->next = NULL;
+
+    // Se a lista está vazia, insere no início
+    if (head_finance == NULL) {
+        head_finance = novo;
+    } else {
+        // Encontra o último nó
+        FinanceNode *atual = head_finance;
+        while (atual->next != NULL) {
+            atual = atual->next;
+        }
+        // Insere no final
+        atual->next = novo;
+    }
+
+    finance_save_file();
+    return 1; // Sucesso
+}
+
+// Busca uma transação na lista pelo ID
+Finance *finance_list_find(int id) {
+    FinanceNode *atual = head_finance;
+    
+    while (atual != NULL) {
+        if (atual->data.id == id) {
+            return &atual->data;  // Retorna endereço do dado dentro do nó
+        }
+        atual = atual->next;
+    }
+
+    return NULL; // Não encontrado
+}
+
+// Remove fisicamente um nó da lista
+int finance_list_remove(int id) {
+    FinanceNode *atual = head_finance;
+    FinanceNode *anterior = NULL;
+
+    while (atual != NULL) {
+        if (atual->data.id == id) {
+            // Caso 1: removendo o primeiro nó
+            if (anterior == NULL) {
+                head_finance = atual->next;
+            }
+            // Caso 2: removendo nó do meio/fim
+            else {
+                anterior->next = atual->next;
+            }
+
+            free(atual);               // libera o nó da lista dinâmica
+            finance_save_file();       // reescreve o arquivo atualizado
+            return 1;                  // sucesso
+        }
+
+        // avança ponteiros
+        anterior = atual;
+        atual = atual->next;
+    }
+
+    return 0; // não encontrou
+}
+
+// Libera toda a memória alocada para a lista
+void free_finance_list(void) {
+    FinanceNode *atual = head_finance;
+
+    while (atual != NULL) {
+        FinanceNode *temp = atual;
+        atual = atual->next;
+        free(temp); // libera o nó atual da lista
+    }
+
+    head_finance = NULL; // zera o ponteiro global
+}
+
+void finance_list_print(int (*match)(const void *)) {
+    FinanceNode *node = head_finance;
+
+    while (node) {
+        if (match(&node->data)) {
+            Finance f = node->data;
+            printf("%d - %s - %.2f\n", f.id, f.description, f.value);
+        }
+        node = node->next;
+    }
+}
 static int search_id = -1;  // Variável global para armazenar o ID de pesquisa
 
 // Define o ID de pesquisa
@@ -32,116 +174,68 @@ int match_all_finance(const void *data) {
     return 1;
 }
 
-// Gera um novo ID automaticamente
+// Gera ID baseado no maior ID da lista
 int generate_finance_id(void) {
-    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
     int max_id = 0;
+    FinanceNode *atual = head_finance;
     
-    if (file != NULL) {
-        Finance finance;
-        while (fread(&finance, sizeof(Finance), 1, file)) {
-            if (finance.id > max_id) {
-                max_id = finance.id;
-            }
+    while (atual != NULL) {
+        if (atual->data.id > max_id) {
+            max_id = atual->data.id;
         }
-        fclose(file);
+        atual = atual->next;
     }
-    
     return max_id + 1;
 }
 
 // Função para contar quantas finanças uma pessoa possui
 int count_finance_by_people_id(int people_id) {
-    if (people_id <= 0) {
-        return 0;
-    }
+    if (people_id <= 0) return 0;
     
-    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
-    if (!file) {
-        return 0;
-    }
-    
-    Finance finance;
     int count = 0;
+    FinanceNode *atual = head_finance;
     
-    while (fread(&finance, sizeof(Finance), 1, file)) {
-        if (finance.people_id == people_id) {
+    while (atual != NULL) {
+        if (atual->data.people_id == people_id && atual->data.status) {
             count++;
         }
+        atual = atual->next;
     }
     
-    fclose(file);
     return count;
 }
 
-// Função para excluir fisicamente todas as finanças de uma pessoa (versão melhorada)
 int delete_finance_by_people_id(int people_id) {
-    if (people_id <= 0) {
-        return 0;
-    }
+    if (people_id <= 0) return 0;
     
-    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
-    if (!file) {
-        return 0; // Nenhum arquivo, nada para excluir
-    }
-    
-    // Verificar primeiro se há registros para excluir
-    Finance finance;
-    int records_to_delete = 0;
-    while (fread(&finance, sizeof(Finance), 1, file)) {
-        if (finance.people_id == people_id) {
-            records_to_delete++;
-        }
-    }
-    
-    if (records_to_delete == 0) {
-        fclose(file);
-        return 0; // Nada para excluir
-    }
-    
-    // Voltar ao início do arquivo
-    rewind(file);
-    
-    // Criar arquivo temporário
-    FILE *temp_file = fopen("temp_finance.dat", "wb");
-    if (!temp_file) {
-        fclose(file);
-        return 0;
-    }
-    
+    FinanceNode *atual = head_finance;
+    FinanceNode *anterior = NULL;
     int deleted_count = 0;
-    int error_occurred = 0;
     
-    // Copiar todos os registros exceto os da pessoa especificada
-    while (fread(&finance, sizeof(Finance), 1, file)) {
-        if (finance.people_id != people_id) {
-            if (fwrite(&finance, sizeof(Finance), 1, temp_file) != 1) {
-                error_occurred = 1;
-                break;
+    while (atual != NULL) {
+        if (atual->data.people_id == people_id) {
+            FinanceNode *to_delete = atual;
+            
+            if (anterior == NULL) {
+                // Removendo do início
+                head_finance = atual->next;
+                atual = head_finance;
+            } else {
+                // Removendo do meio/fim
+                anterior->next = atual->next;
+                atual = anterior->next;
             }
-        } else {
+            
+            free(to_delete);
             deleted_count++;
+        } else {
+            anterior = atual;
+            atual = atual->next;
         }
     }
     
-    fclose(file);
-    fclose(temp_file);
-    
-    if (error_occurred) {
-        remove("temp_finance.dat");
-        return 0;
-    }
-    
-    // Substituir arquivo original pelo temporário
-    if (remove(FILE_NAME_FINANCE) != 0) {
-        remove("temp_finance.dat");
-        return 0;
-    }
-    
-    if (rename("temp_finance.dat", FILE_NAME_FINANCE) != 0) {
-        // Tentar restaurar do backup se houver
-        // rename(backup_name, FILE_NAME_FINANCE);
-        return 0;
+    if (deleted_count > 0) {
+        finance_save_file();
     }
     
     return deleted_count;
@@ -149,29 +243,23 @@ int delete_finance_by_people_id(int people_id) {
 
 // Função para listar finanças de uma pessoa específica
 void list_finance_by_people_id(int people_id) {
-    if (people_id <= 0) {
-        return;
-    }
+    if (people_id <= 0) return;
     
-    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
-    if (!file) {
-        return;
-    }
-    
-    Finance finance;
+    FinanceNode *atual = head_finance;
     int count = 0;
     
     printf("\n╔══════════════════════════════════════════════════════════════╗\n");
     printf("║               TRANSAÇÕES FINANCEIRAS ASSOCIADAS              ║\n");
     printf("╠══════════════════════════════════════════════════════════════╣\n");
     
-    while (fread(&finance, sizeof(Finance), 1, file)) {
-        if (finance.people_id == people_id) {
+    while (atual != NULL) {
+        if (atual->data.people_id == people_id) {
             count++;
-            const char *type_text = (finance.type == 'R') ? "Receita" : "Despesa";
+            const char *type_text = (atual->data.type == FINANCE_RECEITA) ? "Receita" : "Despesa";
             printf("║ %-4d | %-25s | R$ %8.2f | %-11s ║\n", 
-                   finance.id, finance.description, finance.value, type_text);
+                   atual->data.id, atual->data.description, atual->data.value, type_text);
         }
+        atual = atual->next;
     }
     
     if (count == 0) {
@@ -180,15 +268,13 @@ void list_finance_by_people_id(int people_id) {
     
     printf("╚══════════════════════════════════════════════════════════════╝\n");
     printf("Total de transações: %d\n", count);
-    
-    fclose(file);
 }
 
 // Imprime os dados completos de uma transação (para consulta individual)
 void print_finance_detail(const void *data) {
     Finance *f = (Finance *)data;
     
-    const char *type_text = (f->type == 'R' || f->type == 'r') ? "Receita" : "Despesa";
+    const char *type_text = (f->type == FINANCE_RECEITA) ? "Receita" : "Despesa";
     const char *status_text = f->status ? "Ativo" : "Inativo";
     
     // Para o valor, formatando com R$
@@ -215,7 +301,7 @@ void print_finance_detail(const void *data) {
 void print_finance_table(const void *data) {
     Finance *f = (Finance *)data;
     
-    const char *type_text = (f->type == 'R' || f->type == 'r') ? "Receita" : "Despesa";
+    const char *type_text = (f->type == FINANCE_RECEITA) ? "Receita" : "Despesa";
     const char *status_text = f->status ? "Ativo" : "Inativo";
     
     printf("║ ");
@@ -234,31 +320,31 @@ void print_finance_table(const void *data) {
     printf(" ║\n");
 }
 
+// LISTAGEM PAGINADA USANDO A LISTA DINÂMICA
 void list_finance_paginated(bool active_only) {
-    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
-    if (!file) {
-        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
+    if (head_finance == NULL) {
+        print_warning("Nenhum registro encontrado (Lista Vazia).");
         wait_for_enter();
         return;
     }
 
-    // Conta o total de registros válidos para o filtro
+    // Conta registros (Na RAM)
     int total_records = 0;
-    Finance f;
-    while (fread(&f, sizeof(Finance), 1, file)) {
-        if (!active_only || f.status) {
+    FinanceNode *atual = head_finance;
+    while (atual != NULL) {
+        if (!active_only || atual->data.status) {
             total_records++;
         }
+        atual = atual->next;
     }
 
     if (total_records == 0) {
-        fclose(file);
         print_warning("Nenhum registro encontrado.");
         wait_for_enter();
         return;
     }
 
-    // Configurações da paginação
+    // Configuração Paginação
     const int ITEMS_PER_PAGE = 10;
     int total_pages = (total_records + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE;
     int current_page = 1;
@@ -266,8 +352,6 @@ void list_finance_paginated(bool active_only) {
 
     do {
         clear_screen();
-        
-        // Cabeçalho
         const char* title = active_only ? "RELATORIO DE FINANÇAS (ATIVAS)" : "RELATORIO DE FINANÇAS (TODAS)";
         printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
         printf("║ %-118s ║\n", title);
@@ -276,45 +360,33 @@ void list_finance_paginated(bool active_only) {
         printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
         printf("╠══════╬═══════════╬═════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
 
-
-        // Posiciona e lê registros da página atual
-        rewind(file); // Volta ao inicio do arquivo
+        // 2. Navegar até a página atual
+        atual = head_finance;
         int skipped = 0;
         int printed = 0;
         int start_index = (current_page - 1) * ITEMS_PER_PAGE;
 
-        while (fread(&f, sizeof(Finance), 1, file) && printed < ITEMS_PER_PAGE) {
-            // Aplica o filtro (ativo ou todos)
-            if (!active_only || f.status) {
-                // Pula os registros das páginas anteriores
+        while (atual != NULL && printed < ITEMS_PER_PAGE) {
+            if (!active_only || atual->data.status) {
                 if (skipped < start_index) {
                     skipped++;
-                    continue;
+                } else {
+                    print_finance_table(&atual->data);
+                    printed++;
                 }
-                
-                // Imprime o registro atual
-                print_finance_table(&f);
-                printed++;
             }
+            atual = atual->next;
         }
 
         printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
-        
-        // Rodapé de Navegação
         printf("\n[A] Anterior  [P] Próxima  [0] Sair\n");
         
-        option = get_keypress(); // Usa função de capturar tecla sem enter
+        option = get_keypress();
 
-        // Lógica de navegação
-        if ((option == 'p' || option == 'P') && current_page < total_pages) {
-            current_page++;
-        } else if ((option == 'a' || option == 'A') && current_page > 1) {
-            current_page--;
-        }
+        if ((option == 'p' || option == 'P') && current_page < total_pages) current_page++;
+        else if ((option == 'a' || option == 'A') && current_page > 1) current_page--;
 
     } while (option != '0');
-
-    fclose(file);
 }
 
 // void list_all_finance(void) {
@@ -384,77 +456,74 @@ void list_finance_by_category(void) {
 
     printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
     printf("║                                  RELATORIO FINANCEIRO POR CATEGORIA                                                   ║\n");
-    printf("║                                                                                                                       ║\n");
     printf("╠══════╦═══════════╦═════════════════════════╦════════════╦══════════════╦══════════════════════╦═══════════╦═══════════╣\n");
     printf("║  ID  ║ ID Pessoa ║ Descrição               ║ Valor      ║ Data         ║ Categoria            ║ Tipo      ║ Status    ║\n");
     printf("╠══════╬═══════════╬═════════════════════════╬════════════╬══════════════╬══════════════════════╬═══════════╬═══════════╣\n");
 
-    FILE *file = fopen(FILE_NAME_FINANCE, "rb");
-    if (!file) {
-        printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
-        print_error("Nenhum dado cadastrado ou erro ao abrir arquivo.");
-        return;
-    }
-
-    Finance finance;
+    FinanceNode *atual = head_finance;
     int count = 0;
     float total = 0;
 
-    while (fread(&finance, sizeof(Finance), 1, file)) {
-        if (!finance.status) continue;
-
-        if (strcasecmp(finance.category, categoria) == 0) {
-            print_finance_table(&finance);
+    while (atual != NULL) {
+        if (atual->data.status && strcasecmp(atual->data.category, categoria) == 0) {
+            print_finance_table(&atual->data);
             count++;
-            total += finance.value;
+            total += atual->data.value;
         }
+        atual = atual->next;
     }
 
     printf("╚══════╩═══════════╩═════════════════════════╩════════════╩══════════════╩══════════════════════╩═══════════╩═══════════╝\n");
     printf("Total de transações na categoria '%s': %d\n", categoria, count);
     printf("Valor total: R$ %.2f\n", total);
-
-    fclose(file);
 }
-void list_finance_by_person(void) {
-    FILE *fp_people = fopen(FILE_NAME_PEOPLE, "rb");
-    FILE *fp_fin = fopen(FILE_NAME_FINANCE, "rb");
 
-    if (!fp_people || !fp_fin) {
-        print_error("Erro ao abrir arquivos de dados.");
-        if (fp_people) fclose(fp_people);
-        if (fp_fin) fclose(fp_fin);
+// Relatório de finanças por pessoa (saldo)
+void list_finance_by_person(void) {
+    if (head_finance == NULL) {
+        print_error("Nenhuma transação cadastrada.");
         return;
     }
 
-    People p;
-    Finance f;
-
- 
     printf("╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\n");
     printf("║                                  RELATÓRIO DE FINANÇAS GERAIS POR PESSOA                                              ║\n");
-    printf("║                                                                                                                       ║\n");
     printf("╠══════╦══════════════════════════════╦═════════════════════╦══════════════════════════╦════════════════════════════════╣\n");
     printf("║  ID  ║   Nome                       ║ Receitas            ║ Despesas                 ║ Saldo                          ║\n");
     printf("╠══════╬══════════════════════════════╬═════════════════════╬══════════════════════════╬════════════════════════════════╣\n");
 
+    // Primeiro, precisamos obter a lista de pessoas
+    // Vou assumir que você tem uma função para obter todas as pessoas ativas
+    // Se não tiver, precisará carregar o arquivo de pessoas
+    
+    FILE *fp_people = fopen(FILE_NAME_PEOPLE, "rb");
+    if (!fp_people) {
+        print_error("Erro ao abrir arquivo de pessoas.");
+        return;
+    }
+    
+    People p;
     while (fread(&p, sizeof(People), 1, fp_people)) {
         if (!p.status) continue;
 
         float total_r = 0, total_d = 0;
-
-        rewind(fp_fin);
-        while (fread(&f, sizeof(Finance), 1, fp_fin)) {
-            if (f.status && f.people_id == p.id) {
-                if (f.type == FINANCE_RECEITA) total_r += f.value;
-                else total_d += f.value;
+        
+        // Calcular totais para esta pessoa
+        FinanceNode *atual = head_finance;
+        while (atual != NULL) {
+            if (atual->data.status && atual->data.people_id == p.id) {
+                if (atual->data.type == FINANCE_RECEITA) {
+                    total_r += atual->data.value;
+                } else {
+                    total_d += atual->data.value;
+                }
             }
+            atual = atual->next;
         }
 
         printf("║ %-4d ║ %-28s ║ %-19.2f ║ %-24.2f ║ %-30.2f ║\n",
                p.id, p.name, total_r, total_d, total_r - total_d);
     }
+    
     printf("╚══════╩══════════════════════════════╩═════════════════════╩══════════════════════════╩════════════════════════════════╝\n");
     fclose(fp_people);
-    fclose(fp_fin);
 }

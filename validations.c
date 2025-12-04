@@ -475,3 +475,7 @@ bool is_valid_residence(const Residence *residence) {
 
     return true;
 }
+
+int is_valid_finance_type(int type) {
+    return (type == FINANCE_RECEITA || type == FINANCE_DESPESA);
+}
