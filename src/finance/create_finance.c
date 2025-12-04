@@ -85,7 +85,6 @@ void create_finance_ui() {
 
     printf("\n");
     if (finance_list_insert(new_finance)) {
-        printf("\n");
         print_success("Transação cadastrada com sucesso!");
         printf(COLOR_CYAN "ID da transação: %d" COLOR_RESET "\n", new_finance.id);
     } else {

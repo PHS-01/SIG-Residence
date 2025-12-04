@@ -186,7 +186,7 @@ void print_people_table(const void *data) {
 void list_people_paginated(bool active_only) {
     if (head_people == NULL) {
         print_warning("Nenhum registro encontrado (Lista Vazia).");
-        wait_for_enter();
+        // wait_for_enter();
         return;
     }
 
@@ -202,7 +202,7 @@ void list_people_paginated(bool active_only) {
 
     if (total_records == 0) {
         print_warning("Nenhum registro encontrado.");
-        wait_for_enter();
+        // wait_for_enter();
         return;
     }
 

@@ -54,7 +54,6 @@ void dashboard_people() {
                 physical_delete_people_ui();
                 break;
             case 0:
-                print_success("Retornando ao menu principal...");
                 break;
         }
 

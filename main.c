@@ -8,11 +8,15 @@
 #include "controllers.h"
 #include "people.h"
 #include "finance.h"
+#include "residence.h"
 
 // Função de saída do programa
 void exit_program(void) {
-    free_people_list(); // Limpa a memória RAM antes de matar o processo
+    // Limpa a memória RAM antes de matar o processo
+    free_people_list();
     free_finance_list();
+    free_residence_list();
+
     clear_screen();
     disable_raw_mode();
     show_cursor();
@@ -27,6 +31,7 @@ int main(void) {
     // Carrega listas dinâmicas na RAM
     load_people_list();
     finance_load_file();
+    load_residence_list();
 
     
     bool loop = true;

@@ -8,159 +8,106 @@
 #include "validations.h"
 
 void update_residence_ui() {
-    Residence updated_residence;
     int id;
-    
     if (!read_int_input("Digite o ID da residência que deseja atualizar: ", &id)) {
         print_error("ID inválido.");
         return;
     }
 
-    // Primeiro verifica se a residência existe
-    set_search_residence_id(id);
-    Residence existing_residence;
-    if (!read_data(&existing_residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
+    // Busca ponteiro na memória
+    Residence *existing_residence = find_residence_by_id(id);
+
+    if (existing_residence == NULL || existing_residence->status == false) {
         print_error("Residência com ID %d não encontrada ou está inativa.", id);
         return;
     }
 
+    // Fazemos uma cópia para editar. Se salvar, copiamos de volta.
+    Residence temp_res = *existing_residence;
+
     printf("\n");
-    print_residence_detail(&existing_residence);
+    print_residence_detail(existing_residence);
     printf("\n");
     
     print_info("Deixe em branco para manter o valor atual.\n");
     
     char temp[100];
     int temp_int;
+    bool address_changed = false;
     
-    // Endereço - com validação
-    printf("Endereço atual: %s\n", existing_residence.address);
+    // Endereço (Verifica se mudou para reordenar)
+    printf("Endereço atual: %s\n", existing_residence->address);
     read_string_input("Novo endereço: ", temp, sizeof(temp));
     if (strlen(temp) > 0) {
         do {
-            if (!is_valid_string(temp, sizeof(updated_residence.address))) {
-                print_error("Endereço não pode estar vazio e deve ter até 99 caracteres.");
+            if (!is_valid_string(temp, sizeof(temp_res.address))) {
+                print_error("Endereço inválido.");
                 read_string_input("Novo endereço: ", temp, sizeof(temp));
-            } else {
-                break;
-            }
+            } else { break; }
         } while (1);
-        strcpy(updated_residence.address, temp);
-    } else {
-        strcpy(updated_residence.address, existing_residence.address);
+        
+        if (strcmp(temp, existing_residence->address) != 0) {
+            strcpy(temp_res.address, temp);
+            address_changed = true;
+        }
     }
     
-    // Número - com validação
-    printf("Número atual: %d\n", existing_residence.number);
+    // Número
+    printf("Número atual: %d\n", existing_residence->number);
     if (read_int_input("Novo número: ", &temp_int)) {
-        do {
-            if (!is_valid_residence_number(temp_int)) {
-                print_error("Número da residência deve ser positivo.");
-                if (!read_int_input("Novo número: ", &temp_int)) {
-                    temp_int = existing_residence.number;
-                    break;
-                }
-            } else {
-                break;
-            }
-        } while (1);
-        updated_residence.number = temp_int;
-    } else {
-        updated_residence.number = existing_residence.number;
+        // Validação simples
+        if (is_valid_residence_number(temp_int)) temp_res.number = temp_int;
     }
     
     // Complemento
-    printf("Complemento atual: %s\n", existing_residence.complement);
+    printf("Complemento atual: %s\n", existing_residence->complement);
     read_string_input("Novo complemento: ", temp, sizeof(temp));
-    if (strlen(temp) > 0) {
-        // Complemento pode ser vazio, mas se preenchido, verificar o tamanho
-        if (strlen(temp) >= sizeof(updated_residence.complement)) {
-            print_error("Complemento é muito longo (máximo 49 caracteres).");
-            // Não vamos repetir a entrada, apenas mantemos o atual
-            strcpy(updated_residence.complement, existing_residence.complement);
-        } else {
-            strcpy(updated_residence.complement, temp);
-        }
-    } else {
-        strcpy(updated_residence.complement, existing_residence.complement);
-    }
-    
-    // Bairro - com validação
-    printf("Bairro atual: %s\n", existing_residence.neighborhood);
+    if (strlen(temp) > 0) strcpy(temp_res.complement, temp);
+
+    // Bairro
+    printf("Bairro atual: %s\n", existing_residence->neighborhood);
     read_string_input("Novo bairro: ", temp, sizeof(temp));
-    if (strlen(temp) > 0) {
-        do {
-            if (!is_valid_string(temp, sizeof(updated_residence.neighborhood))) {
-                print_error("Bairro não pode estar vazio e deve ter até 49 caracteres.");
-                read_string_input("Novo bairro: ", temp, sizeof(temp));
-            } else {
-                break;
-            }
-        } while (1);
-        strcpy(updated_residence.neighborhood, temp);
-    } else {
-        strcpy(updated_residence.neighborhood, existing_residence.neighborhood);
-    }
+    if (strlen(temp) > 0) strcpy(temp_res.neighborhood, temp);
     
-    // Cidade - com validação
-    printf("Cidade atual: %s\n", existing_residence.city);
+    // Cidade
+    printf("Cidade atual: %s\n", existing_residence->city);
     read_string_input("Nova cidade: ", temp, sizeof(temp));
-    if (strlen(temp) > 0) {
-        do {
-            if (!is_valid_string(temp, sizeof(updated_residence.city))) {
-                print_error("Cidade não pode estar vazia e deve ter até 49 caracteres.");
-                read_string_input("Nova cidade: ", temp, sizeof(temp));
-            } else {
-                break;
-            }
-        } while (1);
-        strcpy(updated_residence.city, temp);
-    } else {
-        strcpy(updated_residence.city, existing_residence.city);
-    }
+    if (strlen(temp) > 0) strcpy(temp_res.city, temp);
     
-    // Estado - com validação
-    printf("Estado atual: %s\n", existing_residence.state);
+    // Estado
+    printf("Estado atual: %s\n", existing_residence->state);
     read_string_input("Novo estado: ", temp, sizeof(temp));
     if (strlen(temp) > 0) {
-        do {
-            if (!is_valid_state(temp)) {
-                print_error("Estado inválido! Use uma sigla de 2 letras válida (ex: SP, RJ, MG).");
-                read_string_input("Novo estado: ", temp, sizeof(temp));
-            } else {
-                break;
-            }
-        } while (1);
-        strcpy(updated_residence.state, temp);
-    } else {
-        strcpy(updated_residence.state, existing_residence.state);
-    }
+         if (is_valid_state(temp)) strcpy(temp_res.state, temp);
+    } 
     
-    // CEP - com validação
-    printf("CEP atual: %s\n", existing_residence.cep);
+    // CEP
+    printf("CEP atual: %s\n", existing_residence->cep);
     read_string_input("Novo CEP: ", temp, sizeof(temp));
     if (strlen(temp) > 0) {
-        do {
-            if (!is_valid_cep(temp)) {
-                print_error("CEP inválido! Use o formato 12345-678 ou 12345678.");
-                read_string_input("Novo CEP: ", temp, sizeof(temp));
-            } else {
-                break;
-            }
-        } while (1);
-        strcpy(updated_residence.cep, temp);
-    } else {
-        strcpy(updated_residence.cep, existing_residence.cep);
+        if (is_valid_cep(temp)) strcpy(temp_res.cep, temp);
     }
 
-    updated_residence.id = id;
-    updated_residence.status = true;
-
-    printf("\n");
-    set_search_residence_id(id);
-    if (update(&updated_residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
-        print_success("Residência atualizada com sucesso!");
+    // LÓGICA DE SALVAMENTO
+    if (address_changed) {
+        // Se mudou o endereço, a ordem alfabética pode mudar.
+        // Removemos o antigo e inserimos o novo (que vai achar seu lugar sozinho)
+        int old_id = existing_residence->id;
+        
+        // Remove fisicamente o nó antigo (mas sem salvar no disco ainda para performance, ou salva direto)
+        remove_residence_from_list(old_id);
+        
+        // Garante que o ID se mantém o mesmo
+        temp_res.id = old_id;
+        
+        // Insere ordenado
+        insert_residence_sorted(temp_res);
+        
+        print_success("Residência atualizada e reordenada com sucesso!");
     } else {
-        print_error("Erro ao atualizar residência.");
+        // Se não mudou endereço, apenas atualiza a RAM no lugar e salva
+        *existing_residence = temp_res;
+        save_residence_list();
+        print_success("Residência atualizada com sucesso!");
     }
 }

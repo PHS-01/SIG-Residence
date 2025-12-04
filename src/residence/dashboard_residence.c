@@ -54,7 +54,6 @@ void dashboard_residence() {
                 physical_delete_residence_ui();
                 break;
             case 0:
-                print_success("Retornando ao menu principal...");
                 break;
         }
 

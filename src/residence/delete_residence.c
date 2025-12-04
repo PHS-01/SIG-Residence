@@ -15,27 +15,25 @@ void delete_residence_ui() {
         return;
     }
 
-    // Primeiro verifica se a residência existe
-    set_search_residence_id(id);
-    Residence residence;
-    if (!read_data(&residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
+    // Busca na memória
+    Residence *residence = find_residence_by_id(id);
+
+    // Verifica se existe e se já não está inativo
+    if (residence == NULL || residence->status == false) {
         print_error("Residência com ID %d não encontrada ou já está inativa.", id);
         return;
     }
 
-    printf("\nDados da residência:\n");
-    print_residence_detail(&residence);
+    printf("\n");
+    print_residence_detail(residence);
     printf("\n");
 
     read_string_input("Tem certeza que deseja inativar esta residência? (s/N): ", confirm, sizeof(confirm));
 
     if (confirm[0] == 's' || confirm[0] == 'S') {
-        set_search_residence_id(id);
-        if (delete(sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
-            print_success("Residência inativada com sucesso.");
-        } else {
-            print_error("Erro ao inativar residência.");
-        }
+        residence->status = false; // Atualiza na RAM
+        save_residence_list();     // Persiste no arquivo
+        print_success("Residência inativada com sucesso.");
     } else {
         print_warning("Operação cancelada.");
     }
