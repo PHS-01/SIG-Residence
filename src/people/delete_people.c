@@ -23,7 +23,7 @@ void delete_people_ui() {
     }
 
     printf("\n");
-    print_people_detail(&person);
+    print_people_detail(person);
     printf("\n");
 
     read_string_input("Tem certeza que deseja inativar esta pessoa? (s/N): ", confirm, sizeof(confirm));
