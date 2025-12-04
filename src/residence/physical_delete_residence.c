@@ -15,26 +15,24 @@ void physical_delete_residence_ui() {
         return;
     }
 
-    // Primeiro verifica se a residência existe
-    set_search_residence_id(id);
-    Residence residence;
-    if (!read_data(&residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
+    // Busca para confirmar
+    Residence *residence = find_residence_by_id(id);
+    if (residence == NULL) {
         print_error("Residência com ID %d não encontrada.", id);
         return;
     }
 
     printf("\nDados da residência que será excluída FISICAMENTE:\n");
-    print_residence_detail(&residence);
+    print_residence_detail(residence);
     printf("\n");
     print_warning("ATENÇÃO: Esta operação é IRREVERSÍVEL!");
 
     clear_input_buffer();
-
     read_string_input("Confirma a exclusão física? (digite 'sim' para confirmar): ", confirm, sizeof(confirm));
 
     if (strcmp(confirm, "sim") == 0) {
-        set_search_residence_id(id);
-        if (physical_delete(sizeof(Residence), match_residence_by_id, FILE_NAME_RESIDENCE)) {
+        // Remove da lista e salva
+        if (remove_residence_from_list(id)) {
             print_success("Residência excluída fisicamente com sucesso.");
         } else {
             print_error("Erro ao excluir residência fisicamente.");

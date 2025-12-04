@@ -9,12 +9,14 @@ void read_residence_ui() {
     
     if (read_int_input("Digite o ID da residência: ", &id)) {
         printf("\n");
-        set_search_residence_id(id);
-        Residence residence;
-        if (read_data(&residence, sizeof(Residence), FILE_NAME_RESIDENCE, match_residence_by_id)) {
-            print_residence_detail(&residence);
+        
+        // Busca na memória ao invés do arquivo
+        Residence *residence = find_residence_by_id(id);
+
+        if (residence != NULL) {
+            print_residence_detail(residence);
         } else {
-            print_error("Residência com ID %d não encontrada ou está inativa.", id);
+            print_error("Residência com ID %d não encontrada.", id);
         }
     } else {
         print_error("ID inválido.");
