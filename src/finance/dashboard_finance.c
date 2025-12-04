@@ -53,7 +53,6 @@ void dashboard_finance() {
                 physical_delete_finance_ui();
                 break;
             case 0:
-                print_success("Retornando ao menu principal...");
                 break;
         }
 
