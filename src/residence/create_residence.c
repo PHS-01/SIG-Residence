@@ -67,9 +67,10 @@ void create_residence_ui() {
     new_residence.status = true;
 
     printf("\n");
-    create(&new_residence, sizeof(Residence), FILE_NAME_RESIDENCE);
-    
-    printf("\n");
-    print_success("Residência cadastrada com sucesso!");
-    printf(COLOR_CYAN "ID da residência: %d" COLOR_RESET "\n", new_residence.id);
+    if (insert_residence_sorted(new_residence)) {
+        print_success("Residência cadastrada com sucesso!");
+        printf(COLOR_CYAN "ID da residência: %d" COLOR_RESET "\n", new_residence.id);
+    } else {
+        print_error("Erro ao cadastrar residência.");
+    }
 }

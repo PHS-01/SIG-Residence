@@ -54,7 +54,6 @@ void create_people_ui() {
 
     printf("\n");
     if (create_person(new_person)) {
-        printf("\n");
         print_success("Pessoa cadastrada com sucesso!");
         printf(COLOR_CYAN "ID da pessoa: %d" COLOR_RESET "\n", new_person.id);
     } else {
