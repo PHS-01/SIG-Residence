@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include "screens.h"
 #include "finance.h"
 #include "config.h"
@@ -47,15 +48,34 @@ void create_finance_ui() {
     }
     
     // Data - Padrão while(true) com break
-    while (true) {
-        read_string_input("Data (dd/mm/aaaa): ", new_finance.date, sizeof(new_finance.date));
-        if (!validation_date(new_finance.date)) {
-            print_error("Data inválida! Use o formato dd/mm/aaaa e insira uma data real.");
-        } else {
-            break; // Sucesso
-        }
-    }
+    // while (true) {
+    //     read_string_input("Data (dd/mm/aaaa): ", new_finance.date, sizeof(new_finance.date));
+    //     if (!validation_date(new_finance.date)) {
+    //         print_error("Data inválida! Use o formato dd/mm/aaaa e insira uma data real.");
+    //     } else {
+    //         break; // Sucesso
+    //     }
+    // }
     
+    // By Gemini
+    // Obtém o tempo atual 
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+
+    // Buffer maior (40 bytes) para satisfazer o compilador que calcula o pior caso dos inteiros
+    char temp_date[40];
+
+    // Formata no buffer temporário
+    snprintf(temp_date, sizeof(temp_date), "%02d/%02d/%04d", 
+             tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+
+    // Copia para a struct limitando ao tamanho exato (10 chars + \0)
+    strncpy(new_finance.date, temp_date, sizeof(new_finance.date) - 1);
+    new_finance.date[sizeof(new_finance.date) - 1] = '\0'; // Garante null-termination
+
+    // Exibe para o usuário saber qual data foi registrada
+    printf("Data atual registrada automaticamente: %s\n", new_finance.date);
+
     // Categoria - Padrão while(true) com break
     while (true) {
         read_string_input("Categoria: ", new_finance.category, sizeof(new_finance.category));
