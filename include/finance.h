@@ -9,30 +9,32 @@ typedef enum {
 } FinanceType;
 
 typedef struct {
-    bool status;    // ativo ou inativo
+    bool status;             // ativo ou inativo
     int id;
     int people_id;           // Identificador único de pessoa (1:N)
     char description[100];
     float value;
     char date[11];           // dd/mm/aaaa
-    char category[50];      // todo: Fazer enum e relatorio para categorias     
-    FinanceType type;               // 'R' para receita, 'D' para despesa
+    char category[50];       
+    FinanceType type;        // 1 para receita, 2 para despesa
 } Finance;
 
 typedef struct FinanceNode {
     Finance data;
     struct FinanceNode *next;   // aponta para o próximo nó
 } FinanceNode;
+
 // Variável Global Externa
 extern FinanceNode *head_finance;
 
 // FUNÇÕES DE GERENCIAMENTO DE LISTAGEM DINÂMICA DIRETA (CRUD EM MEMÓRIA)
 int finance_list_insert(Finance f);             // Insere na lista em RAM
-int finance_list_remove(int id);              // Remove da lista em RAM 
-void finance_load_file(void);                        // Carrega do arquivo para RAM
-void free_finance_list(void);                     // Libera a memória da lista
-void finance_save_file(void);                       // Salva da RAM para arquivo
-Finance *finance_list_find(int id);  // Busca nó na RAM pelo critério
+int finance_list_remove(int id);                // Remove da lista em RAM 
+void finance_load_file(void);                   // Carrega do arquivo para RAM
+void free_finance_list(void);                   // Libera a memória da lista
+void finance_save_file(void);                   // Salva da RAM para arquivo
+Finance *finance_list_find(int id);             // Busca nó na RAM pelo critério
+
 void finance_list_print(int (*match)(const void *)); // Imprime lista conforme critério
 
 // Funções de match

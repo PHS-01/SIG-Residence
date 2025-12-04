@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "finance.h"
 #include "terminal_control.h"
 #include "controllers.h"
@@ -14,11 +15,12 @@ void update_finance_ui() {
         print_error("ID inválido.");
         return;
     }
-    Finance *existing_finance= finance_list_find(id);
+    
+    Finance *existing_finance = finance_list_find(id);
     
     // Primeiro verifica se a transação existe
     if (existing_finance == NULL || existing_finance->status == false) { 
-        print_error("Transação com ID %d não encontrada ou está inativa.");
+        print_error("Transação com ID %d não encontrada ou está inativa.", id);
         return;
     }
 
@@ -77,6 +79,7 @@ void update_finance_ui() {
         } while (1);
         strcpy(existing_finance->date, temp);
     }
+    
     // Categoria - com validação
     printf("Categoria atual: %s\n", existing_finance->category);
     read_string_input("Nova categoria: ", temp, sizeof(temp));
@@ -90,35 +93,35 @@ void update_finance_ui() {
             }
         } while (1);
         strcpy(existing_finance->category, temp); 
-      }
+    }
     
-    // Tipo - com validação
-    printf("Tipo atual: %c\n", existing_finance->type);
-    char type_input[2];
-    read_string_input("Novo tipo (R para Receita, D para Despesa): ", type_input, sizeof(type_input));
-    if (strlen(type_input) > 0) {
-        char new_type = type_input[0];
-        do {
-            if (new_type != 'R' && new_type != 'r' && new_type != 'D' && new_type != 'd') {
-                print_error("Tipo inválido! Use 'R' para Receita ou 'D' para Despesa.");
-                read_string_input("Novo tipo (R para Receita, D para Despesa): ", type_input, sizeof(type_input));
-                new_type = type_input[0];
+    // Tipo - com validação (agora usando inteiro diretamente)
+    printf("Tipo atual: %s\n", existing_finance->type == FINANCE_RECEITA ? "Receita" : "Despesa");
+    
+    // Pergunta pelo tipo
+    int new_type = -1;
+    printf("Deseja alterar o tipo? (s/N): ");
+    char resposta[3];
+    read_string_input("", resposta, sizeof(resposta));
+    
+    if (resposta[0] == 's' || resposta[0] == 'S') {
+        while (true) {
+            if (read_int_input("Novo tipo (1 para Receita, 2 para Despesa): ", &new_type)) {
+                if (new_type == FINANCE_RECEITA || new_type == FINANCE_DESPESA) {
+                    existing_finance->type = (FinanceType)new_type;
+                    break;
+                } else {
+                    print_error("Tipo inválido! Digite 1 para Receita ou 2 para Despesa.");
+                }
             } else {
-                break;
+                print_error("Entrada inválida. Digite 1 para Receita ou 2 para Despesa.");
             }
-        } while (1);
-        
-        // Converter para maiúscula
-        if (new_type == 'r') new_type = 'R';
-        if (new_type == 'd') new_type = 'D';
-        existing_finance->type = new_type;
-    } 
+        }
+    }
 
     existing_finance->id = id;
     existing_finance->status = true;
 
     finance_save_file();
     print_success("Transação atualizada com sucesso!");
-        
-    
 }
