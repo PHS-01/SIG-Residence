@@ -40,7 +40,16 @@ void finance_load_file(void) {
 
     fclose(file);
 }
+void finance_save_append(FinanceNode *novo_no) {
+    if (!novo_no) return;
 
+    FILE *file = fopen(FILE_NAME_FINANCE, "ab");
+    if (!file) return;
+
+    fwrite(&novo_no->data, sizeof(Finance), 1, file);
+
+    fclose(file);
+}
 // Salva da RAM para o Arquivo
 void finance_save_file(void) {
     FILE *file = fopen(FILE_NAME_FINANCE, "wb");
@@ -78,7 +87,7 @@ int finance_list_insert(Finance new_finance) {
         atual->next = novo;
     }
 
-    finance_save_file();
+    finance_save_append(novo);
     return 1; // Sucesso
 }
 
