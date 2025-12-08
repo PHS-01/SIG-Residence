@@ -34,7 +34,7 @@ void finance_load_file(void) {
 
     // Lê cada registro do arquivo e monta a lista
     while (fread(&temp_data, sizeof(Finance), 1, file)) {
-        FinanceNode *novo = malloc(sizeof(FinanceNode));
+        FinanceNode *novo =(FinanceNode*) malloc(sizeof(FinanceNode));
         if (!novo) {
             fclose(file);
             return;
@@ -43,10 +43,12 @@ void finance_load_file(void) {
         novo->data = temp_data;
         novo->next = NULL;
 
-        if (head_finance == NULL)
+        if (head_finance == NULL){
             head_finance = novo;
-        else
+        }
+        else{
             ultimo->next = novo;
+        }
 
         ultimo = novo;
     }

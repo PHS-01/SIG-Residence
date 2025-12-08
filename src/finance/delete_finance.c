@@ -26,8 +26,7 @@ void delete_finance_ui() {
     print_finance_detail(finance);
     printf("\n");
 
-    read_string_input("Tem certeza que deseja inativar esta transação? (s/N): ",
-                      confirm, sizeof(confirm));
+    read_string_input("Tem certeza que deseja inativar esta transação? (s/N): ",confirm, sizeof(confirm));
 
     if (confirm[0] != 's' && confirm[0] != 'S') {
         print_warning("Operação cancelada.");
