@@ -31,8 +31,12 @@ void delete_people_ui() {
 
     if (confirm[0] == 's' || confirm[0] == 'S') {
         person->status = false; // Muda na RAM
-        save_people_list();     // Salva no Disco
-        print_success("Pessoa inativada com sucesso.");
+        // Salva no disco
+        if (update_person(*person)) {
+            print_success("Pessoa inativada com sucesso.");
+        } else {
+            print_error("Erro ao salvar inativação no disco.");
+        }
     } else {
         print_warning("Operação cancelada.");
     }

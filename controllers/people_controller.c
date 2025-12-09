@@ -6,6 +6,7 @@
 #include "config.h"
 #include "menu_borders.h"
 #include "terminal_control.h"
+#include "controllers.h"
 
 // VARIÁVEIS GLOBAIS
 // A "cabeça" da lista fica aqui. Inicialmente vazia (NULL).
@@ -42,19 +43,6 @@ void load_people_list() {
     fclose(file);
 }
 
-// Salva da RAM para o Arquivo
-void save_people_list() {
-    FILE *file = fopen(FILE_NAME_PEOPLE, "wb"); // "wb" zera o arquivo
-    if (!file) return;
-
-    PeopleNode *atual = head_people;
-    while (atual != NULL) {
-        fwrite(&atual->data, sizeof(People), 1, file);
-        atual = atual->next;
-    }
-    fclose(file);
-}
-
 // Adiciona uma pessoa na lista e salva
 int create_person(People new_person) {
     // Cria o nó na memória
@@ -66,8 +54,37 @@ int create_person(People new_person) {
     head_people = novo;
     
     // Persiste no disco
-    save_people_list();
-    return 1; // Sucesso
+    // Otimização: Salva APENAS o novo registro no final do arquivo
+    FILE *file = fopen(FILE_NAME_PEOPLE, "ab"); // "ab" escreve no fim sem apagar
+    if (file) {
+        fwrite(&new_person, sizeof(People), 1, file);
+        fclose(file);
+        return 1;
+    }
+    return 0;
+}
+
+int update_person(People person_data) {
+    FILE *file = fopen(FILE_NAME_PEOPLE, "r+b"); // Leitura e Escrita
+    if (!file) return 0;
+
+    People temp;
+    int found = 0;
+
+    // Lê o arquivo registro por registro
+    while (fread(&temp, sizeof(People), 1, file)) {
+        if (temp.id == person_data.id) {
+            // Volta o cursor do arquivo para o início desse registro
+            fseek(file, -((long)sizeof(People)), SEEK_CUR);
+            
+            // Sobrescreve apenas este registro
+            fwrite(&person_data, sizeof(People), 1, file);
+            found = 1;
+            break;
+        }
+    }
+    fclose(file);
+    return found;
 }
 
 // Busca uma pessoa na lista pelo ID e retorna ponteiro para os DADOS
@@ -98,31 +115,33 @@ int generate_people_id(void) {
 
 // Remove fisicamente um nó da lista e salva a alteração no disco
 int remove_person_from_list(int id) {
+    // Remove da memória RAM (Lista Encadeada)
     PeopleNode *atual = head_people;
     PeopleNode *anterior = NULL;
+    int ram_removed = 0;
 
     while (atual != NULL) {
         if (atual->data.id == id) {
             if (anterior == NULL) {
-                // Caso 1: O nó a ser apagado é a CABEÇA da lista
                 head_people = atual->next;
             } else {
-                // Caso 2: O nó está no meio ou no fim
-                // O anterior pula o atual e aponta para o próximo
                 anterior->next = atual->next;
             }
-            
-            free(atual);        // Libera a memória RAM
-            save_people_list(); // Reescreve o arquivo sem esse dado
-            return 1;           // Sucesso
+            free(atual);
+            ram_removed = 1;
+            break; 
         }
-        
-        // Avança os ponteiros
         anterior = atual;
         atual = atual->next;
     }
+
+    // Se não achou na RAM, nem tenta no disco
+    if (!ram_removed) return 0;
+
+    set_search_id(id); 
     
-    return 0; // Não encontrou
+    // Cria um arquivo temporário, copia tudo menos o ID alvo, e renomeia.
+    return physical_delete(sizeof(People), match_people_by_id, FILE_NAME_PEOPLE);
 }
 
 void free_people_list(void) {
