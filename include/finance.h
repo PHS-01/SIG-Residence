@@ -32,6 +32,7 @@ int finance_list_insert(Finance f);             // Insere na lista em RAM
 int finance_list_remove(int id);                // Remove da lista em RAM 
 void finance_load_file(void);                   // Carrega do arquivo para RAM
 void free_finance_list(void);                   // Libera a memória da lista
+void finance_save_append(FinanceNode *novo_no); // Salva um nó no arquivo
 void finance_save_file(void);                   // Salva da RAM para arquivo
 Finance *finance_list_find(int id);             // Busca nó na RAM pelo critério
 

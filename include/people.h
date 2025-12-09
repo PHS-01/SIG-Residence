@@ -23,12 +23,13 @@ typedef struct PeopleNode {
 extern PeopleNode *head_people; 
 
 // FUNÇÕES DE GERENCIAMENTO DE LISTAGEM DINÂMICA INVERTIDA (CRUD EM MEMÓRIA)
-void load_people_list(void);              // Carrega do arquivo para RAM
-void save_people_list(void);              // Salva da RAM para arquivo
-void free_people_list(void);               // Libera a memória da lista
-int create_person(People new_person);     // Insere na lista e salva
-int remove_person_from_list(int id);      // Remove da lista e salva
-People* find_person_by_id(int id);        // Busca ponteiro na RAM pelo ID
+void load_people_list(void);                      // Carrega do arquivo para RAM
+void save_people_list(void);                      // Salva da RAM para arquivo
+void free_people_list(void);                      // Libera a memória da lista
+int create_person(People new_person);             // Insere na lista e salva
+int update_person(People person_data);            // Atualiza na lista e salva
+int remove_person_from_list(int id);              // Remove da lista e salva
+People* find_person_by_id(int id);                // Busca ponteiro na RAM pelo ID
 
 // FUNÇÕES DE SUPORTE E UTILITÁRIOS
 void set_search_id(int id);

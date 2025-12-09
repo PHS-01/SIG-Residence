@@ -97,6 +97,6 @@ void update_people_ui() {
     }
 
     printf("\n");
-    save_people_list(); 
+    update_person(*existing_person); // Salva as alterações no arquivo
     print_success("Pessoa atualizada com sucesso!");
 }

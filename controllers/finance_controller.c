@@ -12,35 +12,60 @@ FinanceNode *head_finance = NULL;
 // FUNÇÕES DE GERENCIAMENTO DA LISTA
 
 // Carrega do arquivo para a RAM
-void finance_load_file(void) { 
+void finance_load_file(void) {
+    // Se a lista já está carregada, não recarregar
     if (head_finance != NULL) return;
 
     FILE *file = fopen(FILE_NAME_FINANCE, "rb");
-    if (!file) return;
+    if (!file) return;  // Arquivo não existe → OK, lista vazia
+
+    // --- Verificação: arquivo vazio ---
+    fseek(file, 0, SEEK_END);
+    long size = ftell(file);
+    if (size == 0) {
+        fclose(file);
+        return;  // Arquivo vazio → lista permanece vazia
+    }
+    rewind(file); // Volta para o início para leitura
+    // ------------------------------------
 
     Finance temp_data;
     FinanceNode *ultimo = NULL;
 
+    // Lê cada registro do arquivo e monta a lista
     while (fread(&temp_data, sizeof(Finance), 1, file)) {
-        FinanceNode *novo = (FinanceNode*) malloc(sizeof(FinanceNode));
+        FinanceNode *novo =(FinanceNode*) malloc(sizeof(FinanceNode));
         if (!novo) {
             fclose(file);
             return;
         }
+
         novo->data = temp_data;
         novo->next = NULL;
 
-        if (head_finance == NULL) {
-            head_finance = novo; // Primeiro da lista
-        } else {
-            ultimo->next = novo; // Liga o anterior ao novo
+        if (head_finance == NULL){
+            head_finance = novo;
         }
+        else{
+            ultimo->next = novo;
+        }
+
         ultimo = novo;
     }
 
     fclose(file);
 }
 
+void finance_save_append(FinanceNode *novo_no) {
+    if (!novo_no) return;
+
+    FILE *file = fopen(FILE_NAME_FINANCE, "ab");
+    if (!file) return;
+
+    fwrite(&novo_no->data, sizeof(Finance), 1, file);
+
+    fclose(file);
+}
 // Salva da RAM para o Arquivo
 void finance_save_file(void) {
     FILE *file = fopen(FILE_NAME_FINANCE, "wb");
@@ -78,7 +103,7 @@ int finance_list_insert(Finance new_finance) {
         atual->next = novo;
     }
 
-    finance_save_file();
+    finance_save_append(novo);
     return 1; // Sucesso
 }
 

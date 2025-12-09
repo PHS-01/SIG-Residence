@@ -19,10 +19,18 @@ void create_finance_ui() {
     while (true) {
         if (!read_int_input("ID de Pessoa: ", &new_finance.people_id)) {
             print_error("ID de Pessoa inválido (formato incorreto).");
-        } else if (!is_valid_people_id(new_finance.people_id)) {
-            print_error("ID de Pessoa não encontrado ou logicamente inválido.");
-        } else {
-            break; // Sucesso
+        } 
+        else {
+            // Busca a pessoa na lista em memória
+            People *p = find_person_by_id(new_finance.people_id);
+
+            if (p == NULL) {
+                print_error("Pessoa não encontrada.");
+            } else if (p->status == false) {
+                print_error("Esta pessoa está inativa. Não é possível vincular uma finança.");
+            } else {
+                break; // Sucesso
+            }
         }
     }
     
